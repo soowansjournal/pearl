@@ -22,8 +22,6 @@
 **5 Bootle Blast + 18 Boot Camp**
 - (1-1) Joint Coordinate Position 
 - (1-2) Body Segment Length
-
-**5 Bootle Blast + 5 Boot Camp**
 - (1-3) Joint Angle ROM
 
 **5 Bootle Blast**

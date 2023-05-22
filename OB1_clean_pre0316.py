@@ -1,22 +1,14 @@
 '''
 ---
-# **Copy of CHAPTER 3: OB1 AutoClean Post0316**
+# **CHAPTER 3: OB1 AutoClean Pre0316**
 ---
 
-**Post 2023-03-16-P05**  
--  (MA_X ← OP_X | MA_Z ← OP_Y | negMA_Y ← OP_Z)
-     - 2.2.2) New OP Coordinate   
-     - 2.2.4) X-axis is Horizontal (not Y-axis)
-     - 3.2.2) Change Direction of the MA Depth Coordinate (Y-axis)
-     - 3.2.4) X-axis is Horizontal (not Y-axis)
-
--  (Y ← OP_X | Z ← OP_Y | X ← OP_Z) + (Y ← MA_X | Z ← MA_Z | X ← negMA_Y)
-     - 2.2.2) New OP Coordinate   
-     - 3.2.2) New OP Coordinate + Change Direction of the MA Depth Coordinate (X-axis)
+**Pre 2023-03-16-P05 (_0221-P01, 0314-P02, 0314-P03, 0315-P04_)**  
+-  (Y ← OP_X | Z ← OP_Y | X ← OP_Z )
 
 **Post 2023-04-02**
 - Check Normality
-  - Return **op_highest_peak, ma_highest_peak** from functions under **5) Analyze Data**......
+  - Return **op_highest_peak, ma_highest_peak** from functions **5) Analyze Data**...
   - 1-3) Angle --> min_angle() + max_angle()
   - 1-4) Reach --> peaks_method2() --> reach_lists()
   - 1-5) Speed --> speed_max()
@@ -39,40 +31,37 @@
 Soowan Choi
 '''
 
-
-from OB1_autoclean_post0316_functions import * # todo import other modules
+from OB1_autoclean_pre0316_functions import * # todo import other modules
 
 def load_op(op_file):
   # create dataframe from uploaded csv files using pandas.read_csv()
-  op = pd.read_csv(op_file) 
-
+  op = pd.read_csv(op_file)
   return op 
+
 
 def load_ma(ma_file):
   # create dataframe from uploaded csv files using pandas.read_csv() & skip the first few rows (3) of information
   ma = pd.read_csv(ma_file, header = 3) 
-  
   return ma
-
 
 # op_games = ['Power1', 'Power2', 'Wizards', 'War', 'Jet', 'Astro', 'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9']
 # ma_games = ['Power1', 'Power2', 'Wizards', 'War', 'Jet', 'Astro', 'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9']
 # op_games = ['Pediatric', 'Single1', 'Single2', 'Five', 'Thirty']
 # ma_games = ['Pediatric', 'Single', 'Single', 'Five', 'Thirty']
 
-op_games = [ 'Thirty']
-ma_games = [ 'Thirty']
-
+op_games = ['Single1', 'Single2', 'Five', 'Thirty']
+ma_games = ['Single', 'Single', 'Five', 'Thirty']
 
 # SELECT FILES HERE
-mmdd = '0502' 
-p = 'P26'
+# 0221-P01, 0314-P02, 0314-P03, 0315-P04
+mmdd = '0314'  
+p = 'P02'
 mmdd_p = mmdd + '_' + p
 
 for game_ind in range(len(op_games)):
   print(f'\n\n\n\n\n\n\n\n{op_games[game_ind]}\n\n\n\n\n\n\n\n')
-  op_file = '2023' + mmdd + '-' + op_games[game_ind] + "-Data.csv"
-  ma_file = '2023' + mmdd + '-' + ma_games[game_ind] + ".csv"
+  op_file = '2023' + mmdd[:4] + '-' + op_games[game_ind] + "-Data.csv"
+  ma_file = '2023' + mmdd[:4] + '-' + ma_games[game_ind] + ".csv"
 
   # Load OP Data
   op = load_op('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/OP_' + mmdd_p + '/' + op_file)
@@ -159,10 +148,10 @@ for game_ind in range(len(op_games)):
   else:
     print("OP DID NOT LOSE SIGHT OF THE PARTICIPANT")
 
-
+  
   # Final Data
-  op_final = op_synch
-  ma_final = ma_resam
+  op_final = op_filte
+  ma_final = ma_filte
 
 
   # DOWNLOAD CLEANED OP DATA
@@ -224,3 +213,4 @@ for game_ind in range(len(op_games)):
           data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align vertical(Z) coordinate
         elif xyz[k] == 'X':
           data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align depth(X) coordinate
+  

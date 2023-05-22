@@ -1,22 +1,14 @@
 '''
 ---
-# **Copy of CHAPTER 3: OB1 AutoClean Post0316**
+# **CHAPTER 3: OB1 AutoClean Pre0316 Final**
 ---
 
-**Post 2023-03-16-P05**  
--  (MA_X ← OP_X | MA_Z ← OP_Y | negMA_Y ← OP_Z)
-     - 2.2.2) New OP Coordinate   
-     - 2.2.4) X-axis is Horizontal (not Y-axis)
-     - 3.2.2) Change Direction of the MA Depth Coordinate (Y-axis)
-     - 3.2.4) X-axis is Horizontal (not Y-axis)
-
--  (Y ← OP_X | Z ← OP_Y | X ← OP_Z) + (Y ← MA_X | Z ← MA_Z | X ← negMA_Y)
-     - 2.2.2) New OP Coordinate   
-     - 3.2.2) New OP Coordinate + Change Direction of the MA Depth Coordinate (X-axis)
+**Pre 2023-03-16-P05 (_0221-P01, 0314-P02, 0314-P03, 0315-P04_)**  
+-  (Y ← OP_X | Z ← OP_Y | X ← OP_Z )
 
 **Post 2023-04-02**
 - Check Normality
-  - Return **op_highest_peak, ma_highest_peak** from functions under **5) Analyze Data**......
+  - Return **op_highest_peak, ma_highest_peak** from functions **5) Analyze Data**...
   - 1-3) Angle --> min_angle() + max_angle()
   - 1-4) Reach --> peaks_method2() --> reach_lists()
   - 1-5) Speed --> speed_max()
@@ -26,6 +18,11 @@
 
 **Fixed on 2023-04-11**
 - Problem 1: Losing Complete Sight of the User
+
+**Tweaked on 2023-05-22**
+- "_**Load automatic peak values to clean**_"
+- def synch_op(op_synch, op_thresh, op_dist, op_peak, op_end)
+- def synch_ma(ma_synch, op_synch, ma_thresh, ma_dist, ma_peak)
 
 **5 Bootle Blast + 18 Boot Camp**
 - (1-1) Joint Coordinate Position 
@@ -38,7 +35,6 @@
 
 Soowan Choi
 '''
-
 
 # 1 - Import Libraries
 # to clean and analyze data
@@ -131,9 +127,9 @@ def clean_op(op_clean):
 
 
 def coord_op(op_coord):
-  '2.2.2) Coordinate Transformation (Y ← OP_X | Z ← OP_Y | X ← OP_Z) + (Y ← MA_X | Z ← MA_Z | X ← negMA_Y)'
+  '2.2.2) Coordinate Transformation (Y <-- OP_X | Z <-- OP_Y | X <-- OP_Z)'
 
-  print('\n2.2.2) COORDINATE TRANSFORMATION (Y ← OP_X | Z ← OP_Y | X ← OP_Z) + (Y ← MA_X | Z ← MA_Z | X ← negMA_Y)\n----------------------------\n')
+  print('\n2.2.2) COORDINATE TRANSFORMATION (Y <-- OP_X | Z <-- OP_Y | X <-- OP_Z)\n----------------------------\n')
 
   # remove the X Y Z indicators from column names
   op_coord.columns = op_coord.columns.str.replace('X$','',regex =True)
@@ -160,14 +156,13 @@ def coord_op(op_coord):
   return op_coord
 
 
-def synch_op(op_synch):
+def synch_op(op_synch, op_thresh, op_dist, op_peak, op_end):
   '2.2.4) Synchronization (Clapping Peak:Orbbec End Time)'
 
   print('\n2.2.4) SYNCHRONIZATION (CLAPPING PEAK:ORBBEC END TIME)\n----------------------------\n')
 
   # visualize OP data before synchronization point
   x = np.linspace(0,int(len(op_synch)),int(len(op_synch)))     # create timeframe using orbbec data length
-  plt.figure(figsize=(5,3))
   plt.plot(x,op_synch['WristLeftY'])        # plot the orbbec joint of interest
   plt.title(f'OP Clapping Motion WristLeftY - BEFORE SYNCHRONIZATION')
   plt.xlabel('Frames')
@@ -175,11 +170,12 @@ def synch_op(op_synch):
   plt.show()
 
   # zoom in on the peak movements
-  height = int(input("Minimal Peak Threshold: "))
-  distance = int(input("Minimal Distance Between Peaks (>1): "))
+  # height = int(input("Minimal Peak Threshold: "))
+  # distance = int(input("Minimal Distance Between Peaks (>1): "))
+  height = op_thresh
+  distance = op_dist
   x = op_synch['WristLeftY']
   peaks, _ = find_peaks(x, height= height, distance = distance)
-  plt.figure(figsize=(5,3))
   plt.plot(x)
   plt.plot(peaks, x[peaks], "x")
   plt.plot(np.zeros_like(x), "--", color="gray")
@@ -190,10 +186,12 @@ def synch_op(op_synch):
   print(x[peaks])
 
   # locate the peak of the third clap
-  op_peak = int(input('\nIndex for peak of 3rd clap: '))
+  # op_peak = int(input('\nIndex for peak of 3rd clap: '))
+  op_peak = op_peak
 
   # locate the end frame of the game
-  end_frame_op = int(input('Orbbec Ending Frame (FROM GRAPH): '))
+  # end_frame_op = int(input('Orbbec Ending Frame (FROM GRAPH): '))
+  end_frame_op = op_end
 
   print(f'\nShape of Orbbec BEFORE synchronization: {op_synch.shape}')
   op_synch = op_synch[op_peak:end_frame_op]       # cut orbbec data from starting position (horizontal peak) to ending position (frame at end of game log)
@@ -201,7 +199,6 @@ def synch_op(op_synch):
 
   # visualize OP data after synchronization point
   x = np.linspace(0,int(len(op_synch)),int(len(op_synch)))     # create timeframe using orbbec data length
-  plt.figure(figsize=(5,3))
   plt.plot(x,op_synch['WristLeftY'])        # plot the orbbec joint of interest
   plt.title(f'OP Clapping Motion WristLeftY - AFTER Synchronization')
   plt.xlabel('Frames')
@@ -331,7 +328,7 @@ def track_op(op_track):
         print(f"{col} Column: {count} UNTRACKED Values | BETWEEN Index {values.index[0]} to {values.index[-1]} --> ({values.index[-1] - values.index[0]}) values?")
 
   return op_track, untracked_op_index, tracking 
-
+  
 
 def filte_op(op_filte, op_hz):
   '2.2.6) Filter Noise (Low-Pass Butterworth)'
@@ -411,7 +408,7 @@ def coord_ma(ma_coord):
       i += 1                                                        # increment dictionary index
 
   # rename columns of three succeeding index (to same name) from new_names list...
-  naming_system = ['Y','X','Z']                     
+  naming_system = ['X','Y','Z']                     
   # get the index of the starting column name, which is 'Front.Head'
   start = ma_coord.columns.get_loc('Front.Head')            
   # create a copy of the column names
@@ -422,13 +419,8 @@ def coord_ma(ma_coord):
     for j in range(0,3):                            
       # change the specific name of the six succeeding columns in place
       ma_coord.rename(columns = {ma_coord.columns[i+j]:ma_tmp[i] + naming_system[j]}, inplace= True)
-  
-  # change the MA depth coordinate (X) such that it matches the new OP depth coordinate X (Originally Z for OP)
-  for col in ma_coord.columns:
-    if col[-1] == 'X':
-      ma_coord[col] = ma_coord[col]*-1
 
-  return ma_coord    
+  return ma_coord       
 
 
 def nullv_ma(ma_nullv):
@@ -517,14 +509,13 @@ def nullv_ma(ma_nullv):
   return ma_nullv
 
 
-def synch_ma(ma_synch, op_synch):
+def synch_ma(ma_synch, op_synch, ma_thresh, ma_dist, ma_peak):
   '3.2.4) Synchronization (Clapping Peak:Orbbec End Time)'
 
   print('\n3.2.4) SYNCHRONIZATION (CLAPPING PEAK:ORBBEC END TIME)\n----------------------------\n')
 
   # visualize MA data before synchronization point
   x = np.linspace(0,int(len(ma_synch)),int(len(ma_synch)))     # create timeframe using motion data length
-  plt.figure(figsize=(5,3))
   plt.plot(x,ma_synch['L.WristY'])        # plot the motion joint of interest
   plt.title(f'MA Clapping Motion WristLeftY - BEFORE SYNCHRONIZATION')
   plt.xlabel('Frames')
@@ -532,11 +523,12 @@ def synch_ma(ma_synch, op_synch):
   plt.show()
 
   # zoom in on the peak movements
-  height = int(input("Minimal Peak Threshold: "))
-  distance = int(input("Minimal Distance Between Peaks (>1): "))
+  # height = int(input("Minimal Peak Threshold: "))
+  # distance = int(input("Minimal Distance Between Peaks (>1): "))
+  height = ma_thresh
+  distance = ma_dist
   x = ma_synch['L.WristY']
   peaks, _ = find_peaks(x, height= height, distance = distance)
-  plt.figure(figsize=(5,3))
   plt.plot(x)
   plt.plot(peaks, x[peaks], "x")
   plt.plot(np.zeros_like(x), "--", color="gray")
@@ -547,7 +539,8 @@ def synch_ma(ma_synch, op_synch):
   print(x[peaks])
 
   # locate the peak of the third clap
-  ma_peak = int(input('\nIndex for peak of 3rd clap: ')) 
+  # ma_peak = int(input('\nIndex for peak of 3rd clap: ')) 
+  ma_peak = ma_peak
 
   # overall MA game duration to locate end frame of the game 
   duration = ma_synch.Time.iloc[ma_peak] + (op_synch.Time.iloc[-1] - op_synch.Time.iloc[0])
@@ -564,7 +557,6 @@ def synch_ma(ma_synch, op_synch):
 
   # visualize MA data after synchronization point
   x = np.linspace(0,int(len(ma_synch)),int(len(ma_synch)))     # create timeframe using motion data length
-  plt.figure(figsize=(5,3))
   plt.plot(x,ma_synch['L.WristY'])        # plot the motion joint of interest
   plt.title(f'MA Clapping Motion L.WristY - AFTER Synchronization')
   plt.xlabel('Frames')
@@ -602,8 +594,7 @@ def resam_ma(ma_resam, op_synch):
 
   # visualize MA data after resampling
   x = np.linspace(0,int(len(ma_resam)),int(len(ma_resam)))     # create timeframe using motion data length
-  plt.figure(figsize=(5,3))
-  plt.plot(x,ma_resam['L.WristX'])        # plot the motion joint of interest
+  plt.plot(x,ma_resam['L.WristY'])        # plot the motion joint of interest
   plt.title(f'Resampled MA Clapping Motion L.WristY')
   plt.xlabel('Frames')
   plt.ylabel('Distance [cm]')
@@ -647,7 +638,7 @@ def filte_ma(ma_filte, ma_hz):
   ma_filte.columns = col_names[1:]                 
   ma_filte.insert(0,'Time',time)    
 
-  return ma_filte              
+  return ma_filte                           
 
 
 def cut_data(op_cut, ma_cut):
@@ -760,8 +751,7 @@ def data_vis(op_vis, ma_vis, joint, op_joint, ma_joint):
   # create timeframe using shorter data length
   if len(op_vis) > len(ma_vis):
     print('[length OP > MA]')
-    x = np.linspace(0,len(ma_vis),len(ma_vis))  
-    plt.figure(figsize=(5,3))                     
+    x = np.linspace(0,len(ma_vis),len(ma_vis))                       
     plt.plot(x,op_vis[op_joint].iloc[0:len(ma_vis)], label = 'OP Cleaned')                  
     plt.plot(x,ma_vis[ma_joint], label = 'MA Cleaned')                    
     plt.legend()
@@ -771,8 +761,7 @@ def data_vis(op_vis, ma_vis, joint, op_joint, ma_joint):
     plt.show()
   elif len(ma_vis) > len(op_vis):     
     print('[length MA > OP]')
-    x = np.linspace(0,len(op_vis),len(op_vis))  
-    plt.figure(figsize=(5,3))                     
+    x = np.linspace(0,len(op_vis),len(op_vis))                       
     plt.plot(x,op_vis[op_joint], label = 'OP Cleaned')                  
     plt.plot(x,ma_vis[ma_joint].iloc[0:len(op_vis)], label = 'MA Cleaned')                    
     plt.legend()
@@ -782,8 +771,7 @@ def data_vis(op_vis, ma_vis, joint, op_joint, ma_joint):
     plt.show()
   else: 
     print('[length OP = MA: Data has already been CUT]')
-    x = np.linspace(0,len(op_vis),len(op_vis)) 
-    plt.figure(figsize=(5,3))                    
+    x = np.linspace(0,len(op_vis),len(op_vis))                       
     plt.plot(x,op_vis[op_joint], label = 'OP Cleaned')                  
     plt.plot(x,ma_vis[ma_joint], label = 'MA Cleaned')                    
     plt.legend()

@@ -1,6 +1,6 @@
 '''
 ---
-# **CHAPTER 3: OB1 AutoClean Pre0316**
+# **CHAPTER 3: OB1 AutoClean Pre0316 Final**
 ---
 
 **Pre 2023-03-16-P05 (_0221-P01, 0314-P02, 0314-P03, 0315-P04_)**  
@@ -19,11 +19,14 @@
 **Fixed on 2023-04-11**
 - Problem 1: Losing Complete Sight of the User
 
+**Tweaked on 2023-05-22**
+- "_**Load automatic peak values to clean**_"
+- def synch_op(op_synch, op_thresh, op_dist, op_peak, op_end)
+- def synch_ma(ma_synch, op_synch, ma_thresh, ma_dist, ma_peak)
+
 **5 Bootle Blast + 18 Boot Camp**
 - (1-1) Joint Coordinate Position 
 - (1-2) Body Segment Length
-
-**5 Bootle Blast + 5 Boot Camp**
 - (1-3) Joint Angle ROM
 
 **5 Bootle Blast**
@@ -33,7 +36,7 @@
 Soowan Choi
 '''
 
-from OB1_autoclean_pre0316_functions import * # todo import other modules
+from OB1_autoclean_pre0316_functions_final import * # todo import other modules
 
 def load_op(op_file):
   # create dataframe from uploaded csv files using pandas.read_csv()
@@ -48,11 +51,15 @@ def load_ma(ma_file):
 
 # op_games = ['Power1', 'Power2', 'Wizards', 'War', 'Jet', 'Astro', 'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9']
 # ma_games = ['Power1', 'Power2', 'Wizards', 'War', 'Jet', 'Astro', 'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9']
-# op_games = ['Pediatric', 'Single1', 'Singl2', 'Five', 'Thirty']
-# ma_games = ['Pediatric', 'Single1', 'Singl2', 'Five', 'Thirty']
+# op_games = ['Pediatric', 'Single1', 'Single2', 'Five', 'Thirty']
+# ma_games = ['Pediatric', 'Single', 'Single', 'Five', 'Thirty']
 
-op_games = ['Single1', 'Single2', 'Five', 'Thirty']
-ma_games = ['Single', 'Single', 'Five', 'Thirty']
+op_games = ['Power1', 'Power2', 'Wizards', 'War', 'Jet', 'Astro', 
+            'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9',
+            'Pediatric', 'Single1', 'Single2', 'Five', 'Thirty']
+ma_games = ['Power1', 'Power2', 'Wizards', 'War', 'Jet', 'Astro', 
+            'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9',
+            'Pediatric', 'Single1', 'Single2', 'Five', 'Thirty']
 
 # SELECT FILES HERE
 # 0221-P01, 0314-P02, 0314-P03, 0315-P04
@@ -74,10 +81,36 @@ for game_ind in range(len(op_games)):
   print(ma.head(3))
 
 
+  # Load automatic peak values to clean
+  peaks = pd.read_csv("/Users/soowan/Documents/VSCODE/Pearl/peaks_pre0316.csv") 
+
+  for i in range(len(peaks)):
+      if peaks["Date_P##"][i] == mmdd_p:
+        if str(peaks[op_games[game_ind]][i]) == 'nan':
+            # if we dont know the peaks
+            op_thresh = 0
+            op_dist = 10
+            op_peak = 2
+            op_end = 100
+            ma_thresh = 0
+            ma_dist = 1
+            ma_peak = 2
+            break
+        else:
+            print(peaks[op_games[game_ind]][i:i+7])
+            op_thresh = int(peaks[op_games[game_ind]][i])
+            op_dist = int(peaks[op_games[game_ind]][i+1])
+            op_peak = int(peaks[op_games[game_ind]][i+2])
+            op_end = int(peaks[op_games[game_ind]][i+3])
+            ma_thresh = int(peaks[op_games[game_ind]][i+4])
+            ma_dist = int(peaks[op_games[game_ind]][i+5])
+            ma_peak = int(peaks[op_games[game_ind]][i+6])
+
+
   # clean OP
   op_clean, op_hz = clean_op(op)
   op_coord = coord_op(op_clean)
-  op_synch = synch_op(op_coord)
+  op_synch = synch_op(op_coord, op_thresh, op_dist, op_peak, op_end)
   op_track, untracked_op_index, tracking = track_op(op_synch)
   op_filte = filte_op(op_synch, op_hz)
 
@@ -86,7 +119,7 @@ for game_ind in range(len(op_games)):
   ma_clean, ma_hz = clean_ma(ma)
   ma_coord = coord_ma(ma_clean)
   ma_nullv = nullv_ma(ma_coord)
-  ma_synch = synch_ma(ma_nullv, op_synch)
+  ma_synch = synch_ma(ma_nullv, op_synch, ma_thresh, ma_dist, ma_peak)
   ma_resam = resam_ma(ma_synch, op_synch)
   ma_track = track_ma(ma_resam, untracked_op_index) 
   ma_filte = filte_ma(ma_resam, ma_hz)
