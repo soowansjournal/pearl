@@ -1,6 +1,6 @@
 '''
 ---
-# **CHAPTER 3: OB1 AutoClean Pre0316**
+# **CHAPTER 3: OB1 Clean Pre0316**
 ---
 
 **Pre 2023-03-16-P05 (_0221-P01, 0314-P02, 0314-P03, 0315-P04_)**  
@@ -31,7 +31,7 @@
 Soowan Choi
 '''
 
-from OB1_autoclean_pre0316_functions import * # todo import other modules
+from OB1_clean_pre0316_fun import * # todo import other modules
 
 def load_op(op_file):
   # create dataframe from uploaded csv files using pandas.read_csv()

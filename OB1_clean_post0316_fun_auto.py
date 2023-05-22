@@ -1,6 +1,6 @@
 '''
 ---
-# **Copy of CHAPTER 3: OB1 AutoClean Post0316**
+# **Copy of CHAPTER 3: OB1 Clean Post0316 Auto**
 ---
 
 **Post 2023-03-16-P05**  
@@ -26,6 +26,11 @@
 
 **Fixed on 2023-04-11**
 - Problem 1: Losing Complete Sight of the User
+
+**Tweaked on 2023-05-22**
+- "_**Load automatic peak values to clean**_"
+- def synch_op(op_synch, op_thresh, op_dist, op_peak, op_end)
+- def synch_ma(ma_synch, op_synch, ma_thresh, ma_dist, ma_peak)
 
 **5 Bootle Blast + 18 Boot Camp**
 - (1-1) Joint Coordinate Position 
@@ -160,7 +165,7 @@ def coord_op(op_coord):
   return op_coord
 
 
-def synch_op(op_synch):
+def synch_op(op_synch, op_thresh, op_dist, op_peak, op_end):
   '2.2.4) Synchronization (Clapping Peak:Orbbec End Time)'
 
   print('\n2.2.4) SYNCHRONIZATION (CLAPPING PEAK:ORBBEC END TIME)\n----------------------------\n')
@@ -175,8 +180,10 @@ def synch_op(op_synch):
   plt.show()
 
   # zoom in on the peak movements
-  height = int(input("Minimal Peak Threshold: "))
-  distance = int(input("Minimal Distance Between Peaks (>1): "))
+  # height = int(input("Minimal Peak Threshold: "))
+  # distance = int(input("Minimal Distance Between Peaks (>1): "))
+  height = op_thresh
+  distance = op_dist
   x = op_synch['WristLeftY']
   peaks, _ = find_peaks(x, height= height, distance = distance)
   plt.figure(figsize=(5,3))
@@ -190,10 +197,12 @@ def synch_op(op_synch):
   print(x[peaks])
 
   # locate the peak of the third clap
-  op_peak = int(input('\nIndex for peak of 3rd clap: '))
+  # op_peak = int(input('\nIndex for peak of 3rd clap: '))
+  op_peak = op_peak
 
   # locate the end frame of the game
-  end_frame_op = int(input('Orbbec Ending Frame (FROM GRAPH): '))
+  # end_frame_op = int(input('Orbbec Ending Frame (FROM GRAPH): '))
+  end_frame_op = op_end
 
   print(f'\nShape of Orbbec BEFORE synchronization: {op_synch.shape}')
   op_synch = op_synch[op_peak:end_frame_op]       # cut orbbec data from starting position (horizontal peak) to ending position (frame at end of game log)
@@ -517,7 +526,7 @@ def nullv_ma(ma_nullv):
   return ma_nullv
 
 
-def synch_ma(ma_synch, op_synch):
+def synch_ma(ma_synch, op_synch, ma_thresh, ma_dist, ma_peak):
   '3.2.4) Synchronization (Clapping Peak:Orbbec End Time)'
 
   print('\n3.2.4) SYNCHRONIZATION (CLAPPING PEAK:ORBBEC END TIME)\n----------------------------\n')
@@ -532,8 +541,10 @@ def synch_ma(ma_synch, op_synch):
   plt.show()
 
   # zoom in on the peak movements
-  height = int(input("Minimal Peak Threshold: "))
-  distance = int(input("Minimal Distance Between Peaks (>1): "))
+  # height = int(input("Minimal Peak Threshold: "))
+  # distance = int(input("Minimal Distance Between Peaks (>1): "))
+  height = ma_thresh
+  distance = ma_dist
   x = ma_synch['L.WristY']
   peaks, _ = find_peaks(x, height= height, distance = distance)
   plt.figure(figsize=(5,3))
@@ -547,7 +558,8 @@ def synch_ma(ma_synch, op_synch):
   print(x[peaks])
 
   # locate the peak of the third clap
-  ma_peak = int(input('\nIndex for peak of 3rd clap: ')) 
+  # ma_peak = int(input('\nIndex for peak of 3rd clap: ')) 
+  ma_peak = ma_peak
 
   # overall MA game duration to locate end frame of the game 
   duration = ma_synch.Time.iloc[ma_peak] + (op_synch.Time.iloc[-1] - op_synch.Time.iloc[0])
