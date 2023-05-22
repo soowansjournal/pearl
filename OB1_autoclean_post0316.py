@@ -57,13 +57,18 @@ def load_ma(ma_file):
   return ma
 
 
-op_games = ['BC6', 'BC7']
+# op_games = ['Power1', 'Power2', 'Wizards', 'War', 'Jet', 'Astro', 'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9']
+# ma_games = ['Power1', 'Power2', 'Wizards', 'War', 'Jet', 'Astro', 'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9']
+# op_games = ['Pediatric', 'Single1', 'Single2', 'Five', 'Thirty']
+# ma_games = ['Pediatric', 'Single', 'Single', 'Five', 'Thirty']
 
-ma_games = ['BC6', 'BC7']
+op_games = ['Power1', 'Power2']
+ma_games = ['Power1', 'Power2']
+
 
 # SELECT FILES HERE
-mmdd = '0316' 
-p = 'P05'
+mmdd = '0502' 
+p = 'P26'
 mmdd_p = mmdd + '_' + p
 
 for game_ind in range(len(op_games)):
@@ -86,12 +91,6 @@ for game_ind in range(len(op_games)):
   op_synch = synch_op(op_coord)
   op_track, untracked_op_index, tracking = track_op(op_synch)
   op_filte = filte_op(op_synch, op_hz)
-
-  # DOWNLOAD CLEANED OP DATA
-  op_filte.to_csv(rf'/Users/soowan/Downloads/2023{mmdd}-{p}-{op_games[game_ind]}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig') 
-
-  # DOWNLOAD OP Data Tracking Accuracy 
-  tracking.to_csv(rf'/Users/soowan/Downloads/2023{mmdd}-{p}-{op_games[game_ind]}-Data-tracked.csv', encoding = 'utf-8-sig')
 
 
   # clean MA
@@ -162,9 +161,18 @@ for game_ind in range(len(op_games)):
   else:
     print("OP DID NOT LOSE SIGHT OF THE PARTICIPANT")
 
-  
+
+  # Final Data
+  op_final = op_filte
+  ma_final = ma_filte
+
+
+  # DOWNLOAD CLEANED OP DATA
+  op_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd}-{p}-{op_games[game_ind]}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig') 
+  # DOWNLOAD OP Data Tracking Accuracy 
+  tracking.to_csv(rf'/Users/soowan/Downloads/2023{mmdd}-{p}-{op_games[game_ind]}-Data-tracked.csv', encoding = 'utf-8-sig')
   # DOWNLOAD CLEANED MA BOOT CAMP DATA
-  ma_filte.to_csv(rf'/Users/soowan/Downloads/2023{mmdd}-{p}-{ma_games[game_ind]}-MA-CLEAN.csv', encoding = 'utf-8-sig') 
+  ma_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd}-{p}-{ma_games[game_ind]}-MA-CLEAN.csv', encoding = 'utf-8-sig') 
 
 
   # cut data 
@@ -177,7 +185,7 @@ for game_ind in range(len(op_games)):
   print(f'\nOP Frames (YES Filtered): {op_filte.shape[0]}')  
   print(f'MA Frames (YES Filtered): {ma_filte.shape[0]}\n') 
 
-  op_cut, ma_cut = cut_data(op_filte, ma_filte)
+  op_cut, ma_cut = cut_data(op_final, ma_final)
 
 
   # align data using: METHOD 2
