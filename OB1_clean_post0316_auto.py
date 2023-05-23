@@ -41,6 +41,9 @@
   - _**if we dont know the peaks, go to next game**_
   - game_peaks_unknown.append(op_games[game_ind])
 
+**Added on 2023-05-23**
+- _**Download Files to Specific Location**_
+
 **5 Bootle Blast + 18 Boot Camp**
 - (1-1) Joint Coordinate Position 
 - (1-2) Body Segment Length
@@ -73,13 +76,21 @@ def load_ma(ma_file):
 
 
 # CREATE FILES (DATE & GAMES)
-# op_games = ['Power1', 'Power2', 'Wizards', 'War', 'Jet', 'Astro', 'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9']
-# ma_games = ['Power1', 'Power2', 'Wizards', 'War', 'Jet', 'Astro', 'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9']
-# op_games = ['Pediatric', 'Single1', 'Single2', 'Five', 'Thirty']
-# ma_games = ['Pediatric', 'Single', 'Single', 'Five', 'Thirty']
+# ***0404_P10 MA File Named Single1 and Single2 vs Single and Single***
 
-op_games = ['Astro', 'BC1', 'BC2', 'BC3']
-ma_games = ['Astro', 'BC1', 'BC2', 'BC3']
+# op_games = ['Power1', 'Power2', 'Wizards', 'War', 'Jet', 'Astro', 
+#             'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9',
+#             'Pediatric', 'Single1', 'Single2', 'Five', 'Thirty']
+# ma_games = ['Power1', 'Power2', 'Wizards', 'War', 'Jet', 'Astro', 
+#             'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9',
+#             'Pediatric', 'Single', 'Single', 'Five', 'Thirty']
+
+op_games = ['Power1', 'Power2', 'Wizards', 'War', 'Jet', 'Astro', 
+            'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9',
+            'Pediatric', 'Single1', 'Single2', 'Five', 'Thirty']
+ma_games = ['Power1', 'Power2', 'Wizards', 'War', 'Jet', 'Astro', 
+            'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9',
+            'Pediatric', 'Single', 'Single', 'Five', 'Thirty']
 
 # SELECT FILES HERE
 mmdd = '0406' 
@@ -88,7 +99,9 @@ mmdd_p = mmdd + '_' + p
 # mmdd_p_all = ['0316_P05', '0322_P06', '0402_P07', '0403_P08', '0403_P09', '0404_P10', '0404_P11', 
 #               '0406_P12', '0406_P13', '0407_P14', '0407_P15', '0407_P16', '0408_P17', '0408_P18', 
 #               '0411_P19', '0412_P20', '0412_P21', '0413_P22', '0420_P23', '0420_P24', '0430_P25', '0502_P26', '0516_P27']
-mmdd_p_all = ['0316_P05', '0322_P06']
+mmdd_p_all = ['0316_P05', '0322_P06', '0402_P07', '0403_P08', '0403_P09', '0404_P10', '0404_P11', 
+              '0406_P12', '0406_P13', '0407_P14', '0407_P15', '0407_P16', '0408_P17', '0408_P18', 
+              '0411_P19', '0412_P20', '0412_P21', '0413_P22', '0420_P23', '0420_P24', '0430_P25', '0502_P26', '0516_P27']
 
 
 
@@ -221,12 +234,21 @@ for mmdd_p in mmdd_p_all:
               ma_final = ma_track
 
 
+              # # DOWNLOAD FILES TO DOWNLOADS FOLDER
+              # # DOWNLOAD CLEANED OP DATA
+              # op_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig') 
+              # # DOWNLOAD OP Data Tracking Accuracy 
+              # tracking.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-Data-tracked.csv', encoding = 'utf-8-sig')
+              # # DOWNLOAD CLEANED MA BOOT CAMP DATA
+              # ma_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-MA-CLEAN.csv', encoding = 'utf-8-sig') 
+
+              # DOWNLOAD FILES TO SPECIFIC LOCATION
               # DOWNLOAD CLEANED OP DATA
-              op_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig') 
+              op_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_0551/2023_{mmdd_p[:4]}_{mmdd_p[-3:]}/Auto_Clean_{mmdd_p[:4]}_{mmdd_p[-3:]}/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig') 
               # DOWNLOAD OP Data Tracking Accuracy 
-              tracking.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-Data-tracked.csv', encoding = 'utf-8-sig')
+              tracking.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_0551/2023_{mmdd_p[:4]}_{mmdd_p[-3:]}/Auto_Results_{mmdd_p[:4]}_{mmdd_p[-3:]}/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-Data-tracked.csv', encoding = 'utf-8-sig')
               # DOWNLOAD CLEANED MA BOOT CAMP DATA
-              ma_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-MA-CLEAN.csv', encoding = 'utf-8-sig') 
+              ma_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_0551/2023_{mmdd_p[:4]}_{mmdd_p[-3:]}/Auto_Clean_{mmdd_p[:4]}_{mmdd_p[-3:]}/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-MA-CLEAN.csv', encoding = 'utf-8-sig') 
 
 
               # cut data 

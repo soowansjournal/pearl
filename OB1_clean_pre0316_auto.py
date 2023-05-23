@@ -33,6 +33,9 @@
   - _**if we dont know the peaks, go to next game**_
   - game_peaks_unknown.append(op_games[game_ind])
 
+**Added on 2023-05-23**
+- _**Download Files to Specific Location**_
+
 **5 Bootle Blast + 18 Boot Camp**
 - (1-1) Joint Coordinate Position 
 - (1-2) Body Segment Length
@@ -63,13 +66,19 @@ def load_ma(ma_file):
 
 
 # CREATE FILES (DATE & GAMES)
-# op_games = ['Power1', 'Power2', 'Wizards', 'War', 'Jet', 'Astro', 'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9']
-# ma_games = ['Power1', 'Power2', 'Wizards', 'War', 'Jet', 'Astro', 'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9']
-# op_games = ['Pediatric', 'Single1', 'Single2', 'Five', 'Thirty']
-# ma_games = ['Pediatric', 'Single', 'Single', 'Five', 'Thirty']
+# op_games = ['Power1', 'Power2', 'Wizards', 'War', 'Jet', 'Astro', 
+#             'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9',
+#             'Pediatric', 'Single1', 'Single2', 'Five', 'Thirty']
+# ma_games = ['Power1', 'Power2', 'Wizards', 'War', 'Jet', 'Astro', 
+#             'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9',
+#             'Pediatric', 'Single', 'Single', 'Five', 'Thirty']
 
-op_games = ['Jet', 'Astro', 'BC1', 'BC2']
-ma_games = ['Jet', 'Astro',  'BC1', 'BC2']
+op_games = ['Power1', 'Power2', 'Wizards', 'War', 'Jet', 'Astro', 
+            'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9',
+            'Pediatric', 'Single1', 'Single2', 'Five', 'Thirty']
+ma_games = ['Power1', 'Power2', 'Wizards', 'War', 'Jet', 'Astro', 
+            'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9',
+            'Pediatric', 'Single', 'Single', 'Five', 'Thirty']
 
 # SELECT FILES HERE
 # 0221_13-P01, 0314-P02, 0314-P03, 0315-P04
@@ -77,7 +86,7 @@ mmdd = '0314'
 p = 'P02'
 mmdd_p = mmdd + '_' + p
 # mmdd_p_all = ['0221_P01', '0314_P02', '0314_P03', '0315_P04']
-mmdd_p_all = ['0221_P01']
+mmdd_p_all = ['0221_P01', '0314_P02', '0314_P03', '0315_P04']
 
 
 
@@ -208,12 +217,21 @@ for mmdd_p in mmdd_p_all:
               ma_final = ma_filte
 
 
+              # # DOWNLOAD FILES TO DOWNLOADS FOLDER
+              # # DOWNLOAD CLEANED OP DATA
+              # op_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig') 
+              # # DOWNLOAD OP Data Tracking Accuracy 
+              # tracking.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-Data-tracked.csv', encoding = 'utf-8-sig')
+              # # DOWNLOAD CLEANED MA BOOT CAMP DATA
+              # ma_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-MA-CLEAN.csv', encoding = 'utf-8-sig')
+               
+              # DOWNLOAD FILES TO SPECIFIC LOCATION
               # DOWNLOAD CLEANED OP DATA
-              op_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig') 
+              op_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_0551/2023_{mmdd_p[:4]}_{mmdd_p[-3:]}/Auto_Clean_{mmdd_p[:4]}_{mmdd_p[-3:]}/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig') 
               # DOWNLOAD OP Data Tracking Accuracy 
-              tracking.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-Data-tracked.csv', encoding = 'utf-8-sig')
+              tracking.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_0551/2023_{mmdd_p[:4]}_{mmdd_p[-3:]}/Auto_Results_{mmdd_p[:4]}_{mmdd_p[-3:]}/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-Data-tracked.csv', encoding = 'utf-8-sig')
               # DOWNLOAD CLEANED MA BOOT CAMP DATA
-              ma_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-MA-CLEAN.csv', encoding = 'utf-8-sig') 
+              ma_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_0551/2023_{mmdd_p[:4]}_{mmdd_p[-3:]}/Auto_Clean_{mmdd_p[:4]}_{mmdd_p[-3:]}/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-MA-CLEAN.csv', encoding = 'utf-8-sig') 
 
 
               # cut data 
