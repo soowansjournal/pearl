@@ -1,7 +1,7 @@
 import pandas as pd
 
 # Load peaks.csv file to test
-peaks = pd.read_csv("/Users/soowan/Documents/VSCODE/Pearl/peaks_pre0316.csv") 
+peaks = pd.read_csv("/Users/soowan/Documents/VSCODE/Pearl/peaks_post0316.csv") 
 
 # For one date(participant), one game
 # For each Row in Second Column
@@ -16,19 +16,19 @@ peaks = pd.read_csv("/Users/soowan/Documents/VSCODE/Pearl/peaks_pre0316.csv")
         # index 6 - MA Index 3rd Peak
         # index 7 - NAN
 
-# peaks.iloc[value, game]
-date = '0314_P02'
-game = 'Power1'
-for i in range(len(peaks)):
-    if peaks["Date_P##"][i] == date:
-        print(peaks[game][i:i+7])
-        op_thresh = int(peaks[game][i])
-        op_dist = int(peaks[game][i+1])
-        op_peak = int(peaks[game][i+2])
-        op_end = int(peaks[game][i+3])
-        ma_thresh = int(peaks[game][i+4])
-        ma_dist = int(peaks[game][i+5])
-        ma_peak = int(peaks[game][i+6])
+# # peaks.iloc[value, game]
+# date = '0314_P02'
+# game = 'Power1'
+# for i in range(len(peaks)):
+#     if peaks["Date_P##"][i] == date:
+#         print(peaks[game][i:i+7])
+#         op_thresh = int(peaks[game][i])
+#         op_dist = int(peaks[game][i+1])
+#         op_peak = int(peaks[game][i+2])
+#         op_end = int(peaks[game][i+3])
+#         ma_thresh = int(peaks[game][i+4])
+#         ma_dist = int(peaks[game][i+5])
+#         ma_peak = int(peaks[game][i+6])
 
 
 # Loop through each date(participant), each game
@@ -51,27 +51,22 @@ for i in range(len(peaks)):
 op_games = ['Power1', 'Power2', 'Wizards', 'War', 'Jet', 'Astro', 
             'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9',
             'Pediatric', 'Single1', 'Single2', 'Five', 'Thirty']
-mmdd = '0314'  
-p = 'P02'
+mmdd = '0316'  
+p = 'P05'
 mmdd_p = mmdd + '_' + p
 
+game_peaks_unknown = []
 for game_ind in range(len(op_games)):
-    print(op_games[game_ind])
+    # print(op_games[game_ind])
 
     for i in range(len(peaks)):
         if peaks["Date_P##"][i] == mmdd_p:
             if str(peaks[op_games[game_ind]][i]) == 'nan':
-                # if we dont know the peaks
-                op_thresh = 0
-                op_dist = 10
-                op_peak = 2
-                op_end = 100
-                ma_thresh = 0
-                ma_dist = 1
-                ma_peak = 2
+                # if we dont know the peaks, go to next game
+                game_peaks_unknown.append(op_games[game_ind])
                 break
             else:
-                print(peaks[op_games[game_ind]][i:i+7])
+                # print(peaks[op_games[game_ind]][i:i+7])
                 op_thresh = int(peaks[op_games[game_ind]][i])
                 op_dist = int(peaks[op_games[game_ind]][i+1])
                 op_peak = int(peaks[op_games[game_ind]][i+2])
@@ -79,7 +74,8 @@ for game_ind in range(len(op_games)):
                 ma_thresh = int(peaks[op_games[game_ind]][i+4])
                 ma_dist = int(peaks[op_games[game_ind]][i+5])
                 ma_peak = int(peaks[op_games[game_ind]][i+6])
+                print(op_games[game_ind], op_thresh, ma_peak)
 
-print(ma_peak)
+print("\nPEAKS UNKNOWN FOR GAMES:", game_peaks_unknown, "\n")
 
 
