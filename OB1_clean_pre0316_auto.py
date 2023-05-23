@@ -49,6 +49,11 @@ def load_ma(ma_file):
   ma = pd.read_csv(ma_file, header = 3) 
   return ma
 
+
+
+
+
+# CREATE FILES (DATE & GAMES)
 # op_games = ['Power1', 'Power2', 'Wizards', 'War', 'Jet', 'Astro', 'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9']
 # ma_games = ['Power1', 'Power2', 'Wizards', 'War', 'Jet', 'Astro', 'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9']
 # op_games = ['Pediatric', 'Single1', 'Single2', 'Five', 'Thirty']
@@ -64,6 +69,10 @@ p = 'P02'
 mmdd_p = mmdd + '_' + p
 # mmdd_p_all = ['0221_13_P01', '0314_P02', '0314_P03', '0315_P04']
 mmdd_p_all = ['0314_P02']
+
+
+
+
 
 for mmdd_p in mmdd_p_all:
   game_peaks_unknown = []

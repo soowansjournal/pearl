@@ -60,6 +60,10 @@ def load_ma(ma_file):
   return ma
 
 
+
+
+
+# CREATE FILES (DATE & GAMES)
 # op_games = ['Power1', 'Power2', 'Wizards', 'War', 'Jet', 'Astro', 'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9']
 # ma_games = ['Power1', 'Power2', 'Wizards', 'War', 'Jet', 'Astro', 'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9']
 # op_games = ['Pediatric', 'Single1', 'Single2', 'Five', 'Thirty']
@@ -67,7 +71,6 @@ def load_ma(ma_file):
 
 op_games = ['BC1', 'BC2', 'BC3', 'BC4']
 ma_games = ['BC1', 'BC2', 'BC3', 'BC4']
-
 
 # SELECT FILES HERE
 mmdd = '0406' 
@@ -77,6 +80,10 @@ mmdd_p = mmdd + '_' + p
 #               '0406_P12', '0406_P13', '0407_P14', '0407_P15', '0407_P16', '0408_P17', '0408_P18', 
 #               '0411_P19', '0412_P20', '0412_P21', '0413_P22', '0420_P23', '0420_P24', '0430_P25', '0502_P26', '0516_P27']
 mmdd_p_all = [ '0316_P05']
+
+
+
+
 
 for mmdd_p in mmdd_p_all:
   game_peaks_unknown = []
