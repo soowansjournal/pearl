@@ -27,10 +27,19 @@
 **Fixed on 2023-04-11**
 - Problem 1: Losing Complete Sight of the User
 
+**Added on 2023-05-22**
+- _**Automatically Loop Through Each Participant**_
+- For mmdd_p in mmdd_p_all
+
 **Tweaked on 2023-05-22**
-- "_**Load automatic peak values to clean**_"
-- def synch_op(op_synch, op_thresh, op_dist, op_peak, op_end)
-- def synch_ma(ma_synch, op_synch, ma_thresh, ma_dist, ma_peak)
+- _**Automatically Loop Through Each Game**_
+  - _**if directory game file doesn't exist, go to next game**_
+  -  except FileNotFoundError: directory_unknown.append()
+  - "_**Load automatic peak values to clean**_"
+  - def synch_op(op_synch, op_thresh, op_dist, op_peak, op_end)
+  - def synch_ma(ma_synch, op_synch, ma_thresh, ma_dist, ma_peak)
+  - _**if we dont know the peaks, go to next game**_
+  - game_peaks_unknown.append(op_games[game_ind])
 
 **5 Bootle Blast + 18 Boot Camp**
 - (1-1) Joint Coordinate Position 
@@ -69,8 +78,8 @@ def load_ma(ma_file):
 # op_games = ['Pediatric', 'Single1', 'Single2', 'Five', 'Thirty']
 # ma_games = ['Pediatric', 'Single', 'Single', 'Five', 'Thirty']
 
-op_games = ['BC1', 'BC2', 'BC3', 'BC4']
-ma_games = ['BC1', 'BC2', 'BC3', 'BC4']
+op_games = ['Astro', 'BC1', 'BC2', 'BC3']
+ma_games = ['Astro', 'BC1', 'BC2', 'BC3']
 
 # SELECT FILES HERE
 mmdd = '0406' 
@@ -79,26 +88,35 @@ mmdd_p = mmdd + '_' + p
 # mmdd_p_all = ['0316_P05', '0322_P06', '0402_P07', '0403_P08', '0403_P09', '0404_P10', '0404_P11', 
 #               '0406_P12', '0406_P13', '0407_P14', '0407_P15', '0407_P16', '0408_P17', '0408_P18', 
 #               '0411_P19', '0412_P20', '0412_P21', '0413_P22', '0420_P23', '0420_P24', '0430_P25', '0502_P26', '0516_P27']
-mmdd_p_all = [ '0316_P05']
+mmdd_p_all = ['0316_P05', '0322_P06']
 
 
 
 
-
+directory_unknown = []
+game_peaks_unknown = []
+# Automatically Loop Through Each Participant
 for mmdd_p in mmdd_p_all:
-  game_peaks_unknown = []
+  # Automatically Loop Through Each Game
   for game_ind in range(len(op_games)):
     print(f'\n\n\n\n\n\n\n\n{op_games[game_ind]}\n\n\n\n\n\n\n\n')
     op_file = '2023' + mmdd_p[:4] + '-' + op_games[game_ind] + "-Data.csv"
     ma_file = '2023' + mmdd_p[:4] + '-' + ma_games[game_ind] + ".csv"
 
-    # Load OP Data
-    op = load_op('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/OP_' + mmdd_p + '/' + op_file)
-    print(op.head(3))
 
-    # Load MA Data
-    ma = load_ma('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/MA_' + mmdd_p + '/' + ma_file)
-    print(ma.head(3))
+    try:
+      # Load OP Data
+      op = load_op('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/OP_' + mmdd_p + '/' + op_file)
+      print(op.head(3))
+
+      # Load MA Data
+      ma = load_ma('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/MA_' + mmdd_p + '/' + ma_file)
+      print(ma.head(3))
+
+    except FileNotFoundError:
+      # if directory game file doesn't exist, go to next game
+      directory_unknown.append('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/OP_' + mmdd_p + '/' + op_file)
+      continue
 
 
     # Load automatic peak values to clean
@@ -108,7 +126,7 @@ for mmdd_p in mmdd_p_all:
         if peaks["Date_P##"][i] == mmdd_p:
           if str(peaks[op_games[game_ind]][i]) == 'nan':
               # if we dont know the peaks, go to next game
-              game_peaks_unknown.append(op_games[game_ind])
+              game_peaks_unknown.append(mmdd_p + "_" + op_games[game_ind])
               break
           else:
               print(peaks[op_games[game_ind]][i:i+7])
@@ -204,11 +222,11 @@ for mmdd_p in mmdd_p_all:
 
 
               # DOWNLOAD CLEANED OP DATA
-              op_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[5:8]}-{op_games[game_ind]}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig') 
+              op_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig') 
               # DOWNLOAD OP Data Tracking Accuracy 
-              tracking.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[5:8]}-{op_games[game_ind]}-Data-tracked.csv', encoding = 'utf-8-sig')
+              tracking.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-Data-tracked.csv', encoding = 'utf-8-sig')
               # DOWNLOAD CLEANED MA BOOT CAMP DATA
-              ma_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[5:8]}-{op_games[game_ind]}-MA-CLEAN.csv', encoding = 'utf-8-sig') 
+              ma_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-MA-CLEAN.csv', encoding = 'utf-8-sig') 
 
 
               # cut data 
@@ -264,4 +282,10 @@ for mmdd_p in mmdd_p_all:
                       data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align depth(X) coordinate
 
 
-  print("\nPEAKS UNKNOWN FOR GAMES:", game_peaks_unknown, "\n")
+print("\nFOLLOWING FILES DO NOT EXIST:", directory_unknown)
+# for dir in directory_unknown:
+#   print(dir)
+
+print("\nFOLLOWING GAMES HAVE UNKNOWN PEAKS:", game_peaks_unknown)
+# for games in game_peaks_unknown:
+#   print(games)

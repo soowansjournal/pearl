@@ -19,10 +19,19 @@
 **Fixed on 2023-04-11**
 - Problem 1: Losing Complete Sight of the User
 
+**Added on 2023-05-22**
+- _**Automatically Loop Through Each Participant**_
+- For mmdd_p in mmdd_p_all
+
 **Tweaked on 2023-05-22**
-- "_**Load automatic peak values to clean**_"
-- def synch_op(op_synch, op_thresh, op_dist, op_peak, op_end)
-- def synch_ma(ma_synch, op_synch, ma_thresh, ma_dist, ma_peak)
+- _**Automatically Loop Through Each Game**_
+  - _**if directory game file doesn't exist, go to next game**_
+  -  except FileNotFoundError: directory_unknown.append()
+  - "_**Load automatic peak values to clean**_"
+  - def synch_op(op_synch, op_thresh, op_dist, op_peak, op_end)
+  - def synch_ma(ma_synch, op_synch, ma_thresh, ma_dist, ma_peak)
+  - _**if we dont know the peaks, go to next game**_
+  - game_peaks_unknown.append(op_games[game_ind])
 
 **5 Bootle Blast + 18 Boot Camp**
 - (1-1) Joint Coordinate Position 
