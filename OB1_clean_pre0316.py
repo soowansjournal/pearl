@@ -49,13 +49,13 @@ def load_ma(ma_file):
 # op_games = ['Pediatric', 'Single1', 'Single2', 'Five', 'Thirty']
 # ma_games = ['Pediatric', 'Single', 'Single', 'Five', 'Thirty']
 
-op_games = ['Single1', 'Single2', 'Five', 'Thirty']
-ma_games = ['Single', 'Single', 'Five', 'Thirty']
+op_games = ['Thirty']
+ma_games = ['Thirty']
 
 # SELECT FILES HERE
 # 0221-P01, 0314-P02, 0314-P03, 0315-P04
-mmdd = '0314'  
-p = 'P02'
+mmdd = '0315'  
+p = 'P04'
 mmdd_p = mmdd + '_' + p
 
 for game_ind in range(len(op_games)):
@@ -150,8 +150,8 @@ for game_ind in range(len(op_games)):
 
   
   # Final Data
-  op_final = op_filte
-  ma_final = ma_filte
+  op_final = op_synch
+  ma_final = ma_resam
 
 
   # DOWNLOAD CLEANED OP DATA
@@ -176,7 +176,7 @@ for game_ind in range(len(op_games)):
 
 
   # align data using: METHOD 2
-  op_align_joints, ma_align_joints = align_joints(op_cut, ma_cut)
+  op_align_joints, ma_align_joints = align_joints(op_final, ma_final)
 
 
   # Visualize ALL Data (39 graphs total)

@@ -60,13 +60,13 @@ def load_ma(ma_file):
 # op_games = ['Pediatric', 'Single1', 'Single2', 'Five', 'Thirty']
 # ma_games = ['Pediatric', 'Single', 'Single', 'Five', 'Thirty']
 
-op_games = [ 'Thirty']
-ma_games = [ 'Thirty']
+op_games = ['Single1', 'Single2', 'Five', 'Thirty']
+ma_games = [ 'Single', 'Single', 'Five', 'Thirty']
 
 
 # SELECT FILES HERE
-mmdd = '0502' 
-p = 'P26'
+mmdd = '0516' 
+p = 'P27'
 mmdd_p = mmdd + '_' + p
 
 for game_ind in range(len(op_games)):
@@ -77,6 +77,7 @@ for game_ind in range(len(op_games)):
   # Load OP Data
   op = load_op('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/OP_' + mmdd_p + '/' + op_file)
   print(op.head(3))
+  
 
   # Load MA Data
   ma = load_ma('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/MA_' + mmdd_p + '/' + ma_file)
