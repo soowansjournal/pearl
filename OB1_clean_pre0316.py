@@ -159,7 +159,7 @@ for game_ind in range(len(op_games)):
   # DOWNLOAD OP Data Tracking Accuracy 
   tracking.to_csv(rf'/Users/soowan/Downloads/2023{mmdd}-{p}-{op_games[game_ind]}-Data-tracked.csv', encoding = 'utf-8-sig')
   # DOWNLOAD CLEANED MA BOOT CAMP DATA
-  ma_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd}-{p}-{ma_games[game_ind]}-MA-CLEAN.csv', encoding = 'utf-8-sig') 
+  ma_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd}-{p}-{op_games[game_ind]}-MA-CLEAN.csv', encoding = 'utf-8-sig') 
 
 
   # cut data 
