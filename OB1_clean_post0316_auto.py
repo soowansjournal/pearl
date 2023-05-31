@@ -77,6 +77,7 @@ def load_ma(ma_file):
 
 # CREATE FILES (DATE & GAMES)
 # ***0404_P10 MA File Named Single1 and Single2 vs Single and Single***
+# Files with Problems: 0408_P18_BC8
 
 # op_games = ['Power1', 'Power2', 'Wizards', 'War', 'Jet', 'Astro', 
 #             'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9',
@@ -99,9 +100,7 @@ mmdd_p = mmdd + '_' + p
 # mmdd_p_all = ['0316_P05', '0322_P06', '0402_P07', '0403_P08', '0403_P09', '0404_P10', '0404_P11', 
 #               '0406_P12', '0406_P13', '0407_P14', '0407_P15', '0407_P16', '0408_P17', '0408_P18', 
 #               '0411_P19', '0412_P20', '0412_P21', '0413_P22', '0420_P23', '0420_P24', '0430_P25', '0502_P26', '0516_P27']
-mmdd_p_all = ['0316_P05', '0322_P06', '0402_P07', '0403_P08', '0403_P09', '0404_P10', '0404_P11', 
-              '0406_P12', '0406_P13', '0407_P14', '0407_P15', '0407_P16', '0408_P17', '0408_P18', 
-              '0411_P19', '0412_P20', '0412_P21', '0413_P22', '0420_P23', '0420_P24', '0430_P25', '0502_P26', '0516_P27']
+mmdd_p_all = ['0403_P08']
 
 
 
@@ -230,8 +229,8 @@ for mmdd_p in mmdd_p_all:
 
 
               # Final Data
-              op_final = op_track
-              ma_final = ma_track
+              op_final = op_synch
+              ma_final = ma_resam
 
 
               # # DOWNLOAD FILES TO DOWNLOADS FOLDER
@@ -252,14 +251,14 @@ for mmdd_p in mmdd_p_all:
 
 
               # cut data 
-              print(f'OP Synchronized Game Duration: {op_synch.Time.iloc[-1] - op_synch.Time.iloc[0]}')
-              print(f'MA Synchronized Game Duration: {ma_synch.Time.iloc[-1] - ma_synch.Time.iloc[0]}')
-              print(f'\nOP Frames (NOT Resampled): {op_synch.shape[0]}') 
-              print(f'MA Frames (YES Resampled): {ma_resam.shape[0]}') 
-              print(f'\nOP Frames (from OP Tracked Data only): {op_track.shape[0]}')  
-              print(f'MA Frames (from OP Tracked Data only): {ma_track.shape[0]}') 
-              print(f'\nOP Frames (YES Filtered): {op_filte.shape[0]}')  
-              print(f'MA Frames (YES Filtered): {ma_filte.shape[0]}\n') 
+              # print(f'OP Synchronized Game Duration: {op_synch.Time.iloc[-1] - op_synch.Time.iloc[0]}')
+              # print(f'MA Synchronized Game Duration: {ma_synch.Time.iloc[-1] - ma_synch.Time.iloc[0]}')
+              # print(f'\nOP Frames (NOT Resampled): {op_synch.shape[0]}') 
+              # print(f'MA Frames (YES Resampled): {ma_resam.shape[0]}') 
+              # print(f'\nOP Frames (from OP Tracked Data only): {op_track.shape[0]}')  
+              # print(f'MA Frames (from OP Tracked Data only): {ma_track.shape[0]}') 
+              # print(f'\nOP Frames (YES Filtered): {op_filte.shape[0]}')  
+              # print(f'MA Frames (YES Filtered): {ma_filte.shape[0]}\n') 
 
               op_cut, ma_cut = cut_data(op_final, ma_final)
 
@@ -268,40 +267,40 @@ for mmdd_p in mmdd_p_all:
               op_align_joints, ma_align_joints = align_joints(op_cut, ma_cut)
 
 
-              # Visualize ALL Data (39 graphs total)
-              op_head = ['Head']
-              ma_head = ['Front.Head']
-              op_joints = ['Wrist','Hip','Knee']
-              ma_joints = ['Wrist','ASIS','Knee']
-              op_side = ['Left','Right']
-              ma_side = ['L.','R.']
-              xyz = ['Y','Z','X']
-              # Head Data
-              for i in range(len(op_head)):
-                for k in range(len(xyz)):
-                  op_joint = op_head[i] + xyz[k]
-                  ma_joint = ma_head[i] + xyz[k]
-                  joint = ma_joint
-                  if xyz[k] == 'Y':
-                    data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align horizontal(Y) coordinate
-                  elif xyz[k] == 'Z':
-                    data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align vertical(Z) coordinate
-                  elif xyz[k] == 'X':
-                    data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align depth(X) coordinate
+              # # Visualize ALL Data (39 graphs total)
+              # op_head = ['Head']
+              # ma_head = ['Front.Head']
+              # op_joints = ['Wrist', 'Hip', 'Knee']
+              # ma_joints = ['Wrist', 'ASIS', 'Knee']
+              # op_side = ['Left','Right']
+              # ma_side = ['L.','R.']
+              # xyz = ['Y','Z','X']
+              # # Head Data
+              # for i in range(len(op_head)):
+              #   for k in range(len(xyz)):
+              #     op_joint = op_head[i] + xyz[k]
+              #     ma_joint = ma_head[i] + xyz[k]
+              #     joint = ma_joint
+              #     if xyz[k] == 'Y':
+              #       data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align horizontal(Y) coordinate
+              #     elif xyz[k] == 'Z':
+              #       data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align vertical(Z) coordinate
+              #     elif xyz[k] == 'X':
+              #       data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align depth(X) coordinate
 
-              # Body Data
-              for i in range(len(op_joints)):                   # for each joints
-                for j in range(len(op_side)):                   # for each sides 
-                  for k in range(len(xyz)):                     # for each xyz 
-                    op_joint = op_joints[i] + op_side[j] + xyz[k]  # specific OP joint name
-                    ma_joint = ma_side[j] + ma_joints[i] + xyz[k]  # specific MA joint name 
-                    joint = ma_side[j] + ma_joints[i] + xyz[k]     # joint of interest
-                    if xyz[k] == 'Y':
-                      data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align horizontal(Y) coordinate
-                    elif xyz[k] == 'Z':
-                      data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align vertical(Z) coordinate
-                    elif xyz[k] == 'X':
-                      data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align depth(X) coordinate
+              # # Body Data
+              # for i in range(len(op_joints)):                   # for each joints
+              #   for j in range(len(op_side)):                   # for each sides 
+              #     for k in range(len(xyz)):                     # for each xyz 
+              #       op_joint = op_joints[i] + op_side[j] + xyz[k]  # specific OP joint name
+              #       ma_joint = ma_side[j] + ma_joints[i] + xyz[k]  # specific MA joint name 
+              #       joint = ma_side[j] + ma_joints[i] + xyz[k]     # joint of interest
+              #       if xyz[k] == 'Y':
+              #         data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align horizontal(Y) coordinate
+              #       elif xyz[k] == 'Z':
+              #         data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align vertical(Z) coordinate
+              #       elif xyz[k] == 'X':
+              #         data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align depth(X) coordinate
 
 
 print("\nFOLLOWING FILES DO NOT EXIST:", directory_unknown)

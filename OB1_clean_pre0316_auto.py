@@ -66,6 +66,8 @@ def load_ma(ma_file):
 
 
 # CREATE FILES (DATE & GAMES)
+# Files with Problems: 0314_P03_BC9 + 0315_P04_BC7 + 0315_P04_BC8
+
 # op_games = ['Power1', 'Power2', 'Wizards', 'War', 'Jet', 'Astro', 
 #             'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9',
 #             'Pediatric', 'Single1', 'Single2', 'Five', 'Thirty']
@@ -86,7 +88,7 @@ mmdd = '0314'
 p = 'P02'
 mmdd_p = mmdd + '_' + p
 # mmdd_p_all = ['0221_P01', '0314_P02', '0314_P03', '0315_P04']
-mmdd_p_all = ['0221_P01', '0314_P02', '0314_P03', '0315_P04']
+mmdd_p_all = [ '0315_P04']
 
 
 
@@ -103,11 +105,11 @@ for mmdd_p in mmdd_p_all:
     try:
       # Load OP Data
       op = load_op('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/OP_' + mmdd_p + '/' + op_file)
-      print(op.head(3))
+      # print(op.head(3))
 
       # Load MA Data
       ma = load_ma('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/MA_' + mmdd_p + '/' + ma_file)
-      print(ma.head(3))
+      # print(ma.head(3))
 
     except FileNotFoundError:
       # if directory game file doesn't exist, go to next game
@@ -213,8 +215,8 @@ for mmdd_p in mmdd_p_all:
 
               
               # Final Data
-              op_final = op_filte
-              ma_final = ma_filte
+              op_final = op_synch
+              ma_final = ma_resam
 
 
               # # DOWNLOAD FILES TO DOWNLOADS FOLDER
@@ -251,40 +253,40 @@ for mmdd_p in mmdd_p_all:
               op_align_joints, ma_align_joints = align_joints(op_cut, ma_cut)
 
 
-              # Visualize ALL Data (39 graphs total)
-              op_head = ['Head']
-              ma_head = ['Front.Head']
-              op_joints = ['Wrist','Hip','Knee']
-              ma_joints = ['Wrist','ASIS','Knee']
-              op_side = ['Left','Right']
-              ma_side = ['L.','R.']
-              xyz = ['Y','Z','X']
-              # Head Data
-              for i in range(len(op_head)):
-                for k in range(len(xyz)):
-                  op_joint = op_head[i] + xyz[k]
-                  ma_joint = ma_head[i] + xyz[k]
-                  joint = ma_joint
-                  if xyz[k] == 'Y':
-                    data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align horizontal(Y) coordinate
-                  elif xyz[k] == 'Z':
-                    data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align vertical(Z) coordinate
-                  elif xyz[k] == 'X':
-                    data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align depth(X) coordinate
+              # # Visualize ALL Data (39 graphs total)
+              # op_head = ['Head']
+              # ma_head = ['Front.Head']
+              # op_joints = ['Wrist', 'Hip', 'Knee']
+              # ma_joints = ['Wrist', 'ASIS', 'Knee']
+              # op_side = ['Left','Right']
+              # ma_side = ['L.','R.']
+              # xyz = ['Y','Z','X']
+              # # Head Data
+              # for i in range(len(op_head)):
+              #   for k in range(len(xyz)):
+              #     op_joint = op_head[i] + xyz[k]
+              #     ma_joint = ma_head[i] + xyz[k]
+              #     joint = ma_joint
+              #     if xyz[k] == 'Y':
+              #       data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align horizontal(Y) coordinate
+              #     elif xyz[k] == 'Z':
+              #       data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align vertical(Z) coordinate
+              #     elif xyz[k] == 'X':
+              #       data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align depth(X) coordinate
 
-              # Body Data
-              for i in range(len(op_joints)):                   # for each joints
-                for j in range(len(op_side)):                   # for each sides 
-                  for k in range(len(xyz)):                     # for each xyz 
-                    op_joint = op_joints[i] + op_side[j] + xyz[k]  # specific OP joint name
-                    ma_joint = ma_side[j] + ma_joints[i] + xyz[k]  # specific MA joint name 
-                    joint = ma_side[j] + ma_joints[i] + xyz[k]     # joint of interest
-                    if xyz[k] == 'Y':
-                      data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align horizontal(Y) coordinate
-                    elif xyz[k] == 'Z':
-                      data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align vertical(Z) coordinate
-                    elif xyz[k] == 'X':
-                      data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align depth(X) coordinate
+              # # Body Data
+              # for i in range(len(op_joints)):                   # for each joints
+              #   for j in range(len(op_side)):                   # for each sides 
+              #     for k in range(len(xyz)):                     # for each xyz 
+              #       op_joint = op_joints[i] + op_side[j] + xyz[k]  # specific OP joint name
+              #       ma_joint = ma_side[j] + ma_joints[i] + xyz[k]  # specific MA joint name 
+              #       joint = ma_side[j] + ma_joints[i] + xyz[k]     # joint of interest
+              #       if xyz[k] == 'Y':
+              #         data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align horizontal(Y) coordinate
+              #       elif xyz[k] == 'Z':
+              #         data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align vertical(Z) coordinate
+              #       elif xyz[k] == 'X':
+              #         data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align depth(X) coordinate
 
 print("\nFOLLOWING FILES DO NOT EXIST:", directory_unknown)
 # for dir in directory_unknown:

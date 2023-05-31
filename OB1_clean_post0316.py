@@ -60,13 +60,13 @@ def load_ma(ma_file):
 # op_games = ['Pediatric', 'Single1', 'Single2', 'Five', 'Thirty']
 # ma_games = ['Pediatric', 'Single', 'Single', 'Five', 'Thirty']
 
-op_games = ['Single1', 'Single2', 'Five', 'Thirty']
-ma_games = [ 'Single', 'Single', 'Five', 'Thirty']
+op_games = ['BC8']
+ma_games = [ 'BC8']
 
 
 # SELECT FILES HERE
-mmdd = '0516' 
-p = 'P27'
+mmdd = '0408' 
+p = 'P18'
 mmdd_p = mmdd + '_' + p
 
 for game_ind in range(len(op_games)):
