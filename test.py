@@ -44,7 +44,4 @@ for mmdd_p in mmdd_p_all:
     # Rest of the loop logic
     # ...
 
-
-
-
-
+    

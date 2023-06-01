@@ -34,23 +34,10 @@ def load_ma(ma_file):
 
 
 # Select Game
-# op_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro',
-#             'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9']
-# ma_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro',
-#             'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9']
+# op_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
+# ma_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
 op_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
 ma_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
-
-
-# manually update the boot camp files to corresponding name
-boot_camp = ['SeatStarJump',	'HipExt',	'Kick',	'LatStep',	'HipFlex',	'SeatHipFlex',	'StLun',	'BackStep',	'SeatKnExt']
-# rename the boot camp exercises
-j = 0
-for i in range(len(op_games)):
-  if 'BC' in op_games[i]:
-    op_games[i] = op_games[i] + '-' + boot_camp[j]
-    ma_games[i] = ma_games[i] + '-' + boot_camp[j]
-    j = j+1
 
 
 # SELECT FILES HERE

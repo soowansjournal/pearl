@@ -35,10 +35,8 @@ def load_ma(ma_file):
 
 
 # Select Game
-# op_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro',
-#             'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9']
-# ma_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro',
-#             'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9']
+# op_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
+# ma_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
 op_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
 ma_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
 

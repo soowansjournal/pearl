@@ -34,10 +34,22 @@ def load_ma(ma_file):
 
 
 # Select Game
-# op_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
-# ma_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
-op_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
-ma_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
+# op_games = ['Sqt', 'StLun', 'VMODip', 'HipFlex', 'HipExt', 'HipAbd', 'Kick', 'LatStep', 'BackStep',
+#             'StarJump', 'Run',
+#             'SeatKnExt', 'SeatHipFlex', 'SeatStarJump',
+#             'SeatClfStr', 'ForStep', 'CalfStr', 'TdemStnce']
+# ma_games = ['Sqt', 'StLun', 'VMODip', 'HipFlex', 'HipExt', 'HipAbd', 'Kick', 'LatStep', 'BackStep',
+#             'StarJump', 'Run',
+#             'SeatKnExt', 'SeatHipFlex', 'SeatStarJump',
+#             'SeatClfStr', 'ForStep', 'CalfStr', 'TdemStnce']
+op_games = ['Sqt', 'StLun', 'VMODip', 'HipFlex', 'HipExt', 'HipAbd', 'Kick', 'LatStep', 'BackStep',
+            'StarJump', 'Run',
+            'SeatKnExt', 'SeatHipFlex', 'SeatStarJump',
+            'SeatClfStr', 'ForStep', 'CalfStr', 'TdemStnce']
+ma_games = ['Sqt', 'StLun', 'VMODip', 'HipFlex', 'HipExt', 'HipAbd', 'Kick', 'LatStep', 'BackStep',
+            'StarJump', 'Run',
+            'SeatKnExt', 'SeatHipFlex', 'SeatStarJump',
+            'SeatClfStr', 'ForStep', 'CalfStr', 'TdemStnce']
 
 
 # SELECT FILES HERE
@@ -51,6 +63,12 @@ mmdd_p_all = ['0221_P01', '0314_P02', '0314_P03', '0315_P04',
               '0411_P19', '0412_P20', '0412_P21', '0413_P22', '0420_P23', '0420_P24', '0430_P25', '0502_P26', '0516_P27']
 
 
+strength_angles = []
+cardio_angles = []
+seated_angles = []
+static_angles = []
+
+
 # 1) For each game
 for game_ind in range(len(op_games)):
 
@@ -61,8 +79,32 @@ for game_ind in range(len(op_games)):
     for mmdd_p in mmdd_p_all:
 
         print(f'\n\n\n\n\n\n\n\n{mmdd_p}\n\n\n\n\n\n\n\n')
-        op_file = '2023' + mmdd_p[:4] + '-' + mmdd_p[-3:] + '-' + op_games[game_ind] + "-Data-OP-CLEAN.csv"
-        ma_file = '2023' + mmdd_p[:4] + '-' + mmdd_p[-3:] + '-' + ma_games[game_ind] + "-MA-CLEAN.csv"
+
+        # *** For each participant rename BC#-Game ***
+
+        # Load bootcamp.csv file to rename
+        bootcamp = pd.read_csv("/Users/soowan/Documents/VSCODE/Pearl/bootcamp.csv") 
+
+        # For each row 
+        # If correct participant
+        # For each column
+        # If correct Game and cell isn't empty
+        # Rename: BC#-Game
+
+        temp = []
+        for i in range(len(bootcamp)):
+            if mmdd_p in bootcamp.iloc[i,0]:
+                for j in range(len(bootcamp.columns)):
+                    if (op_games[game_ind] in str(bootcamp.iloc[i,j])) and (str(bootcamp.iloc[i,j]) != 'nan'):
+                        op_game = bootcamp.columns[j] + '-' + op_games[game_ind]
+                        ma_game = bootcamp.columns[j] + '-' + ma_games[game_ind]
+                        break
+                    else:
+                        op_game = 'NA' + '-' + op_games[game_ind]
+                        ma_game = 'NA' + '-' + op_games[game_ind]
+
+        op_file = '2023' + mmdd_p[:4] + '-' + mmdd_p[-3:] + '-' + op_game + "-Data-OP-CLEAN.csv"
+        ma_file = '2023' + mmdd_p[:4] + '-' + mmdd_p[-3:] + '-' + ma_game + "-MA-CLEAN.csv"
         #print(op_file, '\t', ma_file)
 
         try: 
@@ -169,15 +211,66 @@ for game_ind in range(len(op_games)):
         # show results
         joint_angles = table_angle_results(df_list)
 
-        # DOWNLOAD the angle results --> paste into data results
-        joint_angles.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/3_Angle/{op_games[game_ind]}/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-angle.csv', encoding = 'utf-8-sig') 
+        # DOWNLOAD EACH GAME EACH PARTICIPANT
+        joint_angles.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/3_Angle/BC_Boot_Camp/{op_games[game_ind]}/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-angle.csv', encoding = 'utf-8-sig') 
+
 
         data.append(joint_angles)
+
 
         print("\nFOLLOWING FILES DO NOT EXIST:", directory_unknown)
 
 
     joint_angles_overall = pd.concat(data)
 
-    # DOWNLOAD the OVERALL angle results --> paste into data results
-    joint_angles_overall.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/3_Angle/{op_games[game_ind]}/2023-{op_games[game_ind]}-angle.csv', encoding = 'utf-8-sig') 
+    # DOWNLOAD EACH GAME ALL PARTICIPANT
+    joint_angles_overall.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/3_Angle/BC_Boot_Camp/{op_games[game_ind]}/2023-{op_games[game_ind]}-angle.csv', encoding = 'utf-8-sig') 
+
+
+
+
+
+    # Group Boot Camp into Four Categories
+    # STRENGTH
+    strength = ['Sqt', 'StLun', 'VMODip', 'HipFlex', 'HipExt', 'HipAbd', 'Kick', 'LatStep', 'BackStep']
+    strength = ['Sqt', 'StLun', 'VMODip', 'HipFlex', 'HipExt', 'HipAbd', 'Kick', 'LatStep', 'BackStep']
+    # CARDIO
+    cardio = ['StarJump', 'Run']
+    cardio = ['StarJump', 'Run']
+    # SEATED
+    seated = ['SeatKnExt', 'SeatHipFlex', 'SeatStarJump']
+    seated = ['SeatKnExt', 'SeatHipFlex', 'SeatStarJump']
+    # STATIC
+    static = ['SeatClfStr', 'ForStep', 'CalfStr', 'TdemStnce']
+    static = ['SeatClfStr', 'ForStep', 'CalfStr', 'TdemStnce']
+
+
+    if op_games[game_ind] in strength:
+        # Insert the new column at the first index location
+        joint_angles_overall.insert(0, 'Game', np.repeat(op_games[game_ind], len(joint_angles_overall)))
+        strength_angles.append(joint_angles_overall)
+
+    elif op_games[game_ind] in cardio:
+        joint_angles_overall.insert(0, 'Game', np.repeat(op_games[game_ind], len(joint_angles_overall)))
+        cardio_angles.append(joint_angles_overall)
+
+    elif op_games[game_ind] in seated:
+        joint_angles_overall.insert(0, 'Game', np.repeat(op_games[game_ind], len(joint_angles_overall)))
+        seated_angles.append(joint_angles_overall)
+
+    elif op_games[game_ind] in static:
+        joint_angles_overall.insert(0, 'Game', np.repeat(op_games[game_ind], len(joint_angles_overall)))
+        static_angles.append(joint_angles_overall)
+
+
+joint_angles_strength = pd.concat(strength_angles)
+joint_angles_cardio = pd.concat(cardio_angles)
+joint_angles_seated = pd.concat(seated_angles)
+joint_angles_static = pd.concat(static_angles)
+
+
+# DOWNLOAD GROUPED GAMES ALL PARTICIPANT 
+joint_angles_strength.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/3_Angle//BC_Strength/2023-STRENGTH-angle.csv', encoding = 'utf-8-sig')
+joint_angles_cardio.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/3_Angle//BC_Cardio/2023-CARDIO-angle.csv', encoding = 'utf-8-sig')
+joint_angles_seated.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/3_Angle/BC_Seated/2023-SEATED-angle.csv', encoding = 'utf-8-sig')
+joint_angles_static.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/3_Angle//BC_Static/2023-STATIC-angle.csv', encoding = 'utf-8-sig')
