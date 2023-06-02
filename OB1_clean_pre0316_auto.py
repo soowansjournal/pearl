@@ -74,21 +74,13 @@ def load_ma(ma_file):
 # ma_games = ['Power1', 'Power2', 'Wizards', 'War', 'Jet', 'Astro', 
 #             'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9',
 #             'Pediatric', 'Single', 'Single', 'Five', 'Thirty']
-
-op_games = ['Power1', 'Power2', 'Wizards', 'War', 'Jet', 'Astro', 
-            'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9',
-            'Pediatric', 'Single1', 'Single2', 'Five', 'Thirty']
-ma_games = ['Power1', 'Power2', 'Wizards', 'War', 'Jet', 'Astro', 
-            'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9',
-            'Pediatric', 'Single', 'Single', 'Five', 'Thirty']
+op_games = ['Power1','BC1', 'Single1']
+ma_games = ['Power1','BC1', 'Single']
 
 # SELECT FILES HERE
 # 0221_13-P01, 0314-P02, 0314-P03, 0315-P04
-mmdd = '0314'  
-p = 'P02'
-mmdd_p = mmdd + '_' + p
 # mmdd_p_all = ['0221_P01', '0314_P02', '0314_P03', '0315_P04']
-mmdd_p_all = [ '0315_P04']
+mmdd_p_all = ['0315_P04']
 
 
 
@@ -136,105 +128,147 @@ for mmdd_p in mmdd_p_all:
               ma_dist = int(peaks[op_games[game_ind]][i+5])
               ma_peak = int(peaks[op_games[game_ind]][i+6])
 
-
-              # clean OP
-              op_clean, op_hz = clean_op(op)
-              op_coord = coord_op(op_clean)
-              op_synch = synch_op(op_coord, op_thresh, op_dist, op_peak, op_end)
-              op_track, untracked_op_index, tracking = track_op(op_synch)
-              op_filte = filte_op(op_synch, op_hz)
-
-
-              # clean MA
-              ma_clean, ma_hz = clean_ma(ma)
-              ma_coord = coord_ma(ma_clean)
-              ma_nullv = nullv_ma(ma_coord)
-              ma_synch = synch_ma(ma_nullv, op_synch, ma_thresh, ma_dist, ma_peak)
-              ma_resam = resam_ma(ma_synch, op_synch)
-              ma_track = track_ma(ma_resam, untracked_op_index) 
-              ma_filte = filte_ma(ma_resam, ma_hz)
+              try:
+                # clean OP
+                op_clean, op_hz = clean_op(op)
+                op_coord = coord_op(op_clean)
+                op_synch = synch_op(op_coord, op_thresh, op_dist, op_peak, op_end)
+                op_track, untracked_op_index, tracking = track_op(op_synch)
+                op_filte = filte_op(op_synch, op_hz)
 
 
-              # Problem 1: Losing Complete Sight of the User
-              # step 1
-              # look at jumps in OP_Synch time stamps
-              time_peak_cut = op_synch.Time.iloc[0]
-              print(f"Time at 3rd Peak Cut: {round(time_peak_cut,3)}")
-              cut_from_time = []
-              cut_until_time = []
-              for i in range(len(op_synch.Time) - 1):
-                time_from = op_synch.Time.iloc[i]
-                time_until = op_synch.Time.iloc[i+1]
-                time_inc = op_synch.Time.iloc[i+1] - op_synch.Time.iloc[i]
-                duration_from = time_from - time_peak_cut
-                duration_until = time_until - time_peak_cut
-                if time_inc > 1:
-                  print(f"Index: {i} \tTime from 3rd peak cut: {round(time_from,3)}s \tfor Seconds: {round(time_inc,3)} \tuntil: {round(time_until,3)}s")
-                  print(f"Index: {i} \tDuration from 3rd peak cut: {round(duration_from,3)}s \tfor Seconds: {round(time_inc,3)} \tuntil duration from 3rd peak cut: {round(duration_until,3)}s\n")
-                  cut_from_time.append(duration_from)
-                  cut_until_time.append(duration_until)
-
-              # step 2
-              # fix MA if OP seems have lost sight
-              if len(cut_until_time) > 0 :
-
-                # step 3
-                # locate frames to remove from MA_Synch using OP_Synch jump time increments and MA frequency
-                print(f"OP lost sight {len(cut_from_time)} times so cut MA {len(cut_from_time)} times")
-                cut_from_frame = []
-                cut_until_frame = []
-                for i in range(len(cut_from_time)):
-                  frame_from = ma_hz * cut_from_time[i]  # this many frames from beginning of MA third peak
-                  frame_until = ma_hz * cut_until_time[i]
-                  print(f"Cut MA frame from: {round(frame_from,0)} \tuntil frame: {round(frame_until,0)}")
-                  cut_from_frame.append(frame_from)
-                  cut_until_frame.append(frame_until)
-
-                # step 4
-                # cut MA_Synch data from 3rd peak until specified frames
-                print(f"Length of MA_Synch BEFORE removing lost OP sight: {len(ma_synch)}")
-
-                if len(cut_until_frame) == 1:
-                  ma_synch = ma_synch.drop(np.r_[round(cut_from_frame[0]):round(cut_until_frame[0])])
-                elif len(cut_until_frame) == 2:
-                  ma_synch = ma_synch.drop(np.r_[round(cut_from_frame[0]):round(cut_until_frame[0]), round(cut_from_frame[1]):round(cut_until_frame[1])])
-                elif len(cut_until_frame) == 3:
-                  ma_synch = ma_synch.drop(np.r_[round(cut_from_frame[0]):round(cut_until_frame[0]), round(cut_from_frame[1]):round(cut_until_frame[1]), 
-                                                round(cut_from_frame[2]):round(cut_until_frame[2])])
-
-                print(f"Length of MA_Synch AFTER removing lost OP sight: {len(ma_synch)}")
-
-                # step 5
-                # resample MA using the newly synchronized MA data
+                # clean MA
+                ma_clean, ma_hz = clean_ma(ma)
+                ma_coord = coord_ma(ma_clean)
+                ma_nullv = nullv_ma(ma_coord)
+                ma_synch = synch_ma(ma_nullv, op_synch, ma_thresh, ma_dist, ma_peak)
                 ma_resam = resam_ma(ma_synch, op_synch)
                 ma_track = track_ma(ma_resam, untracked_op_index) 
                 ma_filte = filte_ma(ma_resam, ma_hz)
 
-              else:
-                print("OP DID NOT LOSE SIGHT OF THE PARTICIPANT")
 
+                # Problem 1: Losing Complete Sight of the User
+                # step 1
+                # look at jumps in OP_Synch time stamps
+                time_peak_cut = op_synch.Time.iloc[0]
+                print(f"Time at 3rd Peak Cut: {round(time_peak_cut,3)}")
+                cut_from_time = []
+                cut_until_time = []
+                for i in range(len(op_synch.Time) - 1):
+                  time_from = op_synch.Time.iloc[i]
+                  time_until = op_synch.Time.iloc[i+1]
+                  time_inc = op_synch.Time.iloc[i+1] - op_synch.Time.iloc[i]
+                  duration_from = time_from - time_peak_cut
+                  duration_until = time_until - time_peak_cut
+                  if time_inc > 1:
+                    print(f"Index: {i} \tTime from 3rd peak cut: {round(time_from,3)}s \tfor Seconds: {round(time_inc,3)} \tuntil: {round(time_until,3)}s")
+                    print(f"Index: {i} \tDuration from 3rd peak cut: {round(duration_from,3)}s \tfor Seconds: {round(time_inc,3)} \tuntil duration from 3rd peak cut: {round(duration_until,3)}s\n")
+                    cut_from_time.append(duration_from)
+                    cut_until_time.append(duration_until)
+
+                # step 2
+                # fix MA if OP seems have lost sight
+                if len(cut_until_time) > 0 :
+
+                  # step 3
+                  # locate frames to remove from MA_Synch using OP_Synch jump time increments and MA frequency
+                  print(f"OP lost sight {len(cut_from_time)} times so cut MA {len(cut_from_time)} times")
+                  cut_from_frame = []
+                  cut_until_frame = []
+                  for i in range(len(cut_from_time)):
+                    frame_from = ma_hz * cut_from_time[i]  # this many frames from beginning of MA third peak
+                    frame_until = ma_hz * cut_until_time[i]
+                    print(f"Cut MA frame from: {round(frame_from,0)} \tuntil frame: {round(frame_until,0)}")
+                    cut_from_frame.append(frame_from)
+                    cut_until_frame.append(frame_until)
+
+                  # step 4
+                  # cut MA_Synch data from 3rd peak until specified frames
+                  print(f"Length of MA_Synch BEFORE removing lost OP sight: {len(ma_synch)}")
+
+                  if len(cut_until_frame) == 1:
+                    ma_synch = ma_synch.drop(np.r_[round(cut_from_frame[0]):round(cut_until_frame[0])])
+                  elif len(cut_until_frame) == 2:
+                    ma_synch = ma_synch.drop(np.r_[round(cut_from_frame[0]):round(cut_until_frame[0]), round(cut_from_frame[1]):round(cut_until_frame[1])])
+                  elif len(cut_until_frame) == 3:
+                    ma_synch = ma_synch.drop(np.r_[round(cut_from_frame[0]):round(cut_until_frame[0]), round(cut_from_frame[1]):round(cut_until_frame[1]), 
+                                                  round(cut_from_frame[2]):round(cut_until_frame[2])])
+
+                  print(f"Length of MA_Synch AFTER removing lost OP sight: {len(ma_synch)}")
+
+                  # step 5
+                  # resample MA using the newly synchronized MA data
+                  ma_resam = resam_ma(ma_synch, op_synch)
+                  ma_track = track_ma(ma_resam, untracked_op_index) 
+                  ma_filte = filte_ma(ma_resam, ma_hz)
+
+                else:
+                  print("OP DID NOT LOSE SIGHT OF THE PARTICIPANT")
+
+              except:
+                 continue
+              
               
               # Final Data
               op_final = op_synch
               ma_final = ma_resam
 
 
-              # # DOWNLOAD FILES TO DOWNLOADS FOLDER
-              # # DOWNLOAD CLEANED OP DATA
-              # op_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig') 
-              # # DOWNLOAD OP Data Tracking Accuracy 
-              # tracking.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-Data-tracked.csv', encoding = 'utf-8-sig')
-              # # DOWNLOAD CLEANED MA BOOT CAMP DATA
-              # ma_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-MA-CLEAN.csv', encoding = 'utf-8-sig')
-               
-              # DOWNLOAD FILES TO SPECIFIC LOCATION
-              # DOWNLOAD CLEANED OP DATA
-              op_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_0551/2023_{mmdd_p[:4]}_{mmdd_p[-3:]}/Auto_Clean_{mmdd_p[:4]}_{mmdd_p[-3:]}/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig') 
-              # DOWNLOAD OP Data Tracking Accuracy 
-              tracking.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_0551/2023_{mmdd_p[:4]}_{mmdd_p[-3:]}/Auto_Results_{mmdd_p[:4]}_{mmdd_p[-3:]}/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-Data-tracked.csv', encoding = 'utf-8-sig')
-              # DOWNLOAD CLEANED MA BOOT CAMP DATA
-              ma_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_0551/2023_{mmdd_p[:4]}_{mmdd_p[-3:]}/Auto_Clean_{mmdd_p[:4]}_{mmdd_p[-3:]}/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-MA-CLEAN.csv', encoding = 'utf-8-sig') 
+              # *** For each participant rename BC#-Game ***
+              # Load bootcamp.csv file to rename
+              bootcamp = pd.read_csv("/Users/soowan/Documents/VSCODE/Pearl/bootcamp.csv") 
 
+              # For each row 
+              # If correct participant
+              # For each column
+              # If correct BC column and corresponding cell isn't empty
+              # Rename: BC#-Game
+              for i in range(len(bootcamp)):
+                  if mmdd_p in bootcamp.iloc[i,0]:
+                      for j in range(len(bootcamp.columns)):
+                          if op_games[game_ind] == str(bootcamp.columns[j]):
+                                  if str(bootcamp.iloc[i,j]) != 'nan':
+                                      op_game = op_games[game_ind] + '-' + str(bootcamp.iloc[i,j])
+                                      ma_game = ma_games[game_ind] + '-' + str(bootcamp.iloc[i,j])
+                                      break
+                                  else:
+                                      op_game = op_games[game_ind] + '-' + 'NA'
+                                      ma_game = ma_games[game_ind] + '-' + 'NA'
+                                      break
+
+
+              # DOWNLOAD FILES TO DOWNLOADS FOLDER
+              if 'BC' in op_games[game_ind]:
+                # DOWNLOAD CLEANED OP DATA
+                op_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_game}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig') 
+                # DOWNLOAD OP Data Tracking Accuracy 
+                tracking.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_game}-Data-tracked.csv', encoding = 'utf-8-sig')
+                # DOWNLOAD CLEANED MA BOOT CAMP DATA
+                ma_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{ma_game}-MA-CLEAN.csv', encoding = 'utf-8-sig')
+              else:
+                op_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig') 
+                # DOWNLOAD OP Data Tracking Accuracy 
+                tracking.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-Data-tracked.csv', encoding = 'utf-8-sig')
+                # DOWNLOAD CLEANED MA BOOT CAMP DATA
+                ma_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-MA-CLEAN.csv', encoding = 'utf-8-sig')
+                 
+
+              # # DOWNLOAD FILES TO SPECIFIC LOCATION
+              # if 'BC' in op_games[game_ind]:
+              #   # DOWNLOAD CLEANED OP DATA
+              #   op_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_0551/2023_{mmdd_p[:4]}_{mmdd_p[-3:]}/Auto_Clean_{mmdd_p[:4]}_{mmdd_p[-3:]}/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_game}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig') 
+              #   # DOWNLOAD OP Data Tracking Accuracy 
+              #   tracking.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_0551/2023_{mmdd_p[:4]}_{mmdd_p[-3:]}/Auto_Results_{mmdd_p[:4]}_{mmdd_p[-3:]}/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_game}-Data-tracked.csv', encoding = 'utf-8-sig')
+              #   # DOWNLOAD CLEANED MA BOOT CAMP DATA
+              #   ma_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_0551/2023_{mmdd_p[:4]}_{mmdd_p[-3:]}/Auto_Clean_{mmdd_p[:4]}_{mmdd_p[-3:]}/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{ma_game}-MA-CLEAN.csv', encoding = 'utf-8-sig') 
+              # else:
+              #   # DOWNLOAD CLEANED OP DATA
+              #   op_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_0551/2023_{mmdd_p[:4]}_{mmdd_p[-3:]}/Auto_Clean_{mmdd_p[:4]}_{mmdd_p[-3:]}/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig') 
+              #   # DOWNLOAD OP Data Tracking Accuracy 
+              #   tracking.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_0551/2023_{mmdd_p[:4]}_{mmdd_p[-3:]}/Auto_Results_{mmdd_p[:4]}_{mmdd_p[-3:]}/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-Data-tracked.csv', encoding = 'utf-8-sig')
+              #   # DOWNLOAD CLEANED MA BOOT CAMP DATA
+              #   ma_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_0551/2023_{mmdd_p[:4]}_{mmdd_p[-3:]}/Auto_Clean_{mmdd_p[:4]}_{mmdd_p[-3:]}/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-MA-CLEAN.csv', encoding = 'utf-8-sig') 
+                 
 
               # cut data 
               print(f'OP Synchronized Game Duration: {op_synch.Time.iloc[-1] - op_synch.Time.iloc[0]}')

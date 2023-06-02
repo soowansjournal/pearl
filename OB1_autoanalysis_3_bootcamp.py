@@ -25,11 +25,22 @@ def load_ma(ma_file):
 
 
 # Select Game
-# op_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
-# ma_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
-
-op_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
-ma_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
+# op_games = ['Sqt', 'StLun', 'VMODip', 'HipFlex', 'HipExt', 'HipAbd', 'Kick', 'LatStep', 'BackStep',
+#             'StarJump', 'Run',
+#             'SeatKnExt', 'SeatHipFlex', 'SeatStarJump',
+#             'SeatClfStr', 'ForStep', 'CalfStr', 'TdemStnce']
+# ma_games = ['Sqt', 'StLun', 'VMODip', 'HipFlex', 'HipExt', 'HipAbd', 'Kick', 'LatStep', 'BackStep',
+#             'StarJump', 'Run',
+#             'SeatKnExt', 'SeatHipFlex', 'SeatStarJump',
+#             'SeatClfStr', 'ForStep', 'CalfStr', 'TdemStnce']
+op_games = ['Sqt', 'StLun', 'VMODip', 'HipFlex', 'HipExt', 'HipAbd', 'Kick', 'LatStep', 'BackStep',
+            'StarJump', 'Run',
+            'SeatKnExt', 'SeatHipFlex', 'SeatStarJump',
+            'SeatClfStr', 'ForStep', 'CalfStr', 'TdemStnce']
+ma_games = ['Sqt', 'StLun', 'VMODip', 'HipFlex', 'HipExt', 'HipAbd', 'Kick', 'LatStep', 'BackStep',
+            'StarJump', 'Run',
+            'SeatKnExt', 'SeatHipFlex', 'SeatStarJump',
+            'SeatClfStr', 'ForStep', 'CalfStr', 'TdemStnce']
 
 
 # SELECT FILES HERE
@@ -41,9 +52,31 @@ directory_unknown = []
 
 for game_ind in range(len(op_games)):
     print(f'\n\n\n\n\n\n\n\n{op_games[game_ind]}\n\n\n\n\n\n\n\n')
-    op_file = '2023' + mmdd + '-' + p + '-' + op_games[game_ind] + "-Data-OP-CLEAN.csv"
-    ma_file = '2023' + mmdd + '-' + p + '-' + ma_games[game_ind] + "-MA-CLEAN.csv"
-    #print(op_file, '\t', ma_file)
+    # *** For each participant rename BC#-Game ***
+    # Load bootcamp.csv file to rename
+    bootcamp = pd.read_csv("/Users/soowan/Documents/VSCODE/Pearl/bootcamp.csv") 
+
+    # For each row 
+    # If correct participant
+    # For each column
+    # If correct Game and cell isn't empty
+    # Rename: BC#-Game
+
+    temp = []
+    for i in range(len(bootcamp)):
+        if mmdd_p in bootcamp.iloc[i,0]:
+            for j in range(len(bootcamp.columns)):
+                if (op_games[game_ind] in str(bootcamp.iloc[i,j])) and (str(bootcamp.iloc[i,j]) != 'nan'):
+                    op_game = bootcamp.columns[j] + '-' + op_games[game_ind]
+                    ma_game = bootcamp.columns[j] + '-' + ma_games[game_ind]
+                    break
+                else:
+                    op_game = 'NA' + '-' + op_games[game_ind]
+                    ma_game = 'NA' + '-' + op_games[game_ind]
+                
+
+    op_file = '2023' + mmdd_p[:4] + '-' + mmdd_p[-3:] + '-' + op_game + "-Data-OP-CLEAN.csv"
+    ma_file = '2023' + mmdd_p[:4] + '-' + mmdd_p[-3:] + '-' + ma_game + "-MA-CLEAN.csv"
 
     try:
         # Load OP Data
@@ -145,6 +178,6 @@ for game_ind in range(len(op_games)):
     joint_angles = table_angle_results(df_list)
 
     # DOWNLOAD the angle results --> paste into data results
-    joint_angles.to_csv(rf'/Users/soowan/Downloads/2023{mmdd}-{p}-{op_games[game_ind]}-angle.csv', encoding = 'utf-8-sig') 
+    joint_angles.to_csv(rf'/Users/soowan/Downloads/2023{mmdd}-{p}-{op_game}-angle.csv', encoding = 'utf-8-sig') 
 
 print("\nFOLLOWING FILES DO NOT EXIST:", directory_unknown)

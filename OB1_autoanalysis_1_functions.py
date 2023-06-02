@@ -256,4 +256,4 @@ def fiveone(op_final, ma_final, joint, op_joint, ma_joint):
     corr, p_val = pearsonr(op_array,ma_array[0:len(op_array)])
     print(f'[length MA = OP]Pearsons correlation {joint} joint: %.3f' % corr)
 
-  return joint, corr
+  return joint, corr, p_val

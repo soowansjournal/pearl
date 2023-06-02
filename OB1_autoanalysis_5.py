@@ -24,8 +24,11 @@ def load_ma(ma_file):
   return ma
 
 
-op_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
+# Select Game
+# op_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
+# ma_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
 
+op_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
 ma_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
 
 
@@ -34,20 +37,28 @@ mmdd = '0314'
 p = 'P02'
 mmdd_p = mmdd + '_' + p
 
+
+directory_unknown = []
+
 for game_ind in range(len(op_games)):
     print(f'\n\n\n\n\n\n\n\n{op_games[game_ind]}\n\n\n\n\n\n\n\n')
     op_file = '2023' + mmdd + '-' + p + '-' + op_games[game_ind] + "-Data-OP-CLEAN.csv"
     ma_file = '2023' + mmdd + '-' + p + '-' + ma_games[game_ind] + "-MA-CLEAN.csv"
     #print(op_file, '\t', ma_file)
 
+    try: 
+        # Load OP Data
+        op = load_op('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/Clean_' + mmdd_p + '/' + op_file)
+        print(op.head(3))
 
-    # Load OP Data
-    op = load_op('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/Clean_' + mmdd_p + '/' + op_file)
-    print(op.head(3))
+        # Load MA Data
+        ma = load_ma('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/Clean_' + mmdd_p + '/' + ma_file)
+        print(ma.head(3))
 
-    # Load MA Data
-    ma = load_ma('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/Clean_' + mmdd_p + '/' + ma_file)
-    print(ma.head(3))
+    except FileNotFoundError:
+        # if directory game file doesn't exist, go to next game
+        directory_unknown.append(op_file)
+        continue
 
 
     op_filte = op.copy()
@@ -242,3 +253,8 @@ for game_ind in range(len(op_games)):
     plt.tight_layout(pad=3.0)
 
     plt.show()
+
+
+
+
+print("\nFOLLOWING FILES DO NOT EXIST:", directory_unknown)

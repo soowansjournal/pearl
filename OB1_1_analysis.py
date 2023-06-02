@@ -41,26 +41,12 @@ op_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
 ma_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
 
 
-# manually update the boot camp files to corresponding name
-boot_camp = ['SeatStarJump',	'HipExt',	'Kick',	'LatStep',	'HipFlex',	'SeatHipFlex',	'StLun',	'BackStep',	'SeatKnExt']
-# rename the boot camp exercises
-j = 0
-for i in range(len(op_games)):
-  if 'BC' in op_games[i]:
-    op_games[i] = op_games[i] + '-' + boot_camp[j]
-    ma_games[i] = ma_games[i] + '-' + boot_camp[j]
-    j = j+1
-
-
 # SELECT FILES HERE
 # mmdd_p_all = ['0221_P01', '0314_P02', '0314_P03', '0315_P04', 
 #               '0316_P05', '0322_P06', '0402_P07', '0403_P08', '0403_P09', '0404_P10', '0404_P11', 
 #               '0406_P12', '0406_P13', '0407_P14', '0407_P15', '0407_P16', '0408_P17', '0408_P18', 
-#               '0411_P19', '0412_P20', '0412_P21', '0413_P22', '0420_P23', '0420_P24', '0430_P25', '0502_P26', '0516_P27']
-mmdd_p_all = ['0221_P01', '0314_P02', '0314_P03', '0315_P04', 
-              '0316_P05', '0322_P06', '0402_P07', '0403_P08', '0403_P09', '0404_P10', '0404_P11', 
-              '0406_P12', '0406_P13', '0407_P14', '0407_P15', '0407_P16', '0408_P17', '0408_P18', 
-              '0411_P19', '0412_P20', '0412_P21', '0413_P22', '0420_P23', '0420_P24', '0430_P25', '0502_P26', '0516_P27']
+#               '0411_P19', '0412_P20', '0412_P21', '0413_P22', '0420_P23', '0420_P24', '0430_P25', '0502_P26', '0516_P27', '0601_P28']
+mmdd_p_all = [ '0221_P01']
 
 
 # 1) For each game
@@ -211,6 +197,7 @@ for game_ind in range(len(op_games)):
         joint_p = pd.DataFrame(joint_p_val, columns = joint_col, index = [mmdd_p[-3:]])
         joint_z = pd.DataFrame(joint_corr_z, columns = joint_col, index = [mmdd_p[-3:]])
 
+        
         # DOWNLOAD the joint coordinate correlation R-Z-P-Values --> paste into data results
         joint_r.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/{op_games[game_ind]}/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-Joint_r.csv', encoding = 'utf-8-sig') 
         joint_p.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/{op_games[game_ind]}/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-Joint_p_val.csv', encoding = 'utf-8-sig') 
@@ -221,10 +208,15 @@ for game_ind in range(len(op_games)):
         data_z.append(joint_z)
         
         print("\nFOLLOWING FILES DO NOT EXIST:", directory_unknown)
-
-    joint_r_overall = pd.concat(data_r)
-    joint_p_overall = pd.concat(data_p)
-    joint_z_overall = pd.concat(data_z)
+    
+    
+    # if game doesn't exist for this participant
+    try: 
+        joint_r_overall = pd.concat(data_r)
+        joint_p_overall = pd.concat(data_p)
+        joint_z_overall = pd.concat(data_z)
+    except:
+        continue
 
     # DOWNLOAD the OVERALL joint coordinate correlation R-Z-P-Values --> paste into data results
     joint_r_overall.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/{op_games[game_ind]}/2023-{op_games[game_ind]}-Joint_r.csv', encoding = 'utf-8-sig')

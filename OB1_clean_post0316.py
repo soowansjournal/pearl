@@ -16,7 +16,8 @@
 
 **Post 2023-04-02**
 - Check Normality
-  - Return **op_highest_peak, ma_highest_peak** from functions under **5) Analyze Data**......
+  - Return **op_highest_peak, ma_0
+  highest_peak** from functions under **5) Analyze Data**......
   - 1-3) Angle --> min_angle() + max_angle()
   - 1-4) Reach --> peaks_method2() --> reach_lists()
   - 1-5) Speed --> speed_max()
@@ -55,18 +56,20 @@ def load_ma(ma_file):
   return ma
 
 
-# op_games = ['Power1', 'Power2', 'Wizards', 'War', 'Jet', 'Astro', 'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9']
-# ma_games = ['Power1', 'Power2', 'Wizards', 'War', 'Jet', 'Astro', 'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9']
-# op_games = ['Pediatric', 'Single1', 'Single2', 'Five', 'Thirty']
-# ma_games = ['Pediatric', 'Single', 'Single', 'Five', 'Thirty']
-
-op_games = ['BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9']
-ma_games = ['BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9']
+# CREATE FILES (DATE & GAMES)
+# op_games = ['Power1', 'Power2', 'Wizards', 'War', 'Jet', 'Astro', 
+#             'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9',
+#             'Pediatric', 'Single1', 'Single2', 'Five', 'Thirty']
+# ma_games = ['Power1', 'Power2', 'Wizards', 'War', 'Jet', 'Astro', 
+#             'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9',
+#             'Pediatric', 'Single1', 'Single2', 'Five', 'Thirty']
+op_games = ['Power1','BC1', 'Single1']
+ma_games = ['Power1','BC1', 'Single']
 
 
 # SELECT FILES HERE
-mmdd = '0407' 
-p = 'P16'
+mmdd = '0601' 
+p = 'P28'
 mmdd_p = mmdd + '_' + p
 
 for game_ind in range(len(op_games)):
@@ -165,15 +168,45 @@ for game_ind in range(len(op_games)):
   op_final = op_synch
   ma_final = ma_resam
 
+  # *** For each participant rename BC#-Game ***
+  # Load bootcamp.csv file to rename
+  bootcamp = pd.read_csv("/Users/soowan/Documents/VSCODE/Pearl/bootcamp.csv") 
 
-  # DOWNLOAD CLEANED OP DATA
-  op_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd}-{p}-{op_games[game_ind]}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig') 
-  # DOWNLOAD OP Data Tracking Accuracy 
-  tracking.to_csv(rf'/Users/soowan/Downloads/2023{mmdd}-{p}-{op_games[game_ind]}-Data-tracked.csv', encoding = 'utf-8-sig')
-  # DOWNLOAD CLEANED MA BOOT CAMP DATA
-  ma_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd}-{p}-{op_games[game_ind]}-MA-CLEAN.csv', encoding = 'utf-8-sig') 
+  # For each row 
+  # If correct participant
+  # For each column
+  # If correct BC column and corresponding cell isn't empty
+  # Rename: BC#-Game
+  for i in range(len(bootcamp)):
+      if mmdd_p in bootcamp.iloc[i,0]:
+          for j in range(len(bootcamp.columns)):
+              if op_games[game_ind] == str(bootcamp.columns[j]):
+                      if str(bootcamp.iloc[i,j]) != 'nan':
+                          op_game = op_games[game_ind] + '-' + str(bootcamp.iloc[i,j])
+                          ma_game = ma_games[game_ind] + '-' + str(bootcamp.iloc[i,j])
+                          break
+                      else:
+                          op_game = op_games[game_ind] + '-' + 'NA'
+                          ma_game = ma_games[game_ind] + '-' + 'NA'
+                          break
 
 
+  # DOWNLOAD FILES TO DOWNLOADS FOLDER
+  if 'BC' in op_games[game_ind]:
+    # DOWNLOAD CLEANED OP DATA
+    op_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_game}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig') 
+    # DOWNLOAD OP Data Tracking Accuracy 
+    tracking.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_game}-Data-tracked.csv', encoding = 'utf-8-sig')
+    # DOWNLOAD CLEANED MA BOOT CAMP DATA
+    ma_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{ma_game}-MA-CLEAN.csv', encoding = 'utf-8-sig')
+  else:
+    op_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig') 
+    # DOWNLOAD OP Data Tracking Accuracy 
+    tracking.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-Data-tracked.csv', encoding = 'utf-8-sig')
+    # DOWNLOAD CLEANED MA BOOT CAMP DATA
+    ma_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-MA-CLEAN.csv', encoding = 'utf-8-sig')
+                 
+ 
   # cut data 
   print(f'OP Synchronized Game Duration: {op_synch.Time.iloc[-1] - op_synch.Time.iloc[0]}')
   print(f'MA Synchronized Game Duration: {ma_synch.Time.iloc[-1] - ma_synch.Time.iloc[0]}')

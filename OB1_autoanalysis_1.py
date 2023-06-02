@@ -24,35 +24,20 @@ def load_ma(ma_file):
   return ma
 
 
-# Select Game
-# op_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro',
-#             'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9']
-
-# ma_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro',
-#             'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9']
-
-op_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro',
-            'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9']
-
-ma_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro',
-            'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9']
-
-# manually update the boot camp files to corresponding name
-boot_camp = ['SeatStarJump',	'HipExt',	'Kick',	'LatStep',	'HipFlex',	'SeatHipFlex',	'StLun',	'BackStep',	'SeatKnExt']
- 
-# rename the boot camp exercises
-j = 0
-for i in range(len(op_games)):
-  if 'BC' in op_games[i]:
-    op_games[i] = op_games[i] + '-' + boot_camp[j]
-    ma_games[i] = ma_games[i] + '-' + boot_camp[j]
-    j = j+1
+# Select Game --> Bootle Blast
+# op_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
+# ma_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
+op_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
+ma_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
 
 
 # SELECT FILES HERE
-mmdd = '0314' 
-p = 'P03'
+mmdd = '0221'
+p = 'P01'
 mmdd_p = mmdd + '_' + p
+
+
+directory_unknown = []
 
 for game_ind in range(len(op_games)):
   print(f'\n\n\n\n\n\n\n\n{op_games[game_ind]}\n\n\n\n\n\n\n\n')
@@ -60,14 +45,20 @@ for game_ind in range(len(op_games)):
   ma_file = '2023' + mmdd + '-' + p + '-' + ma_games[game_ind] + "-MA-CLEAN.csv"
   #print(op_file, '\t', ma_file)
 
+  try:
+    # Load OP Data
+    op = load_op('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/Clean_' + mmdd_p + '/' + op_file)
+    print(op.head(3))
 
-  # Load OP Data
-  op = load_op('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/Clean_' + mmdd_p + '/' + op_file)
-  print(op.head(3))
+    # Load MA Data
+    ma = load_ma('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/Clean_' + mmdd_p + '/' + ma_file)
+    print(ma.head(3))
 
-  # Load MA Data
-  ma = load_ma('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/Clean_' + mmdd_p + '/' + ma_file)
-  print(ma.head(3))
+  except FileNotFoundError:
+    # if directory game file doesn't exist, go to next game
+    directory_unknown.append(op_file)
+    continue
+
 
 
   op_filte = op.copy()
@@ -114,6 +105,8 @@ for game_ind in range(len(op_games)):
 
   joint_col = []
   joint_corr_z = []
+  joint_corr = []
+  joint_p_val = []
 
   # Head Data
   for i in range(len(op_head)):
@@ -122,17 +115,23 @@ for game_ind in range(len(op_games)):
       ma_joint = ma_head[i] + xyz[k]
       joint = ma_joint
       if xyz[k] == 'Y':
-        joint, corr = fiveone(op_final, ma_final, joint, op_joint, ma_joint)  # align horizontal(Y) coordinate
+        joint, corr, p_val = fiveone(op_final, ma_final, joint, op_joint, ma_joint)  # align horizontal(Y) coordinate
+        joint_corr.append(corr)
+        joint_p_val.append(p_val)
         joint_col.append(joint)
         z = z_transform(corr)
         joint_corr_z.append(z)
       elif xyz[k] == 'Z':
-        joint, corr = fiveone(op_final, ma_final, joint, op_joint, ma_joint)  # align vertical(Z) coordinate
+        joint, corr, p_val = fiveone(op_final, ma_final, joint, op_joint, ma_joint)  # align vertical(Z) coordinate
+        joint_corr.append(corr)
+        joint_p_val.append(p_val)
         joint_col.append(joint) 
         z = z_transform(corr)
         joint_corr_z.append(z)
       elif xyz[k] == 'X':
-        joint, corr = fiveone(op_final, ma_final, joint, op_joint, ma_joint)  # align depth(X) coordinate
+        joint, corr, p_val = fiveone(op_final, ma_final, joint, op_joint, ma_joint)  # align depth(X) coordinate
+        joint_corr.append(corr)
+        joint_p_val.append(p_val)
         joint_col.append(joint)
         z = z_transform(corr)
         joint_corr_z.append(z)
@@ -144,24 +143,38 @@ for game_ind in range(len(op_games)):
         ma_joint = ma_side[j] + ma_joints[i] + xyz[k]  # specific MA joint name 
         joint = ma_side[j] + ma_joints[i] + xyz[k]     # joint of interest
         if xyz[k] == 'Y':
-          joint, corr = fiveone(op_final, ma_final, joint, op_joint, ma_joint)  # align horizontal(Y) coordinate
+          joint, corr, p_val = fiveone(op_final, ma_final, joint, op_joint, ma_joint)  # align horizontal(Y) coordinate
+          joint_corr.append(corr)
+          joint_p_val.append(p_val)
           joint_col.append(joint)
           z = z_transform(corr)
           joint_corr_z.append(z)
         elif xyz[k] == 'Z':
-          joint, corr = fiveone(op_final, ma_final, joint, op_joint, ma_joint)  # align vertical(Z) coordinate
+          joint, corr, p_val = fiveone(op_final, ma_final, joint, op_joint, ma_joint)  # align vertical(Z) coordinate
+          joint_corr.append(corr)
+          joint_p_val.append(p_val)
           joint_col.append(joint)
           z = z_transform(corr)
           joint_corr_z.append(z)
         elif xyz[k] == 'X':
-          joint, corr = fiveone(op_final, ma_final, joint, op_joint, ma_joint)  # align depth(X) coordinate
+          joint, corr, p_val = fiveone(op_final, ma_final, joint, op_joint, ma_joint)  # align depth(X) coordinate
+          joint_corr.append(corr)
+          joint_p_val.append(p_val)
           joint_col.append(joint) 
           z = z_transform(corr)
           joint_corr_z.append(z)
 
+  joint_corr = [joint_corr]
+  joint_p_val = [joint_p_val]
   joint_corr_z = [joint_corr_z]
 
-  joint_z = pd.DataFrame(joint_corr_z, columns = joint_col)
+  joint_r = pd.DataFrame(joint_corr, columns = joint_col, index = [mmdd_p[-3:]])
+  joint_p = pd.DataFrame(joint_p_val, columns = joint_col, index = [mmdd_p[-3:]])
+  joint_z = pd.DataFrame(joint_corr_z, columns = joint_col, index = [mmdd_p[-3:]])
 
-  # DOWNLOAD the joint coordinate correlation Z-Values --> paste into data results
+  # DOWNLOAD the joint coordinate correlation Z-R-PValues --> paste into data results
+  joint_r.to_csv(rf'/Users/soowan/Downloads/2023{mmdd}-{p}-{op_games[game_ind]}-Joint_r.csv', encoding = 'utf-8-sig')
+  joint_p.to_csv(rf'/Users/soowan/Downloads/2023{mmdd}-{p}-{op_games[game_ind]}-Joint_p.csv', encoding = 'utf-8-sig')
   joint_z.to_csv(rf'/Users/soowan/Downloads/2023{mmdd}-{p}-{op_games[game_ind]}-Joint_z.csv', encoding = 'utf-8-sig') 
+
+print("\nFOLLOWING FILES DO NOT EXIST:", directory_unknown)

@@ -25,28 +25,12 @@ def load_ma(ma_file):
 
 
 # Select Game
-# op_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro',
-#             'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9']
+# op_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
+# ma_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
 
-# ma_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro',
-#             'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9']
+op_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
+ma_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
 
-op_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro',
-            'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9']
-
-ma_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro',
-            'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9']
-
-# manually update the boot camp files to corresponding name
-boot_camp = ['SeatStarJump',	'HipExt',	'Kick',	'LatStep',	'HipFlex',	'SeatHipFlex',	'StLun',	'BackStep',	'SeatKnExt']
- 
-# rename the boot camp exercises
-j = 0
-for i in range(len(op_games)):
-  if 'BC' in op_games[i]:
-    op_games[i] = op_games[i] + '-' + boot_camp[j]
-    ma_games[i] = ma_games[i] + '-' + boot_camp[j]
-    j = j+1
 
 
 # SELECT FILES HERE
@@ -54,20 +38,27 @@ mmdd = '0402'
 p = 'P07'
 mmdd_p = mmdd + '_' + p
 
+directory_unknown = []
+
 for game_ind in range(len(op_games)):
   print(f'\n\n\n\n\n\n\n\n{op_games[game_ind]}\n\n\n\n\n\n\n\n')
   op_file = '2023' + mmdd + '-' + p + '-' + op_games[game_ind] + "-Data-OP-CLEAN.csv"
   ma_file = '2023' + mmdd + '-' + p + '-' + ma_games[game_ind] + "-MA-CLEAN.csv"
   #print(op_file, '\t', ma_file)
 
+  try:
+    # Load OP Data
+    op = load_op('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/Clean_' + mmdd_p + '/' + op_file)
+    print(op.head(3))
 
-  # Load OP Data
-  op = load_op('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/Clean_' + mmdd_p + '/' + op_file)
-  print(op.head(3))
+    # Load MA Data
+    ma = load_ma('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/Clean_' + mmdd_p + '/' + ma_file)
+    print(ma.head(3))
 
-  # Load MA Data
-  ma = load_ma('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/Clean_' + mmdd_p + '/' + ma_file)
-  print(ma.head(3))
+  except FileNotFoundError:
+    # if directory game file doesn't exist, go to next game
+    directory_unknown.append(op_file)
+    continue
 
 
   op_filte = op.copy()
@@ -107,3 +98,5 @@ for game_ind in range(len(op_games)):
 
   # DOWNLOAD the COV results --> paste into data results
   op_cov.to_csv(rf'/Users/soowan/Downloads/2023{mmdd}-{p}-{op_games[game_ind]}-cov.csv', encoding = 'utf-8-sig') 
+
+print("\nFOLLOWING FILES DO NOT EXIST:", directory_unknown)

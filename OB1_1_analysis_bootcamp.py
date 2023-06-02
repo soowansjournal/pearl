@@ -59,11 +59,11 @@ ma_games = ['Sqt', 'StLun', 'VMODip', 'HipFlex', 'HipExt', 'HipAbd', 'Kick', 'La
 # mmdd_p_all = ['0221_P01', '0314_P02', '0314_P03', '0315_P04', 
 #               '0316_P05', '0322_P06', '0402_P07', '0403_P08', '0403_P09', '0404_P10', '0404_P11', 
 #               '0406_P12', '0406_P13', '0407_P14', '0407_P15', '0407_P16', '0408_P17', '0408_P18', 
-#               '0411_P19', '0412_P20', '0412_P21', '0413_P22', '0420_P23', '0420_P24', '0430_P25', '0502_P26', '0516_P27']
+#               '0411_P19', '0412_P20', '0412_P21', '0413_P22', '0420_P23', '0420_P24', '0430_P25', '0502_P26', '0516_P27', '0601_P28']
 mmdd_p_all = ['0221_P01', '0314_P02', '0314_P03', '0315_P04', 
               '0316_P05', '0322_P06', '0402_P07', '0403_P08', '0403_P09', '0404_P10', '0404_P11', 
               '0406_P12', '0406_P13', '0407_P14', '0407_P15', '0407_P16', '0408_P17', '0408_P18', 
-              '0411_P19', '0412_P20', '0412_P21', '0413_P22', '0420_P23', '0420_P24', '0430_P25', '0502_P26', '0516_P27']
+              '0411_P19', '0412_P20', '0412_P21', '0413_P22', '0420_P23', '0420_P24', '0430_P25', '0502_P26', '0516_P27', '0601_P28']
 
 
 strength_r = []
@@ -95,7 +95,6 @@ for game_ind in range(len(op_games)):
     for mmdd_p in mmdd_p_all:
 
         print(f'\n\n\n\n\n\n\n\n{mmdd_p}\n\n\n\n\n\n\n\n')
-
         # *** For each participant rename BC#-Game ***
 
         # Load bootcamp.csv file to rename
@@ -264,10 +263,10 @@ for game_ind in range(len(op_games)):
         joint_p = pd.DataFrame(joint_p_val, columns = joint_col, index = [mmdd_p[-3:]])
         joint_z = pd.DataFrame(joint_corr_z, columns = joint_col, index = [mmdd_p[-3:]])
 
-        # DOWNLOAD EACH GAME EACH PARTICIPANT
-        joint_r.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Boot_Camp/{op_games[game_ind]}/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-Joint_r.csv', encoding = 'utf-8-sig') 
-        joint_p.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Boot_Camp/{op_games[game_ind]}/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-Joint_p_val.csv', encoding = 'utf-8-sig') 
-        joint_z.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Boot_Camp/{op_games[game_ind]}/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-Joint_z.csv', encoding = 'utf-8-sig') 
+        # # DOWNLOAD EACH GAME EACH PARTICIPANT
+        joint_r.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Boot_Camp/{op_games[game_ind]}/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_game}-Joint_r.csv', encoding = 'utf-8-sig') 
+        joint_p.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Boot_Camp/{op_games[game_ind]}/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_game}-Joint_p_val.csv', encoding = 'utf-8-sig') 
+        joint_z.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Boot_Camp/{op_games[game_ind]}/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{ma_game}-Joint_z.csv', encoding = 'utf-8-sig') 
 
 
         data_r.append(joint_r)
@@ -276,12 +275,14 @@ for game_ind in range(len(op_games)):
         
         print("\nFOLLOWING FILES DO NOT EXIST:", directory_unknown)
 
+    try:
+        joint_r_overall = pd.concat(data_r)
+        joint_p_overall = pd.concat(data_p)
+        joint_z_overall = pd.concat(data_z)
+    except:
+        continue
 
-    joint_r_overall = pd.concat(data_r)
-    joint_p_overall = pd.concat(data_p)
-    joint_z_overall = pd.concat(data_z)
-
-    # DOWNLOAD EACH GAME ALL PARTICIPANT
+    # # DOWNLOAD EACH GAME ALL PARTICIPANT
     joint_r_overall.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Boot_Camp/{op_games[game_ind]}/2023-{op_games[game_ind]}-Joint_r.csv', encoding = 'utf-8-sig')
     joint_p_overall.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Boot_Camp/{op_games[game_ind]}/2023-{op_games[game_ind]}-Joint_p_val.csv', encoding = 'utf-8-sig')
     joint_z_overall.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Boot_Camp/{op_games[game_ind]}/2023-{op_games[game_ind]}-Joint_z.csv', encoding = 'utf-8-sig')
@@ -346,34 +347,39 @@ for game_ind in range(len(op_games)):
         static_z.append(joint_z_overall)
 
 
-joint_r_strength = pd.concat(strength_r)
-joint_r_cardio = pd.concat(cardio_r)
-joint_r_seated = pd.concat(seated_r)
-joint_r_static = pd.concat(static_r)
+try:
+    joint_r_strength = pd.concat(strength_r)
+    joint_r_cardio = pd.concat(cardio_r)
+    joint_r_seated = pd.concat(seated_r)
+    joint_r_static = pd.concat(static_r)
 
-joint_p_strength = pd.concat(strength_p)
-joint_p_cardio = pd.concat(cardio_p)
-joint_p_seated = pd.concat(seated_p)
-joint_p_static = pd.concat(static_p)
+    joint_p_strength = pd.concat(strength_p)
+    joint_p_cardio = pd.concat(cardio_p)
+    joint_p_seated = pd.concat(seated_p)
+    joint_p_static = pd.concat(static_p)
 
-joint_z_strength = pd.concat(strength_z)
-joint_z_cardio = pd.concat(cardio_z)
-joint_z_seated = pd.concat(seated_z)
-joint_z_static = pd.concat(static_z)
+    joint_z_strength = pd.concat(strength_z)
+    joint_z_cardio = pd.concat(cardio_z)
+    joint_z_seated = pd.concat(seated_z)
+    joint_z_static = pd.concat(static_z)
 
 
-# DOWNLOAD GROUPED GAMES ALL PARTICIPANT 
-joint_r_strength.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Strength/2023-STRENGTH-Joint_r.csv', encoding = 'utf-8-sig')
-joint_r_cardio.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Cardio/2023-CARDIO-Joint_r.csv', encoding = 'utf-8-sig')
-joint_r_seated.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Seated/2023-SEATED-Joint_r.csv', encoding = 'utf-8-sig')
-joint_r_static.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Static/2023-STATIC-Joint_r.csv', encoding = 'utf-8-sig')
+    # DOWNLOAD GROUPED GAMES ALL PARTICIPANT 
+    joint_r_strength.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Strength/2023-STRENGTH-Joint_r.csv', encoding = 'utf-8-sig')
+    joint_r_cardio.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Cardio/2023-CARDIO-Joint_r.csv', encoding = 'utf-8-sig')
+    joint_r_seated.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Seated/2023-SEATED-Joint_r.csv', encoding = 'utf-8-sig')
+    joint_r_static.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Static/2023-STATIC-Joint_r.csv', encoding = 'utf-8-sig')
 
-joint_p_strength.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Strength/2023-STRENGTH-Joint_p_val.csv', encoding = 'utf-8-sig')
-joint_p_cardio.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Cardio/2023-CARDIO-Joint_p_val.csv', encoding = 'utf-8-sig')
-joint_p_seated.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Seated/2023-SEATED-Joint_p_val.csv', encoding = 'utf-8-sig')
-joint_p_static.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Static/2023-STATIC-Joint_p_val.csv', encoding = 'utf-8-sig')
+    joint_p_strength.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Strength/2023-STRENGTH-Joint_p_val.csv', encoding = 'utf-8-sig')
+    joint_p_cardio.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Cardio/2023-CARDIO-Joint_p_val.csv', encoding = 'utf-8-sig')
+    joint_p_seated.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Seated/2023-SEATED-Joint_p_val.csv', encoding = 'utf-8-sig')
+    joint_p_static.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Static/2023-STATIC-Joint_p_val.csv', encoding = 'utf-8-sig')
 
-joint_z_strength.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Strength/2023-STRENGTH-Joint_z.csv', encoding = 'utf-8-sig')
-joint_z_cardio.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Cardio/2023-CARDIO-Joint_z.csv', encoding = 'utf-8-sig')
-joint_z_seated.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Seated/2023-SEATED-Joint_z.csv', encoding = 'utf-8-sig')
-joint_z_static.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Static/2023-STATIC-Joint_z.csv', encoding = 'utf-8-sig')
+    joint_z_strength.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Strength/2023-STRENGTH-Joint_z.csv', encoding = 'utf-8-sig')
+    joint_z_cardio.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Cardio/2023-CARDIO-Joint_z.csv', encoding = 'utf-8-sig')
+    joint_z_seated.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Seated/2023-SEATED-Joint_z.csv', encoding = 'utf-8-sig')
+    joint_z_static.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Static/2023-STATIC-Joint_z.csv', encoding = 'utf-8-sig')
+
+
+except:
+    print("Not enough games to group")

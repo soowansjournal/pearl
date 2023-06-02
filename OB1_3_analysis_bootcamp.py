@@ -56,11 +56,11 @@ ma_games = ['Sqt', 'StLun', 'VMODip', 'HipFlex', 'HipExt', 'HipAbd', 'Kick', 'La
 # mmdd_p_all = ['0221_P01', '0314_P02', '0314_P03', '0315_P04', 
 #               '0316_P05', '0322_P06', '0402_P07', '0403_P08', '0403_P09', '0404_P10', '0404_P11', 
 #               '0406_P12', '0406_P13', '0407_P14', '0407_P15', '0407_P16', '0408_P17', '0408_P18', 
-#               '0411_P19', '0412_P20', '0412_P21', '0413_P22', '0420_P23', '0420_P24', '0430_P25', '0502_P26', '0516_P27']
+#               '0411_P19', '0412_P20', '0412_P21', '0413_P22', '0420_P23', '0420_P24', '0430_P25', '0502_P26', '0516_P27', '0601_P28']
 mmdd_p_all = ['0221_P01', '0314_P02', '0314_P03', '0315_P04', 
               '0316_P05', '0322_P06', '0402_P07', '0403_P08', '0403_P09', '0404_P10', '0404_P11', 
               '0406_P12', '0406_P13', '0407_P14', '0407_P15', '0407_P16', '0408_P17', '0408_P18', 
-              '0411_P19', '0412_P20', '0412_P21', '0413_P22', '0420_P23', '0420_P24', '0430_P25', '0502_P26', '0516_P27']
+              '0411_P19', '0412_P20', '0412_P21', '0413_P22', '0420_P23', '0420_P24', '0430_P25', '0502_P26', '0516_P27', '0601_P28']
 
 
 strength_angles = []
@@ -212,7 +212,7 @@ for game_ind in range(len(op_games)):
         joint_angles = table_angle_results(df_list)
 
         # DOWNLOAD EACH GAME EACH PARTICIPANT
-        joint_angles.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/3_Angle/BC_Boot_Camp/{op_games[game_ind]}/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-angle.csv', encoding = 'utf-8-sig') 
+        joint_angles.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/3_Angle/BC_Boot_Camp/{op_games[game_ind]}/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_game}-angle.csv', encoding = 'utf-8-sig') 
 
 
         data.append(joint_angles)
@@ -220,8 +220,10 @@ for game_ind in range(len(op_games)):
 
         print("\nFOLLOWING FILES DO NOT EXIST:", directory_unknown)
 
-
-    joint_angles_overall = pd.concat(data)
+    try:
+        joint_angles_overall = pd.concat(data)
+    except:
+        continue
 
     # DOWNLOAD EACH GAME ALL PARTICIPANT
     joint_angles_overall.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/3_Angle/BC_Boot_Camp/{op_games[game_ind]}/2023-{op_games[game_ind]}-angle.csv', encoding = 'utf-8-sig') 
@@ -263,14 +265,18 @@ for game_ind in range(len(op_games)):
         static_angles.append(joint_angles_overall)
 
 
-joint_angles_strength = pd.concat(strength_angles)
-joint_angles_cardio = pd.concat(cardio_angles)
-joint_angles_seated = pd.concat(seated_angles)
-joint_angles_static = pd.concat(static_angles)
+
+try:
+    joint_angles_strength = pd.concat(strength_angles)
+    joint_angles_cardio = pd.concat(cardio_angles)
+    joint_angles_seated = pd.concat(seated_angles)
+    joint_angles_static = pd.concat(static_angles)
 
 
-# DOWNLOAD GROUPED GAMES ALL PARTICIPANT 
-joint_angles_strength.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/3_Angle//BC_Strength/2023-STRENGTH-angle.csv', encoding = 'utf-8-sig')
-joint_angles_cardio.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/3_Angle//BC_Cardio/2023-CARDIO-angle.csv', encoding = 'utf-8-sig')
-joint_angles_seated.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/3_Angle/BC_Seated/2023-SEATED-angle.csv', encoding = 'utf-8-sig')
-joint_angles_static.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/3_Angle//BC_Static/2023-STATIC-angle.csv', encoding = 'utf-8-sig')
+    # DOWNLOAD GROUPED GAMES ALL PARTICIPANT 
+    joint_angles_strength.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/3_Angle//BC_Strength/2023-STRENGTH-angle.csv', encoding = 'utf-8-sig')
+    joint_angles_cardio.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/3_Angle//BC_Cardio/2023-CARDIO-angle.csv', encoding = 'utf-8-sig')
+    joint_angles_seated.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/3_Angle/BC_Seated/2023-SEATED-angle.csv', encoding = 'utf-8-sig')
+    joint_angles_static.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/3_Angle//BC_Static/2023-STATIC-angle.csv', encoding = 'utf-8-sig')
+except:
+    print("Not enough games to group")

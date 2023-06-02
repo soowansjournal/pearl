@@ -44,11 +44,8 @@ ma_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
 # mmdd_p_all = ['0221_P01', '0314_P02', '0314_P03', '0315_P04', 
 #               '0316_P05', '0322_P06', '0402_P07', '0403_P08', '0403_P09', '0404_P10', '0404_P11', 
 #               '0406_P12', '0406_P13', '0407_P14', '0407_P15', '0407_P16', '0408_P17', '0408_P18', 
-#               '0411_P19', '0412_P20', '0412_P21', '0413_P22', '0420_P23', '0420_P24', '0430_P25', '0502_P26', '0516_P27']
-mmdd_p_all = ['0221_P01', '0314_P02', '0314_P03', '0315_P04', 
-              '0316_P05', '0322_P06', '0402_P07', '0403_P08', '0403_P09', '0404_P10', '0404_P11', 
-              '0406_P12', '0406_P13', '0407_P14', '0407_P15', '0407_P16', '0408_P17', '0408_P18', 
-              '0411_P19', '0412_P20', '0412_P21', '0413_P22', '0420_P23', '0420_P24', '0430_P25', '0502_P26', '0516_P27']
+#               '0411_P19', '0412_P20', '0412_P21', '0413_P22', '0420_P23', '0420_P24', '0430_P25', '0502_P26', '0516_P27', '0601_P28']
+mmdd_p_all = ['0221_P01', '0314_P02', '0314_P03', '0601_P28']
 
 
 # 1) For each game
@@ -162,7 +159,11 @@ for game_ind in range(len(op_games)):
             right = pd.DataFrame(np.array(left_reach_max.iloc[i,1:]))
             dataframes.append(right.transpose())
 
-        reach_re = pd.concat(dataframes, axis = 1)
+
+        try:
+            reach_re = pd.concat(dataframes, axis = 1)
+        except:
+            continue
         reach_re = np.array(reach_re[0:])
         reach_re = pd.DataFrame(reach_re, columns = new_col, index = [mmdd_p[-3:]])
 
@@ -173,9 +174,13 @@ for game_ind in range(len(op_games)):
         data.append(reach_re)
 
         print("\nFOLLOWING FILES DO NOT EXIST:", directory_unknown)
+    
 
-
-    reach_overall = pd.concat(data)
+    # if game doesn't exist for this participant
+    try:
+        reach_overall = pd.concat(data)
+    except:
+        continue
 
     # DOWNLOAD the OVERALL Max Hand Reach Values --> paste into data results
     reach_overall.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/4_Reach/{op_games[game_ind]}/2023-{op_games[game_ind]}-reach.csv', encoding = 'utf-8-sig') 

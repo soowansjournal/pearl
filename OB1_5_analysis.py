@@ -43,11 +43,8 @@ ma_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
 # mmdd_p_all = ['0221_P01', '0314_P02', '0314_P03', '0315_P04', 
 #               '0316_P05', '0322_P06', '0402_P07', '0403_P08', '0403_P09', '0404_P10', '0404_P11', 
 #               '0406_P12', '0406_P13', '0407_P14', '0407_P15', '0407_P16', '0408_P17', '0408_P18', 
-#               '0411_P19', '0412_P20', '0412_P21', '0413_P22', '0420_P23', '0420_P24', '0430_P25', '0502_P26', '0516_P27']
-mmdd_p_all = ['0221_P01', '0314_P02', '0314_P03', '0315_P04', 
-              '0316_P05', '0322_P06', '0402_P07', '0403_P08', '0403_P09', '0404_P10', '0404_P11', 
-              '0406_P12', '0406_P13', '0407_P14', '0407_P15', '0407_P16', '0408_P17', '0408_P18', 
-              '0411_P19', '0412_P20', '0412_P21', '0413_P22', '0420_P23', '0420_P24', '0430_P25', '0502_P26', '0516_P27']
+#               '0411_P19', '0412_P20', '0412_P21', '0413_P22', '0420_P23', '0420_P24', '0430_P25', '0502_P26', '0516_P27', '0601_P28']
+mmdd_p_all = ['0601_P28']
 
 
 
@@ -157,7 +154,11 @@ for game_ind in range(len(op_games)):
 
         print("\nFOLLOWING FILES DO NOT EXIST:", directory_unknown)
     
-    speed_overall = pd.concat(data)
+    # if game doesn't exist for this participant
+    try:
+        speed_overall = pd.concat(data)
+    except:
+        continue
 
     # DOWNLOAD the OVERALL Hand Speed Values --> paste into data results
     speed_overall.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/5_Speed/{op_games[game_ind]}/2023-{op_games[game_ind]}-speed.csv', encoding = 'utf-8-sig') 

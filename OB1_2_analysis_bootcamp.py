@@ -56,11 +56,11 @@ ma_games = ['Sqt', 'StLun', 'VMODip', 'HipFlex', 'HipExt', 'HipAbd', 'Kick', 'La
 # mmdd_p_all = ['0221_P01', '0314_P02', '0314_P03', '0315_P04', 
 #               '0316_P05', '0322_P06', '0402_P07', '0403_P08', '0403_P09', '0404_P10', '0404_P11', 
 #               '0406_P12', '0406_P13', '0407_P14', '0407_P15', '0407_P16', '0408_P17', '0408_P18', 
-#               '0411_P19', '0412_P20', '0412_P21', '0413_P22', '0420_P23', '0420_P24', '0430_P25', '0502_P26', '0516_P27']
+#               '0411_P19', '0412_P20', '0412_P21', '0413_P22', '0420_P23', '0420_P24', '0430_P25', '0502_P26', '0516_P27', '0601_P28']
 mmdd_p_all = ['0221_P01', '0314_P02', '0314_P03', '0315_P04', 
               '0316_P05', '0322_P06', '0402_P07', '0403_P08', '0403_P09', '0404_P10', '0404_P11', 
               '0406_P12', '0406_P13', '0407_P14', '0407_P15', '0407_P16', '0408_P17', '0408_P18', 
-              '0411_P19', '0412_P20', '0412_P21', '0413_P22', '0420_P23', '0420_P24', '0430_P25', '0502_P26', '0516_P27']
+              '0411_P19', '0412_P20', '0412_P21', '0413_P22', '0420_P23', '0420_P24', '0430_P25', '0502_P26', '0516_P27', '0601_P28']
 
 
 
@@ -166,14 +166,18 @@ for game_ind in range(len(op_games)):
         op_cov = fivetwo(op_final, ma_final, [mmdd_p[-3:]])
 
         # DOWNLOAD EACH GAME EACH PARTICIPANT
-        op_cov.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/2_Segment/BC_Boot_Camp/{op_games[game_ind]}/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-cov.csv', encoding = 'utf-8-sig')
+        op_cov.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/2_Segment/BC_Boot_Camp/{op_games[game_ind]}/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_game}-cov.csv', encoding = 'utf-8-sig')
  
 
         data.append(op_cov)
         
         print("\nFOLLOWING FILES DO NOT EXIST:", directory_unknown)
 
-    op_cov_overall = pd.concat(data)
+
+    try:
+        op_cov_overall = pd.concat(data)
+    except: 
+        continue
 
     # DOWNLOAD EACH GAME ALL PARTICIPANT
     op_cov_overall.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/2_Segment/BC_Boot_Camp/{op_games[game_ind]}/2023-{op_games[game_ind]}-cov.csv', encoding = 'utf-8-sig')
@@ -214,14 +218,18 @@ for game_ind in range(len(op_games)):
         static_cov.append(op_cov_overall)
 
 
-op_cov_strength = pd.concat(strength_cov)
-op_cov_cardio = pd.concat(cardio_cov)
-op_cov_seated = pd.concat(seated_cov)
-op_cov_static = pd.concat(static_cov)
+
+try:
+    op_cov_strength = pd.concat(strength_cov)
+    op_cov_cardio = pd.concat(cardio_cov)
+    op_cov_seated = pd.concat(seated_cov)
+    op_cov_static = pd.concat(static_cov)
 
 
-# DOWNLOAD GROUPED GAMES ALL PARTICIPANT 
-op_cov_strength.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/2_Segment/BC_Strength/2023-STRENGTH-cov.csv', encoding = 'utf-8-sig')
-op_cov_cardio.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/2_Segment/BC_Cardio/2023-CARDIO-cov.csv', encoding = 'utf-8-sig')
-op_cov_seated.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/2_Segment/BC_Seated/2023-SEATED-cov.csv', encoding = 'utf-8-sig')
-op_cov_static.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/2_Segment/BC_Static/2023-STATIC-cov.csv', encoding = 'utf-8-sig')
+    # DOWNLOAD GROUPED GAMES ALL PARTICIPANT 
+    op_cov_strength.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/2_Segment/BC_Strength/2023-STRENGTH-cov.csv', encoding = 'utf-8-sig')
+    op_cov_cardio.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/2_Segment/BC_Cardio/2023-CARDIO-cov.csv', encoding = 'utf-8-sig')
+    op_cov_seated.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/2_Segment/BC_Seated/2023-SEATED-cov.csv', encoding = 'utf-8-sig')
+    op_cov_static.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/2_Segment/BC_Static/2023-STATIC-cov.csv', encoding = 'utf-8-sig')
+except:
+    print("Not enough games to group")

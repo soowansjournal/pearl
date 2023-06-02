@@ -24,8 +24,11 @@ def load_ma(ma_file):
   return ma
 
 
-op_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
+# Select Game
+# op_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
+# ma_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
 
+op_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
 ma_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
 
 
@@ -34,20 +37,29 @@ mmdd = '0314'
 p = 'P02'
 mmdd_p = mmdd + '_' + p
 
+
+directory_unknown = []
+data = []
+
 for game_ind in range(len(op_games)):
     print(f'\n\n\n\n\n\n\n\n{op_games[game_ind]}\n\n\n\n\n\n\n\n')
     op_file = '2023' + mmdd + '-' + p + '-' + op_games[game_ind] + "-Data-OP-CLEAN.csv"
     ma_file = '2023' + mmdd + '-' + p + '-' + ma_games[game_ind] + "-MA-CLEAN.csv"
     #print(op_file, '\t', ma_file)
 
+    try: 
+        # Load OP Data
+        op = load_op('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/Clean_' + mmdd_p + '/' + op_file)
+        print(op.head(3))
 
-    # Load OP Data
-    op = load_op('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/Clean_' + mmdd_p + '/' + op_file)
-    print(op.head(3))
+        # Load MA Data
+        ma = load_ma('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/Clean_' + mmdd_p + '/' + ma_file)
+        print(ma.head(3))
 
-    # Load MA Data
-    ma = load_ma('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/Clean_' + mmdd_p + '/' + ma_file)
-    print(ma.head(3))
+    except FileNotFoundError:
+        # if directory game file doesn't exist, go to next game
+        directory_unknown.append(op_file)
+        continue
 
 
     op_filte = op.copy()
@@ -101,8 +113,47 @@ for game_ind in range(len(op_games)):
 
     reach = table_reach_results(2, left_reach_max, right_reach_max)
 
+    # # DOWNLOAD the reach results --> paste into data results
+    # reach.to_csv(rf'/Users/soowan/Downloads/2023{mmdd}-{p}-{op_games[game_ind]}-reach.csv', encoding = 'utf-8-sig') 
+
+    
+    # Reorganize DataFrame Results
+    dataframes = []
+    side_coord = ['L.Max.X', 'L.Max.Y', 'L.Max.Z', 'L.Max.3D', 'R.Max.X', 'R.Max.Y', 'R.Max.Z', 'R.Max.3D']
+    specify = ['(OP)', '(MA)', '(Diff)', '(Error%)']
+    new_col = []
+
+    # Create New Column Names
+    for i in side_coord:
+        for j in specify:
+            name = i + j
+            new_col.append(name)
+
+    # Recreate into single row
+    for i in range(len(left_reach_max)):
+        left = pd.DataFrame(np.array(left_reach_max.iloc[i,1:]))
+        dataframes.append(left.transpose())
+        
+    for i in range(len(right_reach_max)):
+        right = pd.DataFrame(np.array(left_reach_max.iloc[i,1:]))
+        dataframes.append(right.transpose())
+
+    reach_re = pd.concat(dataframes, axis = 1)
+    reach_re = np.array(reach_re[0:])
+    reach_re = pd.DataFrame(reach_re, columns = new_col, index = [mmdd_p[-3:]])
+
+
     # DOWNLOAD the reach results --> paste into data results
-    reach.to_csv(rf'/Users/soowan/Downloads/2023{mmdd}-{p}-{op_games[game_ind]}-reach.csv', encoding = 'utf-8-sig') 
+    reach_re.to_csv(rf'/Users/soowan/Downloads/2023{mmdd}-{p}-{op_games[game_ind]}-reach.csv', encoding = 'utf-8-sig')
+
+    data.append(reach_re)
+
+
+
+
+
+
+
 
 
     def check_normality(data, title):
@@ -193,3 +244,9 @@ for game_ind in range(len(op_games)):
     plt.tight_layout(pad=3.0)
 
     plt.show()
+
+
+
+
+
+print("\nFOLLOWING FILES DO NOT EXIST:", directory_unknown)
