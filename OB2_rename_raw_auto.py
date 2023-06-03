@@ -1,6 +1,10 @@
+""" To automatically rename and move raw BC files for Ajmal's Algorithm """
+
+
 import pandas as pd
 import shutil
 import os
+
 
 
 # CREATE FILES (DATE & GAMES)
