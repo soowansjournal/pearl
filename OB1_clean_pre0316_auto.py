@@ -80,7 +80,7 @@ ma_games = ['Power1','BC1', 'Single']
 # SELECT FILES HERE
 # 0221_13-P01, 0314-P02, 0314-P03, 0315-P04
 # mmdd_p_all = ['0221_P01', '0314_P02', '0314_P03', '0315_P04']
-mmdd_p_all = ['0315_P04']
+mmdd_p_all = ['0221_P01']
 
 
 
@@ -214,31 +214,53 @@ for mmdd_p in mmdd_p_all:
               ma_final = ma_resam
 
 
-              # *** For each participant rename BC#-Game ***
-              # Load bootcamp.csv file to rename
-              bootcamp = pd.read_csv("/Users/soowan/Documents/VSCODE/Pearl/bootcamp.csv") 
 
-              # For each row 
-              # If correct participant
-              # For each column
-              # If correct BC column and corresponding cell isn't empty
-              # Rename: BC#-Game
-              for i in range(len(bootcamp)):
-                  if mmdd_p in bootcamp.iloc[i,0]:
-                      for j in range(len(bootcamp.columns)):
-                          if op_games[game_ind] == str(bootcamp.columns[j]):
-                                  if str(bootcamp.iloc[i,j]) != 'nan':
-                                      op_game = op_games[game_ind] + '-' + str(bootcamp.iloc[i,j])
-                                      ma_game = ma_games[game_ind] + '-' + str(bootcamp.iloc[i,j])
-                                      break
-                                  else:
-                                      op_game = op_games[game_ind] + '-' + 'NA'
-                                      ma_game = ma_games[game_ind] + '-' + 'NA'
-                                      break
+              # *** For each participant rename Power1 --> PowerR etc. ***
+              if op_games[game_ind] == 'Power1' or op_games[game_ind] == 'Power2':
+                  # Load power.csv file to rename
+                  power = pd.read_csv("/Users/soowan/Documents/VSCODE/Pearl/power.csv") 
+
+                  # For each row 
+                  # If correct participant
+                  # For each column
+                  # If correct Power column 
+                  # Rename: BC#-Game
+
+                  for i in range(len(power)):
+                      if mmdd_p in power.iloc[i,0]:
+                          for j in range(len(power.columns)):
+                              if op_games[game_ind] == str(power.columns[j]):
+                                  op_game = str(power.iloc[i,j])
+                                  ma_game = str(power.iloc[i,j])
+                                  break
+
+
+              # *** For each participant rename BC#-Game ***
+              if 'BC' in op_games[game_ind]:
+                # Load bootcamp.csv file to rename
+                bootcamp = pd.read_csv("/Users/soowan/Documents/VSCODE/Pearl/bootcamp.csv") 
+
+                # For each row 
+                # If correct participant
+                # For each column
+                # If correct BC column and corresponding cell isn't empty
+                # Rename: BC#-Game
+                for i in range(len(bootcamp)):
+                    if mmdd_p in bootcamp.iloc[i,0]:
+                        for j in range(len(bootcamp.columns)):
+                            if op_games[game_ind] == str(bootcamp.columns[j]):
+                                    if str(bootcamp.iloc[i,j]) != 'nan':
+                                        op_game = op_games[game_ind] + '-' + str(bootcamp.iloc[i,j])
+                                        ma_game = ma_games[game_ind] + '-' + str(bootcamp.iloc[i,j])
+                                        break
+                                    else:
+                                        op_game = op_games[game_ind] + '-' + 'NA'
+                                        ma_game = ma_games[game_ind] + '-' + 'NA'
+                                        break
 
 
               # DOWNLOAD FILES TO DOWNLOADS FOLDER
-              if 'BC' in op_games[game_ind]:
+              if 'Power' in op_games[game_ind] or 'BC' in op_games[game_ind]:
                 # DOWNLOAD CLEANED OP DATA
                 op_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_game}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig') 
                 # DOWNLOAD OP Data Tracking Accuracy 
@@ -254,7 +276,7 @@ for mmdd_p in mmdd_p_all:
                  
 
               # # DOWNLOAD FILES TO SPECIFIC LOCATION
-              # if 'BC' in op_games[game_ind]:
+              # if 'Power' in op_games[game_ind] or 'BC' in op_games[game_ind]:
               #   # DOWNLOAD CLEANED OP DATA
               #   op_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_0551/2023_{mmdd_p[:4]}_{mmdd_p[-3:]}/Auto_Clean_{mmdd_p[:4]}_{mmdd_p[-3:]}/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_game}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig') 
               #   # DOWNLOAD OP Data Tracking Accuracy 
