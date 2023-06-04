@@ -31,7 +31,7 @@ for letters_to_search in count:
         # Copy the file
         shutil.copy(source_file, destination_file)
 
-    print("COUNT - Files copied successfully!")
+        print("COUNT - Files copied successfully!")
 
 
 # Specify the letters to search for in the filenames
@@ -56,4 +56,4 @@ for letters_to_search in timer:
         # Copy the file
         shutil.copy(source_file, destination_file)
 
-    print("TIMER - Files copied successfully!")
+        print("TIMER - Files copied successfully!")

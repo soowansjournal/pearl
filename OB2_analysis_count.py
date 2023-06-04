@@ -45,35 +45,39 @@ mmdd_p_all = ['0221_P01', '0314_P02', '0314_P03', '0315_P04',
 # 5) Read/Analyze the results file - OP vs MA
     # For each row
     # If quality rep
-    # Subtract the timer columns
-    # Sum the time
+    # = 1
     # If not quality rep
-    # Timer = 0 
+    # = 0 
 
-# 1) For each timer game
+# 1) For each count game
 for game_ind in range(len(op_games)):
 
     participant = []
-    op_timer = []
-    ma_timer = []
-    diff_timer = []
-    per_timer = []
+    attempt = []
+    op_attempt = []
+    ma_attempt = []
+    op_count = []
+    ma_count = []
+    true_pos = []
+    false_neg = []
+    false_pos = []
+    true_neg = []
     df_game = pd.DataFrame()
 
     # 2) Go through all participants
     for mmdd_p in mmdd_p_all:
 
-        op_sum_time = []
-        ma_sum_time = []
+        op_sum_count = []
+        ma_sum_count = []
         
         # 3) Go through Ajmal's Results File
-        folder_path = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Results_Ajmal'
+        folder_path = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Results_Ajmal/Count'
 
         for filename in os.listdir(folder_path):
             file_path = os.path.join(folder_path, filename)
             if os.path.isfile(file_path):
 
-                # 4) If correct timer game file
+                # 4) If correct count game file
                 if mmdd_p[-3:] in filename and op_games[game_ind] in filename:
                     # print(file_path)
 
@@ -85,11 +89,11 @@ for game_ind in range(len(op_games)):
 
                         for i in range(1,len(op)):
                             if op['QualityRep'][i] == True:
-                                time = op['TimerEnd'][i] - op['TimerStart'][i]
-                                op_sum_time.append(time)
+                                count = 1
+                                op_sum_count.append(count)
                             elif op['QualityRep'][i] == False: 
-                                time = 0
-                                op_sum_time.append(time)
+                                count = 0
+                                op_sum_count.append(count)
                     
                     # 5.2) Read/Analyze the MA results file
                     if 'MA' in filename:
@@ -99,44 +103,67 @@ for game_ind in range(len(op_games)):
 
                         for i in range(1, len(ma)):
                             if ma['QualityRep'][i] == True:
-                                time = ma['TimerEnd'][i] - ma['TimerStart'][i]
-                                ma_sum_time.append(time)
+                                count = 1
+                                ma_sum_count.append(count)
                             elif ma['QualityRep'][i] == False: 
-                                time = 0
-                                ma_sum_time.append(time)
+                                count = 0
+                                ma_sum_count.append(count)
 
 
-        # Store results for each participant
-        op_time = np.sum(op_sum_time)
-        print(f"{op_games[game_ind]} - {mmdd_p[-3:]} - OP: {op_time}\n")
-        ma_time = np.sum(ma_sum_time)
-        print(f"{ma_games[game_ind]} - {mmdd_p[-3:]} - MA: {ma_time}\n")
+        # Compare for each participant
+        op_total = len(op_sum_count)
+        op_true = np.sum(op_sum_count)
+        print(f"{op_games[game_ind]} - {mmdd_p[-3:]} - OP: {op_total}\n")
+        ma_total = len(ma_sum_count)
+        ma_true = np.sum(ma_sum_count)
+        print(f"{ma_games[game_ind]} - {mmdd_p[-3:]} - MA: {ma_total}\n")
 
         participant.append(mmdd_p[-3:])
-        op_timer.append(op_time)
-        ma_timer.append(ma_time)
-        diff_timer.append(op_time - ma_time)
-        if ma_time == 0:
-            per = 0
-            per_timer.append(per)
-        else:
-            per = round(abs(op_time - ma_time) / abs(ma_time) * 100, 3)
-            per_timer.append(per)
+        attempt.append(len(ma_sum_count))
+        op_attempt.append(op_total)
+        ma_attempt.append(ma_total)
+        op_count.append(op_true)
+        ma_count.append(ma_true)
+        
+        # Calculate TP (OP:1 MA:1) FN (OP:0 MA:1) FP (OP:1 MA:0) TN (OP:0 MA:0)
+        tp = 0
+        fn = 0
+        fp = 0
+        tn = 0
+        for i in range(len(ma_sum_count)):
+            if op_sum_count[i] == 1 and ma_sum_count[i] == 1:
+                tp = tp + 1
+            elif op_sum_count[i] == 0 and ma_sum_count[i] == 1:
+                fn = fn + 1
+            elif op_sum_count[i] == 1 and ma_sum_count[i] == 0:
+                fp = fp + 1
+            elif op_sum_count[i] == 0 and ma_sum_count[i] == 0:
+                tn = tn + 1
+        
+        true_pos.append(tp)
+        false_neg.append(fn)
+        false_pos.append(fp)
+        true_neg.append(tn)
     
 
     # Create dataframe using all participants
     df_game['Participant'] = participant
-    df_game['OP [sec]'] = op_timer
-    df_game['MA [sec]'] = ma_timer
-    df_game['diff [sec]'] = diff_timer
-    df_game['Error [%]'] = per
+    df_game['Attempt'] = attempt
+    df_game['OP Attempt'] = op_attempt
+    df_game['MA Attempt'] = ma_attempt
+    df_game['OP True'] = op_count
+    df_game['MA True'] = ma_count
+    df_game['TP'] = true_pos
+    df_game['FN'] = false_neg
+    df_game['FP'] = false_pos
+    df_game['TN'] = true_neg
     df_game = df_game.set_index('Participant')
     
     # Download Game Results to Downloads Folder
-    df_game.to_csv(rf'/Users/soowan/Downloads/2023-{op_games[game_ind]}-TIMER.csv', encoding = 'utf-8-sig')
+    df_game.to_csv(rf'/Users/soowan/Downloads/2023-{op_games[game_ind]}-COUNT.csv', encoding = 'utf-8-sig')
 
     # # Download Game Results to Specific Folder
-    # df_game.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Results_Soowan/2023-{op_games[game_ind]}-TIMER.csv', encoding = 'utf-8-sig')
+    # df_game.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Results_Soowan/Count/2023-{op_games[game_ind]}-COUNT.csv', encoding = 'utf-8-sig')
 
 
         

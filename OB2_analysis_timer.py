@@ -125,7 +125,7 @@ for game_ind in range(len(op_games)):
     df_game['OP [sec]'] = op_timer
     df_game['MA [sec]'] = ma_timer
     df_game['diff [sec]'] = diff_timer
-    df_game['Error [%]'] = per
+    df_game['Error [%]'] = per_timer
     df_game = df_game.set_index('Participant')
     
     # Download Game Results to Downloads Folder
