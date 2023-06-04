@@ -11,8 +11,10 @@ import os
 
 # op_games = ['BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9']
 # ma_games = ['BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9']
-op_games = ['BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9']
-ma_games = ['BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9']
+op_games = ['BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9',
+            'Single1', 'Single2', 'Five', 'Thirty']
+ma_games = ['BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9',
+            'Single', 'Single', 'Five', 'Thirty']
 
 # SELECT FILES HERE
 # mmdd_p_all = ['0221_P01', '0314_P02', '0314_P03', '0315_P04', 
@@ -38,8 +40,7 @@ for mmdd_p in mmdd_p_all:
     op_source_file = '/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/OP_' + mmdd_p + '/' + op_file
     ma_source_file = '/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/MA_' + mmdd_p + '/' + ma_file
 
-    # Destination folder path
-    destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/OB2_Raw/'
+
 
     # *** For each participant rename BC#-Game ***
     if 'BC' in op_games[game_ind]:
@@ -64,15 +65,55 @@ for mmdd_p in mmdd_p_all:
                               ma_game = ma_games[game_ind] + '-' + 'NA'
                               break
 
-    # New name for the copied file
     if 'BC' in op_games[game_ind]:
+      # Destination folder path
+      destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/OB2_Raw/'
+      # New name for the copied file
       op_new_file_name = rf'2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_game}-Data-OP-CLEAN.csv'
       ma_new_file_name = rf'2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{ma_game}-MA-CLEAN.csv'
-        
+      # Construct the destination file path with the new name
+      op_destination_file = os.path.join(destination_folder, op_new_file_name)
+      ma_destination_file = os.path.join(destination_folder, ma_new_file_name)
 
-    # Construct the destination file path with the new name
-    op_destination_file = os.path.join(destination_folder, op_new_file_name)
-    ma_destination_file = os.path.join(destination_folder, ma_new_file_name)
+    elif op_games[game_ind] == 'Single1':
+      # Destination folder path
+      destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/SLS_Raw/SingleR'
+      op_new_file_name = rf'2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-SLS-Data-OP-CLEAN.csv'
+      ma_new_file_name = rf'2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-SLS-MA-CLEAN.csv'
+      # Construct the destination file path with the new name
+      op_destination_file = os.path.join(destination_folder, op_new_file_name)
+      ma_destination_file = os.path.join(destination_folder, ma_new_file_name)
+    
+    elif op_games[game_ind] == 'Single2':
+      # Destination folder path
+      destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/SLS_Raw/SingleL'
+      op_new_file_name = rf'2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-SLS-Data-OP-CLEAN.csv'
+      ma_new_file_name = rf'2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-SLS-MA-CLEAN.csv'
+      # Construct the destination file path with the new name
+      op_destination_file = os.path.join(destination_folder, op_new_file_name)
+      ma_destination_file = os.path.join(destination_folder, ma_new_file_name)
+    
+    elif op_games[game_ind] == 'Five':
+      # Destination folder path
+      destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/STS_Raw/Five'
+      # New name for the copied file
+      op_new_file_name = rf'2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-StS-Data-OP-CLEAN.csv'
+      ma_new_file_name = rf'2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-StS-MA-CLEAN.csv'
+      # Construct the destination file path with the new name
+      op_destination_file = os.path.join(destination_folder, op_new_file_name)
+      ma_destination_file = os.path.join(destination_folder, ma_new_file_name)
+    
+    elif op_games[game_ind] == 'Thirty':
+      # Destination folder path
+      destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/STS_Raw/Thirty'
+      # New name for the copied file
+      op_new_file_name = rf'2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-StS-Data-OP-CLEAN.csv'
+      ma_new_file_name = rf'2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-StS-MA-CLEAN.csv'
+      # Construct the destination file path with the new name
+      op_destination_file = os.path.join(destination_folder, op_new_file_name)
+      ma_destination_file = os.path.join(destination_folder, ma_new_file_name)
+       
+        
 
     try:
       # Copy the file with the new name to the destination folder
