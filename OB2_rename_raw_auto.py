@@ -26,6 +26,11 @@ mmdd_p_all = ['0221_P01', '0314_P02', '0314_P03', '0315_P04',
               '0406_P12', '0406_P13', '0407_P14', '0407_P15', '0407_P16', '0408_P17', '0408_P18', 
               '0411_P19', '0412_P20', '0412_P21', '0413_P22', '0420_P23', '0420_P24', '0430_P25', '0502_P26', '0516_P27', '0601_P28']
 
+# Specify if Repetition Count exercise or Repetition Timer exercise
+count = ['Sqt', 'StLun', 'VMODip', 'HipFlex', 'HipExt', 'HipAbd', 'Kick', 'LatStep', 'BackStep',
+            'StarJump', 'SeatKnExt', 'SeatHipFlex', 'SeatStarJump']
+timer = ['SeatClfStr', 'Run', 'ForStep', 'CalfStr', 'TdemStnce']
+
 directory_unknown = []
 
 # Automatically Loop Through Each Participant
@@ -65,9 +70,19 @@ for mmdd_p in mmdd_p_all:
                               ma_game = ma_games[game_ind] + '-' + 'NA'
                               break
 
-    if 'BC' in op_games[game_ind]:
+    if 'BC' in op_games[game_ind] and op_game[4:] in count:
       # Destination folder path
-      destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Raw_BC/'
+      destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Raw_BC_Count/'
+      # New name for the copied file
+      op_new_file_name = rf'2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_game}-Data-OP-CLEAN.csv'
+      ma_new_file_name = rf'2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{ma_game}-MA-CLEAN.csv'
+      # Construct the destination file path with the new name
+      op_destination_file = os.path.join(destination_folder, op_new_file_name)
+      ma_destination_file = os.path.join(destination_folder, ma_new_file_name)
+
+    elif 'BC' in op_games[game_ind] and op_game[4:] in timer:
+      # Destination folder path
+      destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Raw_BC_Timer/'
       # New name for the copied file
       op_new_file_name = rf'2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_game}-Data-OP-CLEAN.csv'
       ma_new_file_name = rf'2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{ma_game}-MA-CLEAN.csv'
@@ -77,7 +92,7 @@ for mmdd_p in mmdd_p_all:
 
     elif op_games[game_ind] == 'Single1':
       # Destination folder path
-      destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Raw_SLS/SingleR'
+      destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Raw_SCA_SLS/SingleR'
       op_new_file_name = rf'2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-SLS-Data-OP-CLEAN.csv'
       ma_new_file_name = rf'2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-SLS-MA-CLEAN.csv'
       # Construct the destination file path with the new name
@@ -86,7 +101,7 @@ for mmdd_p in mmdd_p_all:
     
     elif op_games[game_ind] == 'Single2':
       # Destination folder path
-      destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Raw_SLS/SingleL'
+      destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Raw_SCA_SLS/SingleL'
       op_new_file_name = rf'2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-SLS-Data-OP-CLEAN.csv'
       ma_new_file_name = rf'2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-SLS-MA-CLEAN.csv'
       # Construct the destination file path with the new name
@@ -95,7 +110,7 @@ for mmdd_p in mmdd_p_all:
     
     elif op_games[game_ind] == 'Five':
       # Destination folder path
-      destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Raw_STS/Five'
+      destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Raw_SCA_STS/Five'
       # New name for the copied file
       op_new_file_name = rf'2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-StS-Data-OP-CLEAN.csv'
       ma_new_file_name = rf'2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-StS-MA-CLEAN.csv'
@@ -105,7 +120,7 @@ for mmdd_p in mmdd_p_all:
     
     elif op_games[game_ind] == 'Thirty':
       # Destination folder path
-      destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Raw_STS/Thirty'
+      destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Raw_SCA_STS/Thirty'
       # New name for the copied file
       op_new_file_name = rf'2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-StS-Data-OP-CLEAN.csv'
       ma_new_file_name = rf'2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-StS-MA-CLEAN.csv'
