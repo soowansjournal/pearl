@@ -67,7 +67,7 @@ for mmdd_p in mmdd_p_all:
 
     if 'BC' in op_games[game_ind]:
       # Destination folder path
-      destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/OB2_Raw/'
+      destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Raw_BC/'
       # New name for the copied file
       op_new_file_name = rf'2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_game}-Data-OP-CLEAN.csv'
       ma_new_file_name = rf'2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{ma_game}-MA-CLEAN.csv'
@@ -77,7 +77,7 @@ for mmdd_p in mmdd_p_all:
 
     elif op_games[game_ind] == 'Single1':
       # Destination folder path
-      destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/SLS_Raw/SingleR'
+      destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Raw_SLS/SingleR'
       op_new_file_name = rf'2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-SLS-Data-OP-CLEAN.csv'
       ma_new_file_name = rf'2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-SLS-MA-CLEAN.csv'
       # Construct the destination file path with the new name
@@ -86,7 +86,7 @@ for mmdd_p in mmdd_p_all:
     
     elif op_games[game_ind] == 'Single2':
       # Destination folder path
-      destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/SLS_Raw/SingleL'
+      destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Raw_SLS/SingleL'
       op_new_file_name = rf'2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-SLS-Data-OP-CLEAN.csv'
       ma_new_file_name = rf'2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-SLS-MA-CLEAN.csv'
       # Construct the destination file path with the new name
@@ -95,7 +95,7 @@ for mmdd_p in mmdd_p_all:
     
     elif op_games[game_ind] == 'Five':
       # Destination folder path
-      destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/STS_Raw/Five'
+      destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Raw_STS/Five'
       # New name for the copied file
       op_new_file_name = rf'2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-StS-Data-OP-CLEAN.csv'
       ma_new_file_name = rf'2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-StS-MA-CLEAN.csv'
@@ -105,7 +105,7 @@ for mmdd_p in mmdd_p_all:
     
     elif op_games[game_ind] == 'Thirty':
       # Destination folder path
-      destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/STS_Raw/Thirty'
+      destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Raw_STS/Thirty'
       # New name for the copied file
       op_new_file_name = rf'2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-StS-Data-OP-CLEAN.csv'
       ma_new_file_name = rf'2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-StS-MA-CLEAN.csv'
