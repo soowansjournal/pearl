@@ -211,7 +211,7 @@ def synch_op(op_synch, op_thresh, op_dist, op_peak, op_end):
 
   # locate the end frame of the game
   # end_frame_op = int(input('Orbbec Ending Frame (FROM GRAPH): '))
-  end_frame_op = op_end
+  end_frame_op = op_end       #len(op_synch) since we're analyzing Boot Camp???
 
   print(f'\nShape of Orbbec BEFORE synchronization: {op_synch.shape}')
   op_synch = op_synch[op_peak:end_frame_op]       # cut orbbec data from starting position (horizontal peak) to ending position (frame at end of game log)

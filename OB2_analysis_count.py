@@ -1,4 +1,4 @@
-"""To analyze Boot Camp Repetition - Timer - Exercises"""
+"""To analyze Boot Camp Repetition - Count - Exercises"""
 
 import pandas as pd
 import numpy as np
@@ -17,10 +17,14 @@ def load_ma(ma_file):
 
 
 # Select Game
-# op_games = ['SeatClfStr', 'Run', 'ForStep', 'CalfStr', 'TdemStnce']
-# ma_games = ['SeatClfStr', 'Run', 'ForStep', 'CalfStr', 'TdemStnce']
-op_games = ['SeatClfStr', 'Run', 'ForStep', 'CalfStr', 'TdemStnce']
-ma_games = ['SeatClfStr', 'Run', 'ForStep', 'CalfStr', 'TdemStnce']
+# op_games = ['Sqt', 'StLun', 'VMODip', 'HipFlex', 'HipExt', 'HipAbd', 'Kick', 'LatStep', 'BackStep',
+#             'StarJump', 'SeatKnExt', 'SeatHipFlex', 'SeatStarJump']
+# ma_games = ['Sqt', 'StLun', 'VMODip', 'HipFlex', 'HipExt', 'HipAbd', 'Kick', 'LatStep', 'BackStep',
+#             'StarJump', 'SeatKnExt', 'SeatHipFlex', 'SeatStarJump']
+op_games = ['Sqt', 'StLun', 'VMODip', 'HipFlex', 'HipExt', 'HipAbd', 'Kick', 'LatStep', 'BackStep',
+            'StarJump', 'SeatKnExt', 'SeatHipFlex', 'SeatStarJump']
+ma_games = ['Sqt', 'StLun', 'VMODip', 'HipFlex', 'HipExt', 'HipAbd', 'Kick', 'LatStep', 'BackStep',
+            'StarJump', 'SeatKnExt', 'SeatHipFlex', 'SeatStarJump']
 
 
 # SELECT FILES HERE
@@ -34,10 +38,10 @@ mmdd_p_all = ['0221_P01', '0314_P02', '0314_P03', '0315_P04',
               '0411_P19', '0412_P20', '0412_P21', '0413_P22', '0420_P23', '0420_P24', '0430_P25', '0502_P26', '0516_P27', '0601_P28']
 
 # Steps:
-# 1) For each timer game
-# 2) Go through all participants
+# 1) For each count game
+# 2) For each participants
 # 3) Go through Ajmal's Results File
-# 4) If correct timer game file
+# 4) If correct count game file
 # 5) Read/Analyze the results file - OP vs MA
     # For each row
     # If quality rep
@@ -63,7 +67,7 @@ for game_ind in range(len(op_games)):
         ma_sum_time = []
         
         # 3) Go through Ajmal's Results File
-        folder_path = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Results_Ajmal/Timer'
+        folder_path = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Results_Ajmal'
 
         for filename in os.listdir(folder_path):
             file_path = os.path.join(folder_path, filename)
@@ -132,7 +136,7 @@ for game_ind in range(len(op_games)):
     df_game.to_csv(rf'/Users/soowan/Downloads/2023-{op_games[game_ind]}-TIMER.csv', encoding = 'utf-8-sig')
 
     # # Download Game Results to Specific Folder
-    # df_game.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Results_Soowan/Timer/2023-{op_games[game_ind]}-TIMER.csv', encoding = 'utf-8-sig')
+    # df_game.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Results_Soowan/2023-{op_games[game_ind]}-TIMER.csv', encoding = 'utf-8-sig')
 
 
         
