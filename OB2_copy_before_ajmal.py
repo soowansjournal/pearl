@@ -5,13 +5,14 @@ import os
 import re
 
 # Define the source and destination folders
-# USING RAW FILES
-# TIMER
-source_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Raw_BC_Timer'
-destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/OB2_Raw'
-# # COUNT
-# source_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Raw_BC_Count'
+
+# # USING RAW FILES
+# # TIMER
+# source_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Raw_BC_Timer'
 # destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/OB2_Raw'
+# COUNT
+source_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Raw_BC_Count'
+destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/OB2_Raw'
 
 # # USING CLEAN FILES
 # # TIMER
@@ -23,8 +24,8 @@ destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/OB2_Raw'
 
 
 # Specify the letters to search for in the filenames
-letters_to_search = 'MA-CLEAN'
-# letters_to_search = 'OP-CLEAN'
+# letters_to_search = 'MA-CLEAN'
+letters_to_search = 'OP-CLEAN'
 
 
 # Get a list of files in the source folder

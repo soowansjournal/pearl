@@ -36,8 +36,8 @@ def load_ma(ma_file):
 # Select Game
 # op_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
 # ma_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
-op_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
-ma_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
+op_games = [ 'Jet', 'Astro']
+ma_games = ['Jet', 'Astro']
 
 
 # SELECT FILES HERE
@@ -45,7 +45,10 @@ ma_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
 #               '0316_P05', '0322_P06', '0402_P07', '0403_P08', '0403_P09', '0404_P10', '0404_P11', 
 #               '0406_P12', '0406_P13', '0407_P14', '0407_P15', '0407_P16', '0408_P17', '0408_P18', 
 #               '0411_P19', '0412_P20', '0412_P21', '0413_P22', '0420_P23', '0420_P24', '0430_P25', '0502_P26', '0516_P27', '0601_P28']
-mmdd_p_all = ['0601_P28']
+mmdd_p_all = ['0221_P01', '0314_P02', '0314_P03', '0315_P04', 
+              '0316_P05', '0322_P06', '0402_P07', '0403_P08', '0403_P09', '0404_P10', '0404_P11', 
+              '0406_P12', '0406_P13', '0407_P14', '0407_P15', '0407_P16', '0408_P17', '0408_P18', 
+              '0411_P19', '0412_P20', '0412_P21', '0413_P22', '0420_P23', '0420_P24', '0430_P25', '0502_P26', '0516_P27', '0601_P28']
 
 
 # 1) For each game

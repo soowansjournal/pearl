@@ -130,15 +130,26 @@ for game_ind in range(len(op_games)):
         fn = 0
         fp = 0
         tn = 0
-        for i in range(len(ma_sum_count)):
-            if op_sum_count[i] == 1 and ma_sum_count[i] == 1:
-                tp = tp + 1
-            elif op_sum_count[i] == 0 and ma_sum_count[i] == 1:
-                fn = fn + 1
-            elif op_sum_count[i] == 1 and ma_sum_count[i] == 0:
-                fp = fp + 1
-            elif op_sum_count[i] == 0 and ma_sum_count[i] == 0:
-                tn = tn + 1
+        if len(ma_sum_count) > len(op_sum_count):
+            for i in range(len(op_sum_count)):
+                if op_sum_count[i] == 1 and ma_sum_count[i] == 1:
+                    tp = tp + 1
+                elif op_sum_count[i] == 0 and ma_sum_count[i] == 1:
+                    fn = fn + 1
+                elif op_sum_count[i] == 1 and ma_sum_count[i] == 0:
+                    fp = fp + 1
+                elif op_sum_count[i] == 0 and ma_sum_count[i] == 0:
+                    tn = tn + 1
+        else:
+            for i in range(len(ma_sum_count)):
+                if op_sum_count[i] == 1 and ma_sum_count[i] == 1:
+                    tp = tp + 1
+                elif op_sum_count[i] == 0 and ma_sum_count[i] == 1:
+                    fn = fn + 1
+                elif op_sum_count[i] == 1 and ma_sum_count[i] == 0:
+                    fp = fp + 1
+                elif op_sum_count[i] == 0 and ma_sum_count[i] == 0:
+                    tn = tn + 1
         
         true_pos.append(tp)
         false_neg.append(fn)
