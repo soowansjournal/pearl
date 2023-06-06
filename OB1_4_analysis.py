@@ -159,7 +159,7 @@ for game_ind in range(len(op_games)):
             dataframes.append(left.transpose())
             
         for i in range(len(right_reach_max)):
-            right = pd.DataFrame(np.array(left_reach_max.iloc[i,1:]))
+            right = pd.DataFrame(np.array(right_reach_max.iloc[i,1:]))
             dataframes.append(right.transpose())
 
 

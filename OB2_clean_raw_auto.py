@@ -34,7 +34,7 @@ def load_ma(ma_file):
 # op_games = ['BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9',
 #              'Single1', 'Single2', 'Five', 'Thirty']
 # ma_games = ['BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9',
-#              'Single1', 'Single2', 'Five', 'Thirty']
+#              'Single', 'Single', 'Five', 'Thirty']
 op_games = ['BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9',
              'Single1', 'Single2', 'Five', 'Thirty']
 ma_games = ['BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9',
@@ -105,15 +105,20 @@ for mmdd_p in mmdd_p_all:
 
 
               # Clean OP 
-              op_synch = op.drop(op.index[1:op_peak])
+              # Synchronize
+              op_synch = op.drop(op.index[0:op_peak])
               # Standardize Time 
-              op_synch['Time'] = op_synch['Time'] - op_synch['Time'][0]
+              op_synch['Time'] = op_synch['Time'] - op_synch.iloc[0,0]
               op_final = op_synch
      
               # Clean MA
+              # Synchronize
               ma_synch = ma.drop(ma.index[:ma_peak])
               # Standardize Time 
               ma_synch['Time'] = ma_synch['Time'] - ma_synch.iloc[0,1]
+              # Standardize Frames
+              ma_synch['Frame#'] = ma_synch['Frame#'] - (ma_synch.iloc[0,0] - 1)
+              ma_synch['Frame#'] = ma_synch['Frame#'].astype(int)
               ma_final = ma_synch
 
 
@@ -180,7 +185,7 @@ for mmdd_p in mmdd_p_all:
 
 
               # # DOWNLOAD FILES TO DOWNLOADS FOLDER
-              # if 'Power' in op_games[game_ind] or 'BC' in op_games[game_ind]:
+              # if 'BC' in op_games[game_ind]:
               #   # DOWNLOAD CLEANED OP DATA
               #   op_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_game}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig', index = False) 
               #   # DOWNLOAD CLEANED MA BOOT CAMP DATA
@@ -193,23 +198,23 @@ for mmdd_p in mmdd_p_all:
 
               # DOWNLOAD FILES TO SPECIFIC LOCATION
               if 'BC' in op_games[game_ind] and op_game[4:] in count:
-                op_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_BC_Count/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_game}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig') 
-                ma_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_BC_Count/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{ma_game}-MA-CLEAN.csv', encoding = 'utf-8-sig') 
+                op_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_BC_Count/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_game}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig', index = False) 
+                ma_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_BC_Count/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{ma_game}-MA-CLEAN.csv', encoding = 'utf-8-sig', index = False) 
               elif 'BC' in op_games[game_ind] and op_game[4:] in timer:
-                op_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_BC_Timer/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_game}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig') 
-                ma_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_BC_Timer/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{ma_game}-MA-CLEAN.csv', encoding = 'utf-8-sig') 
+                op_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_BC_Timer/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_game}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig', index = False) 
+                ma_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_BC_Timer/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{ma_game}-MA-CLEAN.csv', encoding = 'utf-8-sig', index = False) 
               elif op_games[game_ind] == 'Single1':
-                op_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_SLS/SingleR/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-SLS-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig') 
-                ma_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_SLS/SingleR/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-SLS-MA-CLEAN.csv', encoding = 'utf-8-sig') 
+                op_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_SLS/SingleR/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-SLS-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig', index = False) 
+                ma_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_SLS/SingleR/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-SLS-MA-CLEAN.csv', encoding = 'utf-8-sig', index = False) 
               elif op_games[game_ind] == 'Single2':
-                op_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_SLS/SingleL/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-SLS-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig') 
-                ma_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_SLS/SingleL/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-SLS-MA-CLEAN.csv', encoding = 'utf-8-sig') 
+                op_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_SLS/SingleL/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-SLS-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig', index = False) 
+                ma_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_SLS/SingleL/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-SLS-MA-CLEAN.csv', encoding = 'utf-8-sig', index = False) 
               elif op_games[game_ind] == 'Five':
-                op_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_STS/Five/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-StS-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig') 
-                ma_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_STS/Five/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-StS-MA-CLEAN.csv', encoding = 'utf-8-sig')        
+                op_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_STS/Five/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-StS-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig', index = False) 
+                ma_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_STS/Five/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-StS-MA-CLEAN.csv', encoding = 'utf-8-sig', index = False)        
               elif op_games[game_ind] == 'Thirty':
-                op_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_STS/Thirty/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-StS-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig') 
-                ma_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_STS/Thirty/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-StS-MA-CLEAN.csv', encoding = 'utf-8-sig')        
+                op_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_STS/Thirty/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-StS-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig', index = False) 
+                ma_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_STS/Thirty/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-StS-MA-CLEAN.csv', encoding = 'utf-8-sig', index = False)        
 
 print("\nFOLLOWING FILES DO NOT EXIST:", directory_unknown)
 

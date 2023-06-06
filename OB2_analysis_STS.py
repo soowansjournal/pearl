@@ -16,15 +16,19 @@ def load_ma(ma_file):
   return ma
 
 
+
+
+# Specify which sit! 'Five' or 'Thirty'
+sit_type = 'Thirty'
+
+
+
+
 # Select Game
-# op_games = ['Sqt', 'StLun', 'VMODip', 'HipFlex', 'HipExt', 'HipAbd', 'Kick', 'LatStep', 'BackStep',
-#             'StarJump', 'SeatKnExt', 'SeatHipFlex', 'SeatStarJump']
-# ma_games = ['Sqt', 'StLun', 'VMODip', 'HipFlex', 'HipExt', 'HipAbd', 'Kick', 'LatStep', 'BackStep',
-#             'StarJump', 'SeatKnExt', 'SeatHipFlex', 'SeatStarJump']
-op_games = ['Sqt', 'StLun', 'VMODip', 'HipFlex', 'HipExt', 'HipAbd', 'Kick', 'LatStep', 'BackStep',
-            'StarJump', 'SeatKnExt', 'SeatHipFlex', 'SeatStarJump']
-ma_games = ['Sqt', 'StLun', 'VMODip', 'HipFlex', 'HipExt', 'HipAbd', 'Kick', 'LatStep', 'BackStep',
-            'StarJump', 'SeatKnExt', 'SeatHipFlex', 'SeatStarJump']
+# op_games = ['StS']
+# ma_games = ['StS']
+op_games = ['StS']
+ma_games = ['StS']
 
 
 # SELECT FILES HERE
@@ -72,7 +76,10 @@ for game_ind in range(len(op_games)):
         ma_sum_count = []
         
         # 3) Go through Ajmal's Results File
-        folder_path = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Results_Ajmal/Count'
+        if sit_type == 'Five':
+            folder_path = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Results_Ajmal/STS/Five'
+        else:
+            folder_path = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Results_Ajmal/STS/Thirty'
 
         for filename in os.listdir(folder_path):
             file_path = os.path.join(folder_path, filename)
@@ -172,10 +179,16 @@ for game_ind in range(len(op_games)):
     df_game = df_game.set_index('Participant')
     
     # Download Game Results to Downloads Folder
-    df_game.to_csv(rf'/Users/soowan/Downloads/2023-{op_games[game_ind]}-COUNT.csv', encoding = 'utf-8-sig')
+    if sit_type == 'Five':
+        df_game.to_csv(rf'/Users/soowan/Downloads/2023-{op_games[game_ind]}-Five-COUNT.csv', encoding = 'utf-8-sig')
+    else:
+        df_game.to_csv(rf'/Users/soowan/Downloads/2023-{op_games[game_ind]}-Thirty-COUNT.csv', encoding = 'utf-8-sig')
 
     # # Download Game Results to Specific Folder
-    # df_game.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Results_Soowan/Count/2023-{op_games[game_ind]}-COUNT.csv', encoding = 'utf-8-sig')
+    if sit_type == 'Five':
+        df_game.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Results_Soowan/STS/Five/2023-{op_games[game_ind]}-Five-COUNT.csv', encoding = 'utf-8-sig')
+    else:
+        df_game.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Results_Soowan/STS/Thirty/2023-{op_games[game_ind]}-Thirty-COUNT.csv', encoding = 'utf-8-sig')
 
 
         

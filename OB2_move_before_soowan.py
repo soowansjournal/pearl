@@ -1,21 +1,35 @@
-"""To COPY Files to Use with Soowan's Algorithm"""
+"""To MOVE Files to Use with Soowan's Algorithm"""
 
 import shutil
 import os
 import re
 
-count = ['Sqt', 'StLun', 'VMODip', 'HipFlex', 'HipExt', 'HipAbd', 'Kick', 'LatStep', 'BackStep',
-            'StarJump', 'SeatKnExt', 'SeatHipFlex', 'SeatStarJump']
-timer = ['SeatClfStr', 'Run', 'ForStep', 'CalfStr', 'TdemStnce']
 
+
+
+# Specify which leg!  'R' or 'L'
+leg_side = 'R'
+# Specify which sit! 'Five' or 'Thirty'
+sit_type = 'Thirty'
+
+
+
+
+
+single_leg_stance = ['SLS.csv']
+sit_to_stand = ['StS.csv']
 
 
 # Specify the letters to search for in the filenames
-for letters_to_search in count:
+for letters_to_search in single_leg_stance:
 
     # Define the source and destination folders
     source_folder = '/Users/soowan/Library/Application Support/Holland Bloorview/BBLogVisualizer/Saves/001/Logs'
-    destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Results_Ajmal/Count'
+
+    if leg_side == 'R':
+        destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Results_Ajmal/SLS/SingleR'
+    else:
+        destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Results_Ajmal/SLS/SingleL'
 
     # Get a list of files in the source folder
     file_list = os.listdir(source_folder)
@@ -30,17 +44,21 @@ for letters_to_search in count:
         destination_file = os.path.join(destination_folder, file_name)
 
         # Copy the file
-        shutil.copy(source_file, destination_file)
+        shutil.move(source_file, destination_file)
 
-        print("COUNT - Files copied successfully!")
+        print("Single_Leg_Stance - Files MOVED successfully!")
 
 
 # Specify the letters to search for in the filenames
-for letters_to_search in timer:
+for letters_to_search in sit_to_stand:
 
     # Define the source and destination folders
     source_folder = '/Users/soowan/Library/Application Support/Holland Bloorview/BBLogVisualizer/Saves/001/Logs'
-    destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Results_Ajmal/Timer'
+
+    if sit_type == 'Five':
+        destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Results_Ajmal/STS/Five'
+    else:
+        destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Results_Ajmal/STS/Thirty'
 
     # Get a list of files in the source folder
     file_list = os.listdir(source_folder)
@@ -55,8 +73,6 @@ for letters_to_search in timer:
         destination_file = os.path.join(destination_folder, file_name)
 
         # Copy the file
-        shutil.copy(source_file, destination_file)
+        shutil.move(source_file, destination_file)
 
-        print("TIMER - Files copied successfully!")
-
-
+        print("Sit_to_Stand - Files MOVED successfully!")

@@ -10,9 +10,22 @@ import re
 # # TIMER
 # source_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Raw_BC_Timer'
 # destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/OB2_Raw'
-# COUNT
-source_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Raw_BC_Count'
-destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/OB2_Raw'
+# # COUNT
+# source_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Raw_BC_Count'
+# destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/OB2_Raw'
+# # SINGLE_RIGHT
+# source_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Raw_SCA_SLS/SingleR'
+# destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/OB2_Raw'
+# # SINGLE_LEFT
+# source_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Raw_SCA_SLS/SingleL'
+# destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/OB2_Raw'
+# # FIVE
+# source_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Raw_SCA_STS/Five'
+# destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/OB2_Raw'
+# # THIRTY
+# source_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Raw_SCA_STS/Thirty'
+# destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/OB2_Raw'
+
 
 # # USING CLEAN FILES
 # # TIMER
@@ -20,6 +33,18 @@ destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/OB2_Raw'
 # destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/OB2_Clean'
 # # COUNT
 # source_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_BC_Count'
+# destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/OB2_Clean'
+# SINGLE_RIGHT
+source_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_SLS/SingleR'
+destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/OB2_Clean'
+# # SINGLE_LEFT
+# source_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_SLS/SingleL'
+# destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/OB2_Clean'
+# # FIVE
+# source_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_STS/Five'
+# destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/OB2_Clean'
+# # THIRTY
+# source_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_STS/Thirty'
 # destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/OB2_Clean'
 
 
