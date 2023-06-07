@@ -26,7 +26,7 @@ for game in bb_games:
     for i in range(len(df.columns)):
         if 'OP' in df.columns[i]:
             op_index.append(i)    
-    print(op_index)
+    # print(op_index)
 
 
 
@@ -111,7 +111,7 @@ for game in bb_games:
             ax.set_xlabel('Mean [deg]')
             ax.set_ylabel('Difference [deg]')
             ax.set_title(f'{joint_title[j]}')
-            ax.legend()
+            # ax.legend()
 
             # Add line values
             ax.text(plt.xlim()[1], np.mean(diff), f' {np.mean(diff):.2f}', ha='left', va='center', color='red')
@@ -133,13 +133,13 @@ for game in bb_games:
         # Adjust the spacing between subplots and the overall title
         fig.tight_layout(rect=[0, 0, 1, 0.96])
 
-        # Show the plots
-        plt.show()
+        # # Show the plots
+        # plt.show()
     
     # Get the path to the "Downloads" folder
     downloads_path = os.path.expanduser('~/Downloads')
     # Save the plot to the "Downloads" folder
-    file_path = os.path.join(downloads_path, f'bland_altman_{game}_speed.png')
+    file_path = os.path.join(downloads_path, f'speed_{game}_bland_altman.png')
     fig.savefig(file_path)
 
         
