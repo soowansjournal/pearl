@@ -28,15 +28,15 @@ import re
 
 
 # # USING CLEAN FILES
-# # TIMER
-# source_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_BC_Timer'
-# destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/OB2_Clean'
+# TIMER
+source_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_BC_Timer'
+destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/OB2_Clean'
 # # COUNT
 # source_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_BC_Count'
 # destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/OB2_Clean'
-# SINGLE_RIGHT
-source_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_SLS/SingleR'
-destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/OB2_Clean'
+# # SINGLE_RIGHT
+# source_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_SLS/SingleR'
+# destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/OB2_Clean'
 # # SINGLE_LEFT
 # source_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_SLS/SingleL'
 # destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/OB2_Clean'
@@ -49,8 +49,8 @@ destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/OB2_Clean'
 
 
 # Specify the letters to search for in the filenames
-# letters_to_search = 'MA-CLEAN'
-letters_to_search = 'OP-CLEAN'
+letters_to_search = 'MA-CLEAN'
+# letters_to_search = 'OP-CLEAN'
 
 
 # Get a list of files in the source folder

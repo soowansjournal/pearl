@@ -19,7 +19,7 @@ def load_ma(ma_file):
 
 
 # Specify which leg!  'R' or 'L'
-leg_side = 'R'
+leg_side = 'L'
 
 
 
@@ -166,10 +166,10 @@ for game_ind in range(len(op_games)):
         df_game.to_csv(rf'/Users/soowan/Downloads/2023-{op_games[game_ind]}-Left-TIMER.csv', encoding = 'utf-8-sig')
 
     # # Download Game Results to Specific Folder
-    if leg_side == 'R':
-        df_game.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Results_Soowan/SLS/SingleR/2023-{op_games[game_ind]}-Right-TIMER.csv', encoding = 'utf-8-sig')
-    else: 
-        df_game.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Results_Soowan/SLS/SingleL/2023-{op_games[game_ind]}-Left-TIMER.csv', encoding = 'utf-8-sig')
+    # if leg_side == 'R':
+    #     df_game.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Results_Soowan/SLS/SingleR/2023-{op_games[game_ind]}-Right-TIMER.csv', encoding = 'utf-8-sig')
+    # else: 
+    #     df_game.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Results_Soowan/SLS/SingleL/2023-{op_games[game_ind]}-Left-TIMER.csv', encoding = 'utf-8-sig')
 
 
         

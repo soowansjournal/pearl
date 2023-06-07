@@ -30,7 +30,7 @@ for letters_to_search in count:
         destination_file = os.path.join(destination_folder, file_name)
 
         # Copy the file
-        shutil.copy(source_file, destination_file)
+        shutil.move(source_file, destination_file)
 
         print("COUNT - Files copied successfully!")
 
@@ -55,7 +55,7 @@ for letters_to_search in timer:
         destination_file = os.path.join(destination_folder, file_name)
 
         # Copy the file
-        shutil.copy(source_file, destination_file)
+        shutil.move(source_file, destination_file)
 
         print("TIMER - Files copied successfully!")
 
