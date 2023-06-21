@@ -1,3 +1,6 @@
+# Method 3: Method 2 Fixed
+# (OP: XYZ MA: XYZ -->  Post0316 MA: XZnegY Pre0316 MA: YZX)
+
 '''
 ---
 # **Copy of CHAPTER 3: OB2 Clean Raw Auto**
@@ -10,6 +13,113 @@ Soowan Choi
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+
+
+# from OB2_clean_raw_auto_fun import * # todo import other modules
+def remove_outliers(array):
+  #calculate interquartile range 
+  q1, q3 = np.percentile(array, [25 ,75])
+  iqr = q3 - q1
+
+  lower = q1 - 1.5*iqr
+  upper = q3 + 1.5*iqr
+
+  lower_outliers = len(array[array < lower])
+  upper_outliers = len(array[array > upper])
+
+  outliers_index = list(array.index[array < lower].values) +  list(array.index[array > upper].values)
+
+  # drop upper and lower outliers
+  print(f'Lower Outliers: {lower_outliers} Upper Outliers: {upper_outliers}')
+  array = array.drop(outliers_index)
+
+  return array
+
+def data_vis(op_vis, ma_vis, joint):
+  '''
+  To Visualize and Compare Column Data
+  '''
+
+   # If resampled so OP and MA have equal data length
+  if len(op_vis) == len(ma_vis):
+    print('[length OP == MA]')
+    x = np.linspace(0,len(ma_vis),len(ma_vis))  
+    plt.figure(figsize=(5,3))                     
+    plt.plot(x,op_vis, label = 'OP Cleaned')                  
+    plt.plot(x,ma_vis, label = 'MA Cleaned')                    
+    plt.legend()
+    plt.title(f'Cleaned Orbbec & Motion Data {joint}')
+    plt.xlabel('Frames [Hz]')
+    plt.ylabel('Distance [cm]')
+    plt.show()
+  
+  # If not resampled so OP and MA have different data length
+  else:
+    x = np.linspace(0,len(op_vis),len(op_vis))  
+    plt.figure(figsize=(5,3))                     
+    plt.plot(x,op_vis, label = 'OP Cleaned')
+    plt.legend()
+    plt.title(f'Cleaned Orbbec Data {joint}')
+    plt.xlabel('Frames [Hz]')
+    plt.ylabel('Distance [cm]')
+    plt.show()   
+    
+    x = np.linspace(0,len(ma_vis),len(ma_vis))  
+    plt.figure(figsize=(5,3))                
+    plt.plot(x,ma_vis, label = 'MA Cleaned')                    
+    plt.legend()
+    plt.title(f'Cleaned Motion Data {joint}')
+    plt.xlabel('Frames [Hz]')
+    plt.ylabel('Distance [cm]')
+    plt.show()
+
+
+def align_vis(offset_bias, joint, coord):
+  '''
+  To Visualize and Compare Column Data
+  '''
+  x = np.linspace(0,len(offset_bias),len(offset_bias))  
+  plt.figure(figsize=(5,3))                     
+  plt.plot(x, offset_bias, label = 'Offset_Bias')                                  
+  plt.legend()
+  plt.title(f'Offset_Bias OP & MA: {joint} {coord}')
+  plt.xlabel('Frames [Hz]')
+  plt.ylabel('Distance [cm]')
+  plt.show()
+
+
+def resam_ma(ma_resam, op_synch):
+  # to resampled data
+  from scipy import signal
+  from sklearn.utils import resample
+  '3.2.5) Resample (30 Hz)'
+
+  print('\n3.2.5) RESAMPLE (30 HZ)\n----------------------------\n')
+
+  print(f'The total time that motion runs is {ma_resam.Time.iloc[-1] - ma_resam.Time.iloc[0]} secs \n')
+  print(f'Shape of Motion BEFORE resampling (downsampling to 30 Hz): {ma_resam.shape}')
+
+  # save column and row to recreate dataframe
+  ma_col = ma_resam.columns
+  ma_row = ma_resam.index
+
+  # resample motion dataframe
+  secs = (ma_resam.Time.iloc[-1] - ma_resam.Time.iloc[0])
+  samps = op_synch.shape[0] #int(secs*30)                # number of samples to resample
+  ma_resam = signal.resample(ma_resam, samps)            # array of resampled data
+  ma_resam = pd.DataFrame(ma_resam, columns = ma_col)    # recreate the dataframe
+  print(f'Shape of Motion AFTER resampling (downsampling to 30 Hz): {ma_resam.shape} \n')
+
+  # check which columns have null values from the resampled data 
+  print('Columns with null values AFTER RESAMPLING:')
+  for col in ma_resam.columns:
+    null = str(ma_resam[col].isnull().unique()[0])
+    if null == 'True':
+      print('',col)  
+
+  return ma_resam
+
+
 
 def load_op(op_file):
   # create dataframe from uploaded csv files using pandas.read_csv()
@@ -35,18 +145,15 @@ def load_ma(ma_file):
 #              'Single1', 'Single2', 'Five', 'Thirty']
 # ma_games = ['BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9',
 #              'Single', 'Single', 'Five', 'Thirty']
-op_games = ['BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9',
-             'Single1', 'Single2', 'Five', 'Thirty']
-ma_games = ['BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9',
-             'Single', 'Single', 'Five', 'Thirty']
+op_games = ['BC4']
+ma_games = ['BC4']
 
 # SELECT FILES HERE
 # mmdd_p_all = ['0221_P01', '0314_P02', '0314_P03', '0315_P04', 
 #               '0316_P05', '0322_P06', '0402_P07', '0403_P08', '0403_P09', '0404_P10', '0404_P11', 
 #               '0406_P12', '0406_P13', '0407_P14', '0407_P15', '0407_P16', '0408_P17', '0408_P18', 
 #               '0411_P19', '0412_P20', '0412_P21', '0413_P22', '0420_P23', '0420_P24', '0430_P25', '0502_P26', '0516_P27', '0601_P28']
-mmdd_p_all = [
-              '0316_P05']
+mmdd_p_all = ['0404_P11']
 
 # Specify if Repetition Count exercise or Repetition Timer exercise
 count = ['Sqt', 'StLun', 'VMODip', 'HipFlex', 'HipExt', 'HipAbd', 'Kick', 'LatStep', 'BackStep',
@@ -118,6 +225,201 @@ for mmdd_p in mmdd_p_all:
               ma_synch['Frame#'] = ma_synch['Frame#'] - (ma_synch.iloc[0,0] - 1)
               ma_synch['Frame#'] = ma_synch['Frame#'].astype(int)
               ma_final = ma_synch
+
+              # Synchronize End of MA Too
+              # overall OP game duration to locate end frame of the game for MA 
+              duration = (op_final.Time.iloc[-1] - op_final.Time.iloc[0]) / 1000
+              # round to two decimal places as MA time increases in .05 second decimal increments
+              duration = round(duration,2)
+              # locate the end frame of the game
+              end_frame_ma = ma_final.loc[ma_final['Time'] >= duration, 'Frame#'].values[0]
+              ma_final = ma_final.drop(ma_final.index[end_frame_ma:])
+
+              # Resample MA to Match OP --> Used to Find Offset_Bias
+              ma_resam = resam_ma(ma_final, op_final)
+
+
+
+
+              # Align the Joints (OP: XYZ MA: XYZ -->  Post0316 MA: XZnegY Pre0316 MA: YZX)
+              op_joints = ['Head','ShoulderRight','ElbowRight','WristRight','ShoulderLeft','ElbowLeft','WristLeft',
+                           'HipRight','HipLeft','KneeRight','FootRight','KneeLeft','FootLeft']
+              ma_joints = ['Front.Head','R.Shoulder','R.Elbow','R.Wrist','L.Shoulder','L.Elbow','L.Wrist',
+                           'R.ASIS','L.ASIS','R.Knee','R.Ankle','L.Knee','L.Ankle']
+              
+              ma_joint_cols = []
+              op_joint_cols = []
+              # For each joint
+              for i in range(len(op_joints)):
+                # For each of the columns in each file
+                for n in range(len(ma_resam.columns) - 2):
+                   # If correct joint column
+                   if ma_joints[i] == ma_resam.columns[n]:
+                      # Check to make sure correct joint columns 
+                      ma_joint_cols.append(ma_resam.columns[n])
+                      ma_joint_x = ma_resam.iloc[:,n]
+                      ma_joint_y = ma_resam.iloc[:,n+1]
+                      ma_joint_z = ma_resam.iloc[:,n+2]
+                for k in range(1, len(op_final.columns)-2, 3):
+                   if (op_joints[i] in op_final.columns[k]) and ('Tracked' not in op_final.columns[k]):
+                      # print(op_joints[i], op_final.columns[k])
+                      # Check to make sure correct joint columns 
+                      print(op_final.columns[k])
+                      op_joint_cols.append(op_final.columns[k-2])
+                      op_joint_x = op_final.iloc[:,k]
+                      op_joint_y = op_final.iloc[:,k+1]
+                      op_joint_z = op_final.iloc[:,k+2]
+
+                # Convert values to float (MA used to be 'str')
+                # MA mm --> cm and OP m --> cm  
+                #print(f'MA: {type(ma_joint_x.iloc[-100])}, OP: {type(op_joint_x.iloc[-100])}')
+                ma_joint_x = ma_joint_x.astype(float) / 10
+                ma_joint_y = ma_joint_y.astype(float) / 10
+                ma_joint_z = ma_joint_z.astype(float) / 10
+                op_joint_x = op_joint_x.astype(float) * 100
+                op_joint_y = op_joint_y.astype(float) * 100
+                op_joint_z = op_joint_z.astype(float) * 100
+                #print(f'MA: {type(ma_joint_x.iloc[-1])}, OP: {type(op_joint_x.iloc[-1])}')
+
+                # Get mean coordinate offset (note different data length of MA and OP)(note different coordinate mapping Post0316)
+                # Post0316 (MA_X - OP_X | MA_Y - OP_Z | MA_Z - OP_Y)
+                if mmdd_p[-3:] != 'P01' and mmdd_p[-3:] != 'P02' and mmdd_p[-3:] != 'P03' and mmdd_p[-3:] != 'P04':
+                  offset_bias_x = ma_joint_x - op_joint_x
+                  offset_bias_y = ma_joint_y - op_joint_z
+                  offset_bias_z = ma_joint_z - op_joint_y
+                  offset_bias_x = remove_outliers(offset_bias_x)
+                  offset_bias_y = remove_outliers(offset_bias_y)
+                  offset_bias_z = remove_outliers(offset_bias_z)
+                  align_vis(offset_bias_x, op_joints[i], 'X')
+                  align_vis(offset_bias_y, op_joints[i], 'Y')
+                  align_vis(offset_bias_z, op_joints[i], 'Z')
+                  offset_bias_x = offset_bias_x.mean()
+                  offset_bias_y = offset_bias_y.mean()
+                  offset_bias_z = offset_bias_z.mean()
+                  data_vis(op_joint_x, ma_joint_x - offset_bias_x, op_joints[i])
+                  print(f'{op_joints[i]} X: \t Offset_Bias: {round(offset_bias_x,3)}cm \tOP: {round(op_joint_x.mean(),3)}cm \tMA: {round(ma_joint_x.mean(),3)}cm')
+                  print(f'{op_joints[i]} Y: \t Offset_Bias: {round(offset_bias_y,3)}cm \tOP: {round(op_joint_z.mean(),3)}cm \tMA: {round((ma_joint_y).mean(),3)}cm')
+                  print(f'{op_joints[i]} Z: \t Offset_Bias: {round(offset_bias_z,3)}cm \tOP: {round(op_joint_y.mean(),3)}cm \tMA: {round(ma_joint_z.mean(),3)}cm')
+                  print(f'XYZ Offset and Bias in {op_joints[i]}: {offset_bias_x} {offset_bias_y} {offset_bias_z}')
+
+                  # Subtract from MA file 
+                  for m in range(len(ma_final.columns) - 2):
+                      # If MA column isn't completely empty, align that joint column using that joint offset_bias
+                      if str(offset_bias_x) != 'nan' and ma_joints[i] == ma_final.columns[m] and ma_joints[i] != "R.Shoulder":
+                        # Align MA coordinates to match OP (remove systemic bias)
+                        # MA cm --> mm
+                        print("NAN?", str(offset_bias_x))
+                        print("Joint:", ma_joints[i])
+                        print('col:', ma_final.columns[m])
+                        ma_final.iloc[:,m] = (ma_final.iloc[:,m]).astype(float) - offset_bias_x*10
+                        ma_final.iloc[:,m+1] = (ma_final.iloc[:,m+1]).astype(float) - offset_bias_y*10
+                        ma_final.iloc[:,m+2] = (ma_final.iloc[:,m+2]).astype(float) - offset_bias_z*10
+                        # Convert back to string datatype
+                        ma_final.iloc[:,m] = (ma_final.iloc[:,m]).astype(str)
+                        ma_final.iloc[:,m+1] = (ma_final.iloc[:,m+1]).astype(str)
+                        ma_final.iloc[:,m+2] = (ma_final.iloc[:,m+2]).astype(str)
+                        print('done col:', ma_final.columns[m])
+
+                      # If R.Shoulder isn't empty, align R.Shoulder using R.Shoulder offset_bias
+                      if str(offset_bias_x) != 'nan' and ma_joints[i] == ma_final.columns[m] and ma_joints[i] == "R.Shoulder":
+                        print('col:', ma_final.columns[m])
+                        ma_final.iloc[:,m] = (ma_final.iloc[:,m]).astype(float) - offset_bias_x*10
+                        ma_final.iloc[:,m+1] = (ma_final.iloc[:,m+1]).astype(float) - offset_bias_y*10
+                        ma_final.iloc[:,m+2] = (ma_final.iloc[:,m+2]).astype(float) - offset_bias_z*10
+                        # Convert back to string datatype
+                        ma_final.iloc[:,m] = (ma_final.iloc[:,m]).astype(str)
+                        ma_final.iloc[:,m+1] = (ma_final.iloc[:,m+1]).astype(str)
+                        ma_final.iloc[:,m+2] = (ma_final.iloc[:,m+2]).astype(str)
+                        print('done col:', ma_final.columns[m])
+                        # If R.Offset isn't empty, align R.Offset using R.Shoulder offset_bias
+                        if str(ma_final['R.Offset'].unique()[0]) != 'nan': 
+                          print('col:', 'R.Offset')
+                          ma_final.iloc[:,m+3] = (ma_final.iloc[:,m+3]).astype(float) - offset_bias_x*10
+                          ma_final.iloc[:,m+4] = (ma_final.iloc[:,m+4]).astype(float) - offset_bias_y*10
+                          ma_final.iloc[:,m+5] = (ma_final.iloc[:,m+5]).astype(float) - offset_bias_z*10
+                          # Convert back to string datatype
+                          ma_final.iloc[:,m+3] = (ma_final.iloc[:,m+3]).astype(str)
+                          ma_final.iloc[:,m+4] = (ma_final.iloc[:,m+4]).astype(str)
+                          ma_final.iloc[:,m+5] = (ma_final.iloc[:,m+5]).astype(str)
+                          print('done col:', 'R.Offset')
+
+              
+
+                # Pre0316 (MA_X - OP_Z | MA_Y - OP_X | MA_Z - OP_Y)
+                else: 
+                  offset_bias_x = ma_joint_x - op_joint_z
+                  offset_bias_y = ma_joint_y - op_joint_x
+                  offset_bias_z = ma_joint_z - op_joint_y
+                  offset_bias_x = remove_outliers(offset_bias_x)
+                  offset_bias_y = remove_outliers(offset_bias_y)
+                  offset_bias_z = remove_outliers(offset_bias_z)
+                  align_vis(offset_bias_x, op_joints[i], 'X')
+                  align_vis(offset_bias_y, op_joints[i], 'Y')
+                  align_vis(offset_bias_z, op_joints[i], 'Z')
+                  offset_bias_x = offset_bias_x.mean()
+                  offset_bias_y = offset_bias_y.mean()
+                  offset_bias_z = offset_bias_z.mean()
+                  data_vis(op_joint_z, ma_joint_x - offset_bias_x, op_joints[i])
+                  print(f'{op_joints[i]} X: \t Offset_Bias: {round(offset_bias_x,3)}cm \tOP: {round(op_joint_x.mean(),3)}cm \tMA: {round(ma_joint_x.mean(),3)}cm')
+                  print(f'{op_joints[i]} Y: \t Offset_Bias: {round(offset_bias_y,3)}cm \tOP: {round(op_joint_z.mean(),3)}cm \tMA: {round((ma_joint_y).mean(),3)}cm')
+                  print(f'{op_joints[i]} Z: \t Offset_Bias: {round(offset_bias_z,3)}cm \tOP: {round(op_joint_y.mean(),3)}cm \tMA: {round(ma_joint_z.mean(),3)}cm')
+                  print(f'XYZ Offset and Bias in {op_joints[i]}: {offset_bias_x} {offset_bias_y} {offset_bias_z}')
+
+                  # Subtract from MA file 
+                  for m in range(len(ma_final.columns) - 2):
+                      # If MA column isn't completely empty, align that joint column using that joint offset_bias
+                      if str(offset_bias_x) != 'nan' and ma_joints[i] == ma_final.columns[m] and ma_joints[i] != "R.Shoulder":
+                        # Align MA coordinates to match OP (remove systemic bias)
+                        # MA cm --> mm
+                        print("NAN?", str(offset_bias_x))
+                        print("Joint:", ma_joints[i])
+                        print('col:', ma_final.columns[m])
+                        ma_final.iloc[:,m] = (ma_final.iloc[:,m]).astype(float) - offset_bias_x*10
+                        ma_final.iloc[:,m+1] = (ma_final.iloc[:,m+1]).astype(float) - offset_bias_y*10
+                        ma_final.iloc[:,m+2] = (ma_final.iloc[:,m+2]).astype(float) - offset_bias_z*10
+                        # Convert back to string datatype
+                        ma_final.iloc[:,m] = (ma_final.iloc[:,m]).astype(str)
+                        ma_final.iloc[:,m+1] = (ma_final.iloc[:,m+1]).astype(str)
+                        ma_final.iloc[:,m+2] = (ma_final.iloc[:,m+2]).astype(str)
+                        print('done col:', ma_final.columns[m])
+
+                      # If R.Shoulder isn't empty, align R.Shoulder using R.Shoulder offset_bias
+                      if str(offset_bias_x) != 'nan' and ma_joints[i] == ma_final.columns[m] and ma_joints[i] == "R.Shoulder":
+                        print('col:', ma_final.columns[m])
+                        ma_final.iloc[:,m] = (ma_final.iloc[:,m]).astype(float) - offset_bias_x*10
+                        ma_final.iloc[:,m+1] = (ma_final.iloc[:,m+1]).astype(float) - offset_bias_y*10
+                        ma_final.iloc[:,m+2] = (ma_final.iloc[:,m+2]).astype(float) - offset_bias_z*10
+                        # Convert back to string datatype
+                        ma_final.iloc[:,m] = (ma_final.iloc[:,m]).astype(str)
+                        ma_final.iloc[:,m+1] = (ma_final.iloc[:,m+1]).astype(str)
+                        ma_final.iloc[:,m+2] = (ma_final.iloc[:,m+2]).astype(str)
+                        print('done col:', ma_final.columns[m])
+                        # If R.Offset isn't empty, align R.Offset using R.Shoulder offset_bias
+                        if str(ma_final['R.Offset'].unique()[0]) != 'nan': 
+                          print('col:', 'R.Offset')
+                          ma_final.iloc[:,m+3] = (ma_final.iloc[:,m+3]).astype(float) - offset_bias_x*10
+                          ma_final.iloc[:,m+4] = (ma_final.iloc[:,m+4]).astype(float) - offset_bias_y*10
+                          ma_final.iloc[:,m+5] = (ma_final.iloc[:,m+5]).astype(float) - offset_bias_z*10
+                          # Convert back to string datatype
+                          ma_final.iloc[:,m+3] = (ma_final.iloc[:,m+3]).astype(str)
+                          ma_final.iloc[:,m+4] = (ma_final.iloc[:,m+4]).astype(str)
+                          ma_final.iloc[:,m+5] = (ma_final.iloc[:,m+5]).astype(str)
+                          print('done col:', 'R.Offset')
+                  
+
+                
+
+
+    
+            
+           
+
+
+
+
+
+
+
 
 
               # # Visualize Data
