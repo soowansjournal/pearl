@@ -121,6 +121,8 @@ def resam_ma(ma_resam, op_synch):
 
 
 
+
+
 def load_op(op_file):
   # create dataframe from uploaded csv files using pandas.read_csv()
   op = pd.read_csv(op_file) 
@@ -145,15 +147,15 @@ def load_ma(ma_file):
 #              'Single1', 'Single2', 'Five', 'Thirty']
 # ma_games = ['BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9',
 #              'Single', 'Single', 'Five', 'Thirty']
-op_games = ['BC4']
-ma_games = ['BC4']
+op_games = ['BC1']
+ma_games = ['BC1']
 
 # SELECT FILES HERE
 # mmdd_p_all = ['0221_P01', '0314_P02', '0314_P03', '0315_P04', 
 #               '0316_P05', '0322_P06', '0402_P07', '0403_P08', '0403_P09', '0404_P10', '0404_P11', 
 #               '0406_P12', '0406_P13', '0407_P14', '0407_P15', '0407_P16', '0408_P17', '0408_P18', 
 #               '0411_P19', '0412_P20', '0412_P21', '0413_P22', '0420_P23', '0420_P24', '0430_P25', '0502_P26', '0516_P27', '0601_P28']
-mmdd_p_all = ['0404_P11']
+mmdd_p_all = ['0412_P21']
 
 # Specify if Repetition Count exercise or Repetition Timer exercise
 count = ['Sqt', 'StLun', 'VMODip', 'HipFlex', 'HipExt', 'HipAbd', 'Kick', 'LatStep', 'BackStep',
@@ -285,7 +287,7 @@ for mmdd_p in mmdd_p_all:
                 # Post0316 (MA_X - OP_X | MA_Y - OP_Z | MA_Z - OP_Y)
                 if mmdd_p[-3:] != 'P01' and mmdd_p[-3:] != 'P02' and mmdd_p[-3:] != 'P03' and mmdd_p[-3:] != 'P04':
                   offset_bias_x = ma_joint_x - op_joint_x
-                  offset_bias_y = ma_joint_y - op_joint_z
+                  offset_bias_y = -1*ma_joint_y - op_joint_z
                   offset_bias_z = ma_joint_z - op_joint_y
                   offset_bias_x = remove_outliers(offset_bias_x)
                   offset_bias_y = remove_outliers(offset_bias_y)
@@ -296,7 +298,9 @@ for mmdd_p in mmdd_p_all:
                   offset_bias_x = offset_bias_x.mean()
                   offset_bias_y = offset_bias_y.mean()
                   offset_bias_z = offset_bias_z.mean()
-                  data_vis(op_joint_x, ma_joint_x - offset_bias_x, op_joints[i])
+                  data_vis(op_joint_x, ma_joint_x - offset_bias_x, op_joints[i] + 'X')
+                  data_vis(op_joint_z, -1*ma_joint_y - offset_bias_y, op_joints[i] + 'Y')
+                  data_vis(op_joint_y, ma_joint_z - offset_bias_z, op_joints[i] + 'Z')
                   print(f'{op_joints[i]} X: \t Offset_Bias: {round(offset_bias_x,3)}cm \tOP: {round(op_joint_x.mean(),3)}cm \tMA: {round(ma_joint_x.mean(),3)}cm')
                   print(f'{op_joints[i]} Y: \t Offset_Bias: {round(offset_bias_y,3)}cm \tOP: {round(op_joint_z.mean(),3)}cm \tMA: {round((ma_joint_y).mean(),3)}cm')
                   print(f'{op_joints[i]} Z: \t Offset_Bias: {round(offset_bias_z,3)}cm \tOP: {round(op_joint_y.mean(),3)}cm \tMA: {round(ma_joint_z.mean(),3)}cm')
@@ -312,7 +316,7 @@ for mmdd_p in mmdd_p_all:
                         print("Joint:", ma_joints[i])
                         print('col:', ma_final.columns[m])
                         ma_final.iloc[:,m] = (ma_final.iloc[:,m]).astype(float) - offset_bias_x*10
-                        ma_final.iloc[:,m+1] = (ma_final.iloc[:,m+1]).astype(float) - offset_bias_y*10
+                        ma_final.iloc[:,m+1] = -1*(-1*(ma_final.iloc[:,m+1]).astype(float) - offset_bias_y*10)
                         ma_final.iloc[:,m+2] = (ma_final.iloc[:,m+2]).astype(float) - offset_bias_z*10
                         # Convert back to string datatype
                         ma_final.iloc[:,m] = (ma_final.iloc[:,m]).astype(str)
@@ -324,7 +328,7 @@ for mmdd_p in mmdd_p_all:
                       if str(offset_bias_x) != 'nan' and ma_joints[i] == ma_final.columns[m] and ma_joints[i] == "R.Shoulder":
                         print('col:', ma_final.columns[m])
                         ma_final.iloc[:,m] = (ma_final.iloc[:,m]).astype(float) - offset_bias_x*10
-                        ma_final.iloc[:,m+1] = (ma_final.iloc[:,m+1]).astype(float) - offset_bias_y*10
+                        ma_final.iloc[:,m+1] = -1*(-1*(ma_final.iloc[:,m+1]).astype(float) - offset_bias_y*10)
                         ma_final.iloc[:,m+2] = (ma_final.iloc[:,m+2]).astype(float) - offset_bias_z*10
                         # Convert back to string datatype
                         ma_final.iloc[:,m] = (ma_final.iloc[:,m]).astype(str)
@@ -335,7 +339,7 @@ for mmdd_p in mmdd_p_all:
                         if str(ma_final['R.Offset'].unique()[0]) != 'nan': 
                           print('col:', 'R.Offset')
                           ma_final.iloc[:,m+3] = (ma_final.iloc[:,m+3]).astype(float) - offset_bias_x*10
-                          ma_final.iloc[:,m+4] = (ma_final.iloc[:,m+4]).astype(float) - offset_bias_y*10
+                          ma_final.iloc[:,m+4] = -1*(-1*(ma_final.iloc[:,m+4]).astype(float) - offset_bias_y*10)
                           ma_final.iloc[:,m+5] = (ma_final.iloc[:,m+5]).astype(float) - offset_bias_z*10
                           # Convert back to string datatype
                           ma_final.iloc[:,m+3] = (ma_final.iloc[:,m+3]).astype(str)
@@ -359,7 +363,9 @@ for mmdd_p in mmdd_p_all:
                   offset_bias_x = offset_bias_x.mean()
                   offset_bias_y = offset_bias_y.mean()
                   offset_bias_z = offset_bias_z.mean()
-                  data_vis(op_joint_z, ma_joint_x - offset_bias_x, op_joints[i])
+                  data_vis(op_joint_z, ma_joint_x - offset_bias_x, op_joints[i] + 'X')
+                  data_vis(op_joint_x, ma_joint_y - offset_bias_y, op_joints[i] + 'Y')
+                  data_vis(op_joint_y, ma_joint_z - offset_bias_z, op_joints[i] + 'Z')
                   print(f'{op_joints[i]} X: \t Offset_Bias: {round(offset_bias_x,3)}cm \tOP: {round(op_joint_x.mean(),3)}cm \tMA: {round(ma_joint_x.mean(),3)}cm')
                   print(f'{op_joints[i]} Y: \t Offset_Bias: {round(offset_bias_y,3)}cm \tOP: {round(op_joint_z.mean(),3)}cm \tMA: {round((ma_joint_y).mean(),3)}cm')
                   print(f'{op_joints[i]} Z: \t Offset_Bias: {round(offset_bias_z,3)}cm \tOP: {round(op_joint_y.mean(),3)}cm \tMA: {round(ma_joint_z.mean(),3)}cm')
