@@ -147,15 +147,20 @@ def load_ma(ma_file):
 #              'Single1', 'Single2', 'Five', 'Thirty']
 # ma_games = ['BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9',
 #              'Single', 'Single', 'Five', 'Thirty']
-op_games = ['BC1']
-ma_games = ['BC1']
+op_games = ['BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9',
+             'Single1', 'Single2', 'Five', 'Thirty']
+ma_games = ['BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9',
+             'Single', 'Single', 'Five', 'Thirty']
 
 # SELECT FILES HERE
 # mmdd_p_all = ['0221_P01', '0314_P02', '0314_P03', '0315_P04', 
 #               '0316_P05', '0322_P06', '0402_P07', '0403_P08', '0403_P09', '0404_P10', '0404_P11', 
 #               '0406_P12', '0406_P13', '0407_P14', '0407_P15', '0407_P16', '0408_P17', '0408_P18', 
 #               '0411_P19', '0412_P20', '0412_P21', '0413_P22', '0420_P23', '0420_P24', '0430_P25', '0502_P26', '0516_P27', '0601_P28']
-mmdd_p_all = ['0412_P21']
+mmdd_p_all = ['0221_P01', '0314_P02', '0314_P03', '0315_P04', 
+              '0316_P05', '0322_P06', '0402_P07', '0403_P08', '0403_P09', '0404_P10', '0404_P11', 
+              '0406_P12', '0406_P13', '0407_P14', '0407_P15', '0407_P16', '0408_P17', '0408_P18', 
+              '0411_P19', '0412_P20', '0412_P21', '0413_P22', '0420_P23', '0420_P24', '0430_P25', '0502_P26', '0516_P27', '0601_P28']
 
 # Specify if Repetition Count exercise or Repetition Timer exercise
 count = ['Sqt', 'StLun', 'VMODip', 'HipFlex', 'HipExt', 'HipAbd', 'Kick', 'LatStep', 'BackStep',
@@ -228,17 +233,30 @@ for mmdd_p in mmdd_p_all:
               ma_synch['Frame#'] = ma_synch['Frame#'].astype(int)
               ma_final = ma_synch
 
-              # Synchronize End of MA Too
-              # overall OP game duration to locate end frame of the game for MA 
-              duration = (op_final.Time.iloc[-1] - op_final.Time.iloc[0]) / 1000
-              # round to two decimal places as MA time increases in .05 second decimal increments
-              duration = round(duration,2)
-              # locate the end frame of the game
-              end_frame_ma = ma_final.loc[ma_final['Time'] >= duration, 'Frame#'].values[0]
-              ma_final = ma_final.drop(ma_final.index[end_frame_ma:])
+              # Synchronize End of MA too
+              if (op_final.Time.iloc[-1]/1000) < (ma_final.Time.iloc[-1]):
+                # overall OP game duration to locate end frame of the game for MA 
+                duration = (op_final.Time.iloc[-1] - op_final.Time.iloc[0]) / 1000
+                # round to two decimal places as MA time increases in .05 second decimal increments
+                duration = round(duration,2)
+                # locate the end frame of the game
+                end_frame_ma = ma_final.loc[ma_final['Time'] >= duration, 'Frame#'].values[0]
+                ma_final = ma_final.drop(ma_final.index[end_frame_ma:])
+              # Or OP if OP games runs longer
+              else:
+                # overall MA game duration to locate end frame of the game for OP 
+                duration = (ma_final.Time.iloc[-1] - ma_final.Time.iloc[0]) 
+                # round to two decimal places as MA time increases in .05 second decimal increments
+                duration = round(duration,2)
+                # locate the end frame of the game
+                op_index = op_final.reset_index()
+                end_frame_op = op_index[op_index.Time/1000 >= duration].index[0]
+                op_final = op_final.drop(op_final.index[end_frame_op:])
+                 
 
               # Resample MA to Match OP --> Used to Find Offset_Bias
               ma_resam = resam_ma(ma_final, op_final)
+
 
 
 
@@ -292,19 +310,19 @@ for mmdd_p in mmdd_p_all:
                   offset_bias_x = remove_outliers(offset_bias_x)
                   offset_bias_y = remove_outliers(offset_bias_y)
                   offset_bias_z = remove_outliers(offset_bias_z)
-                  align_vis(offset_bias_x, op_joints[i], 'X')
-                  align_vis(offset_bias_y, op_joints[i], 'Y')
-                  align_vis(offset_bias_z, op_joints[i], 'Z')
+                  # align_vis(offset_bias_x, op_joints[i], 'X')
+                  # align_vis(offset_bias_y, op_joints[i], 'Y')
+                  # align_vis(offset_bias_z, op_joints[i], 'Z')
                   offset_bias_x = offset_bias_x.mean()
                   offset_bias_y = offset_bias_y.mean()
                   offset_bias_z = offset_bias_z.mean()
-                  data_vis(op_joint_x, ma_joint_x - offset_bias_x, op_joints[i] + 'X')
-                  data_vis(op_joint_z, -1*ma_joint_y - offset_bias_y, op_joints[i] + 'Y')
-                  data_vis(op_joint_y, ma_joint_z - offset_bias_z, op_joints[i] + 'Z')
-                  print(f'{op_joints[i]} X: \t Offset_Bias: {round(offset_bias_x,3)}cm \tOP: {round(op_joint_x.mean(),3)}cm \tMA: {round(ma_joint_x.mean(),3)}cm')
-                  print(f'{op_joints[i]} Y: \t Offset_Bias: {round(offset_bias_y,3)}cm \tOP: {round(op_joint_z.mean(),3)}cm \tMA: {round((ma_joint_y).mean(),3)}cm')
-                  print(f'{op_joints[i]} Z: \t Offset_Bias: {round(offset_bias_z,3)}cm \tOP: {round(op_joint_y.mean(),3)}cm \tMA: {round(ma_joint_z.mean(),3)}cm')
-                  print(f'XYZ Offset and Bias in {op_joints[i]}: {offset_bias_x} {offset_bias_y} {offset_bias_z}')
+                  # data_vis(op_joint_x, ma_joint_x - offset_bias_x, op_joints[i] + 'X')
+                  # data_vis(op_joint_z, -1*ma_joint_y - offset_bias_y, op_joints[i] + 'Y')
+                  # data_vis(op_joint_y, ma_joint_z - offset_bias_z, op_joints[i] + 'Z')
+                  # print(f'{op_joints[i]} X: \t Offset_Bias: {round(offset_bias_x,3)}cm \tOP: {round(op_joint_x.mean(),3)}cm \tMA: {round(ma_joint_x.mean(),3)}cm')
+                  # print(f'{op_joints[i]} Y: \t Offset_Bias: {round(offset_bias_y,3)}cm \tOP: {round(op_joint_z.mean(),3)}cm \tMA: {round((ma_joint_y).mean(),3)}cm')
+                  # print(f'{op_joints[i]} Z: \t Offset_Bias: {round(offset_bias_z,3)}cm \tOP: {round(op_joint_y.mean(),3)}cm \tMA: {round(ma_joint_z.mean(),3)}cm')
+                  # print(f'XYZ Offset and Bias in {op_joints[i]}: {offset_bias_x} {offset_bias_y} {offset_bias_z}')
 
                   # Subtract from MA file 
                   for m in range(len(ma_final.columns) - 2):
@@ -357,19 +375,19 @@ for mmdd_p in mmdd_p_all:
                   offset_bias_x = remove_outliers(offset_bias_x)
                   offset_bias_y = remove_outliers(offset_bias_y)
                   offset_bias_z = remove_outliers(offset_bias_z)
-                  align_vis(offset_bias_x, op_joints[i], 'X')
-                  align_vis(offset_bias_y, op_joints[i], 'Y')
-                  align_vis(offset_bias_z, op_joints[i], 'Z')
+                  # align_vis(offset_bias_x, op_joints[i], 'X')
+                  # align_vis(offset_bias_y, op_joints[i], 'Y')
+                  # align_vis(offset_bias_z, op_joints[i], 'Z')
                   offset_bias_x = offset_bias_x.mean()
                   offset_bias_y = offset_bias_y.mean()
                   offset_bias_z = offset_bias_z.mean()
-                  data_vis(op_joint_z, ma_joint_x - offset_bias_x, op_joints[i] + 'X')
-                  data_vis(op_joint_x, ma_joint_y - offset_bias_y, op_joints[i] + 'Y')
-                  data_vis(op_joint_y, ma_joint_z - offset_bias_z, op_joints[i] + 'Z')
-                  print(f'{op_joints[i]} X: \t Offset_Bias: {round(offset_bias_x,3)}cm \tOP: {round(op_joint_x.mean(),3)}cm \tMA: {round(ma_joint_x.mean(),3)}cm')
-                  print(f'{op_joints[i]} Y: \t Offset_Bias: {round(offset_bias_y,3)}cm \tOP: {round(op_joint_z.mean(),3)}cm \tMA: {round((ma_joint_y).mean(),3)}cm')
-                  print(f'{op_joints[i]} Z: \t Offset_Bias: {round(offset_bias_z,3)}cm \tOP: {round(op_joint_y.mean(),3)}cm \tMA: {round(ma_joint_z.mean(),3)}cm')
-                  print(f'XYZ Offset and Bias in {op_joints[i]}: {offset_bias_x} {offset_bias_y} {offset_bias_z}')
+                  # data_vis(op_joint_z, ma_joint_x - offset_bias_x, op_joints[i] + 'X')
+                  # data_vis(op_joint_x, ma_joint_y - offset_bias_y, op_joints[i] + 'Y')
+                  # data_vis(op_joint_y, ma_joint_z - offset_bias_z, op_joints[i] + 'Z')
+                  # print(f'{op_joints[i]} X: \t Offset_Bias: {round(offset_bias_x,3)}cm \tOP: {round(op_joint_x.mean(),3)}cm \tMA: {round(ma_joint_x.mean(),3)}cm')
+                  # print(f'{op_joints[i]} Y: \t Offset_Bias: {round(offset_bias_y,3)}cm \tOP: {round(op_joint_z.mean(),3)}cm \tMA: {round((ma_joint_y).mean(),3)}cm')
+                  # print(f'{op_joints[i]} Z: \t Offset_Bias: {round(offset_bias_z,3)}cm \tOP: {round(op_joint_y.mean(),3)}cm \tMA: {round(ma_joint_z.mean(),3)}cm')
+                  # print(f'XYZ Offset and Bias in {op_joints[i]}: {offset_bias_x} {offset_bias_y} {offset_bias_z}')
 
                   # Subtract from MA file 
                   for m in range(len(ma_final.columns) - 2):
@@ -491,37 +509,37 @@ for mmdd_p in mmdd_p_all:
                                         break
 
 
-              # DOWNLOAD FILES TO DOWNLOADS FOLDER
-              if 'BC' in op_games[game_ind]:
-                # DOWNLOAD CLEANED OP DATA
-                op_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_game}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig', index = False) 
-                # DOWNLOAD CLEANED MA BOOT CAMP DATA
-                ma_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{ma_game}-MA-CLEAN.csv', encoding = 'utf-8-sig', index = False)
-              else:
-                op_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig', index = False) 
-                # DOWNLOAD CLEANED MA BOOT CAMP DATA
-                ma_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-MA-CLEAN.csv', encoding = 'utf-8-sig', index = False)
+              # # DOWNLOAD FILES TO DOWNLOADS FOLDER
+              # if 'BC' in op_games[game_ind]:
+              #   # DOWNLOAD CLEANED OP DATA
+              #   op_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_game}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig', index = False) 
+              #   # DOWNLOAD CLEANED MA BOOT CAMP DATA
+              #   ma_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{ma_game}-MA-CLEAN.csv', encoding = 'utf-8-sig', index = False)
+              # else:
+              #   op_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig', index = False) 
+              #   # DOWNLOAD CLEANED MA BOOT CAMP DATA
+              #   ma_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-MA-CLEAN.csv', encoding = 'utf-8-sig', index = False)
                  
 
-              # # DOWNLOAD FILES TO SPECIFIC LOCATION
-              # if 'BC' in op_games[game_ind] and op_game[4:] in count:
-              #   op_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_BC_Count/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_game}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig', index = False) 
-              #   ma_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_BC_Count/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{ma_game}-MA-CLEAN.csv', encoding = 'utf-8-sig', index = False) 
-              # elif 'BC' in op_games[game_ind] and op_game[4:] in timer:
-              #   op_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_BC_Timer/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_game}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig', index = False) 
-              #   ma_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_BC_Timer/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{ma_game}-MA-CLEAN.csv', encoding = 'utf-8-sig', index = False) 
-              # elif op_games[game_ind] == 'Single1':
-              #   op_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_SLS/SingleR/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-SLS-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig', index = False) 
-              #   ma_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_SLS/SingleR/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-SLS-MA-CLEAN.csv', encoding = 'utf-8-sig', index = False) 
-              # elif op_games[game_ind] == 'Single2':
-              #   op_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_SLS/SingleL/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-SLS-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig', index = False) 
-              #   ma_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_SLS/SingleL/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-SLS-MA-CLEAN.csv', encoding = 'utf-8-sig', index = False) 
-              # elif op_games[game_ind] == 'Five':
-              #   op_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_STS/Five/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-StS-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig', index = False) 
-              #   ma_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_STS/Five/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-StS-MA-CLEAN.csv', encoding = 'utf-8-sig', index = False)        
-              # elif op_games[game_ind] == 'Thirty':
-              #   op_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_STS/Thirty/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-StS-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig', index = False) 
-              #   ma_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_STS/Thirty/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-StS-MA-CLEAN.csv', encoding = 'utf-8-sig', index = False)        
+              # DOWNLOAD FILES TO SPECIFIC LOCATION
+              if 'BC' in op_games[game_ind] and op_game[4:] in count:
+                op_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_BC_Count/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_game}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig', index = False) 
+                ma_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_BC_Count/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{ma_game}-MA-CLEAN.csv', encoding = 'utf-8-sig', index = False) 
+              elif 'BC' in op_games[game_ind] and op_game[4:] in timer:
+                op_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_BC_Timer/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_game}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig', index = False) 
+                ma_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_BC_Timer/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{ma_game}-MA-CLEAN.csv', encoding = 'utf-8-sig', index = False) 
+              elif op_games[game_ind] == 'Single1':
+                op_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_SLS/SingleR/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-SLS-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig', index = False) 
+                ma_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_SLS/SingleR/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-SLS-MA-CLEAN.csv', encoding = 'utf-8-sig', index = False) 
+              elif op_games[game_ind] == 'Single2':
+                op_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_SLS/SingleL/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-SLS-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig', index = False) 
+                ma_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_SLS/SingleL/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-SLS-MA-CLEAN.csv', encoding = 'utf-8-sig', index = False) 
+              elif op_games[game_ind] == 'Five':
+                op_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_STS/Five/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-StS-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig', index = False) 
+                ma_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_STS/Five/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-StS-MA-CLEAN.csv', encoding = 'utf-8-sig', index = False)        
+              elif op_games[game_ind] == 'Thirty':
+                op_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_STS/Thirty/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-StS-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig', index = False) 
+                ma_final.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_STS/Thirty/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-BC-StS-MA-CLEAN.csv', encoding = 'utf-8-sig', index = False)        
 
 print("\nFOLLOWING FILES DO NOT EXIST:", directory_unknown)
 
