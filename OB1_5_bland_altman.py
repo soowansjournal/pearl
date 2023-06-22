@@ -108,6 +108,7 @@ for game in bb_games:
             ax.axhline(np.mean(diff) - loa, color='blue', linestyle='--')
             ax.axhline(0, color='green', linestyle='--')
 
+            ax.set_ylim(-20, 20)  
             ax.set_xlabel('Mean [deg]')
             ax.set_ylabel('Difference [deg]')
             ax.set_title(f'{joint_title[j]}')
