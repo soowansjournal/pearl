@@ -209,16 +209,99 @@ def data_vis(op_vis, ma_vis, joint, op_joint, ma_joint):
     plt.show()
 
 
-def min_angle(op_angle, ma_angle):
+def min_angle(op_angle, ma_angle, LR, joint, minmax):
   ''' to compare the average angle of BOTTOM 5% MIN Values'''
 
+  # # Method 1 --> Avg of Lowest 5 Trough Values
+
+  # # Filter
+  # op_angle = butter_lowpass_filter(op_angle, 1, 30, 6)
+  # ma_angle = butter_lowpass_filter(ma_angle, 1, 30, 6)
+  # # Outliers
+  # op_angle = remove_outliers(pd.Series(op_angle)).reset_index(drop = True)
+  # ma_angle = remove_outliers(pd.Series(ma_angle)).reset_index(drop = True)
+  # op_angle = np.array(op_angle)
+  # ma_angle = np.array(ma_angle)
+
+  # # locate the peaks and troughs from each OP array
+  # # determine the horizontal distance between peaks
+  # distance = len(op_angle) / 10
+  # op_x = np.array(op_angle)
+  # op_peaks, _= find_peaks(op_x, distance = distance)
+  # op_troughs, _= find_peaks(-op_x, distance = distance)
+  # plt.plot(op_x)
+  # plt.plot(op_peaks,op_x[op_peaks], '^')
+  # plt.plot(op_troughs,op_x[op_troughs], 'v')
+  # plt.title(f'OP Peak Values')
+  # plt.xlabel('Frames [Hz]')
+  # plt.ylabel('Angle [deg]')
+  # plt.legend()
+  # plt.show()
+
+  # # absolute min OP trough
+  # op_single_peak = round(op_x[op_troughs].min(),3)
+  # # first five are the lowest trough values
+  # op_lowest_trough = np.array(sorted(op_x[op_troughs])[:5])
+  # # average min OP trough
+  # op_average_peak = round(op_lowest_trough.mean(),3)
+  # print(f"OP Five Lowest Troughs:\t {op_lowest_trough} \nAverage Min OP Trough:\t {op_average_peak} cm")
+
+  # # locate the peaks and troughs from each MA array
+  # # determine the horizontal distance between peaks
+  # distance = len(ma_angle) / 10
+  # ma_x = np.array(ma_angle)
+  # ma_peaks, _= find_peaks(ma_x, distance = distance)
+  # ma_troughs, _= find_peaks(-ma_x, distance = distance)
+  # plt.plot(ma_x)
+  # plt.plot(ma_peaks,ma_x[ma_peaks], '^')
+  # plt.plot(ma_troughs,ma_x[ma_troughs], 'v')
+  # plt.title(f'MA Peak Values')
+  # plt.xlabel('Frames [Hz]')
+  # plt.ylabel('Angle [deg]')
+  # plt.legend()
+  # plt.show()
+
+  # # absolute min MA trough
+  # ma_single_peak = round(ma_x[ma_troughs].min(),3)
+  # # first five are the lowest trough values
+  # ma_lowest_trough = np.array(sorted(ma_x[ma_troughs])[:5])
+  # # average min MA trough
+  # ma_average_peak = round(ma_lowest_trough.mean(),3)
+  # print(f"MA Five Lowest Trough:\t {ma_lowest_trough} \nAverage Max MA Peak:\t {ma_average_peak} cm\n")
+
+  # # Plot OP and MA Angles together
+  # plt.figure(figsize=(5,3))
+  # plt.plot(op_angle, label = 'OP Cleaned')    
+  # plt.plot(op_troughs, op_angle[op_troughs], "*")                
+  # plt.plot(ma_angle, label = 'MA Cleaned')  
+  # plt.plot(ma_troughs, ma_angle[ma_troughs], "*")                  
+  # plt.legend()
+  # plt.xlabel('Frames [Hz]')
+  # plt.ylabel('Angle [deg]')
+  # plt.title(f'OP and MA Angle {LR}.{joint}.{minmax}')
+  # plt.show()
+
+
+  # Method 2 --> Avg of Lowest 5% Trough Values
+
+  # Filter
+  op_angle = butter_lowpass_filter(op_angle, 1, 30, 6)
+  ma_angle = butter_lowpass_filter(ma_angle, 1, 30, 6)
+  # Outliers
+  op_angle = remove_outliers(pd.Series(op_angle)).reset_index(drop = True)
+  ma_angle = remove_outliers(pd.Series(ma_angle)).reset_index(drop = True)
+  op_angle = np.array(op_angle)
+  ma_angle = np.array(ma_angle)
+
   tmp = []
+  op_troughs = []
   # absolute min OP angle
   op_single_peak = round(op_angle.min(), 3)
   # bottom 5% are the lowest angle values
-  for val in sorted(op_angle):
+  for ind,val in enumerate(op_angle): # for val in sorted(op_angle):
     if val/op_single_peak < 1.05:
       tmp.append(val)
+      op_troughs.append(ind)
   op_highest_peak = np.array(tmp)
   # average min OP angle
   op_average_peak = round(op_highest_peak.mean(),3)
@@ -226,56 +309,179 @@ def min_angle(op_angle, ma_angle):
   # print(f"Absolute Min OP Angle:\t {op_single_peak} \nAverage Min OP Angle:\t {op_average_peak} deg")
 
   tmp = []
+  ma_troughs = []
   # absolute min MA angle
   ma_single_peak = round(ma_angle.min(), 3)
   # bottom 5% are the lowest angle values
-  for val in sorted(ma_angle):
+  for ind,val in enumerate(ma_angle): #for val in sorted(ma_angle): 
     if val/ma_single_peak < 1.05:
       tmp.append(val)
+      ma_troughs.append(ind)
   ma_highest_peak = np.array(tmp)
   # average min MA angle
   ma_average_peak = round(ma_highest_peak.mean(),3)
   # print(f'{len(ma_highest_peak)} MA angles within 5% of minimum')
   # print(f"Absolute Min MA Angle:\t {ma_single_peak} \nAverage Min MA Angle:\t {ma_average_peak} deg")
 
+  # Plot OP and MA Angles together
+  plt.figure(figsize=(5,3))
+  plt.plot(op_angle, label = 'OP Cleaned')    
+  plt.plot(op_troughs, op_angle[op_troughs], "*")                
+  plt.plot(ma_angle, label = 'MA Cleaned')  
+  plt.plot(ma_troughs, ma_angle[ma_troughs], "*")                  
+  plt.legend()
+  plt.xlabel('Frames [Hz]')
+  plt.ylabel('Angle [deg]')
+  plt.title(f'OP and MA Angle {LR}.{joint}.{minmax}')
+  plt.show()
+
+
 
   diff = op_average_peak - ma_average_peak 
+  # If difference between OP and MA angles too large, take the mean of all angle values
+  if diff > 10:
+    op_average_peak = op_angle.mean()
+    ma_average_peak = ma_angle.mean()
+    diff = op_average_peak - ma_average_peak
   per = abs(op_average_peak - ma_average_peak) / abs(ma_average_peak) * 100 
 
   return op_average_peak, ma_average_peak, round(diff,3), round(per,3)
 
 
-def max_angle(op_angle, ma_angle):
+def max_angle(op_angle, ma_angle, LR, joint, minmax):
   ''' to compare the average angle of TOP 5% MAX Values'''
-  
-  tmp = []
+
+  # Method 1 --> Avg of Top 5 Peak Values
+
+  # Filter
+  op_angle = butter_lowpass_filter(op_angle, 1, 30, 6)
+  ma_angle = butter_lowpass_filter(ma_angle, 1, 30, 6)
+  # Outliers
+  op_angle = remove_outliers(pd.Series(op_angle)).reset_index(drop = True)
+  ma_angle = remove_outliers(pd.Series(ma_angle)).reset_index(drop = True)
+  op_angle = np.array(op_angle)
+  ma_angle = np.array(ma_angle)
+
+  # locate the peaks and troughs from each OP array
+  # determine the horizontal distance between peaks
+  distance = len(op_angle) / 10
+  op_x = np.array(op_angle)
+  op_peaks, _= find_peaks(op_x, distance = distance)
+  op_troughs, _= find_peaks(-op_x, distance = distance)
+  plt.plot(op_x)
+  plt.plot(op_peaks,op_x[op_peaks], '^')
+  plt.plot(op_troughs,op_x[op_troughs], 'v')
+  plt.title(f'OP Peak Values')
+  plt.xlabel('Frames [Hz]')
+  plt.ylabel('Angle [deg]')
+  plt.legend()
+  plt.show()
+
   # absolute max OP peak
-  op_single_peak = round(op_angle.max(), 3)
-  # top 5% are the highest peak values
-  for val in sorted(op_angle):
-    if val/op_single_peak > 0.95:
-      tmp.append(val)
-  op_highest_peak = np.array(tmp)
+  op_single_peak = round(op_x[op_peaks].max(),3)
+  # last five are the highest peak values
+  op_highest_peak = np.array(sorted(op_x[op_peaks])[-5:])
   # average max OP peak
   op_average_peak = round(op_highest_peak.mean(),3)
-  # print(f'{len(op_highest_peak)} OP angles within 5% of maximum')
-  # print(f"Absolute Max OP Peak:\t {op_single_peak} \nAverage Max OP Peak:\t {op_average_peak} deg")
+  print(f"OP Five Highest Peak:\t {op_highest_peak} \nAverage Max OP Peak:\t {op_average_peak} cm")
 
-  tmp = []
+  # locate the peaks and troughs from each MA array
+  # determine the horizontal distance between peaks
+  distance = len(ma_angle) / 10
+  ma_x = np.array(ma_angle)
+  ma_peaks, _= find_peaks(ma_x, distance = distance)
+  ma_troughs, _= find_peaks(-ma_x, distance = distance)
+  plt.plot(ma_x)
+  plt.plot(ma_peaks,ma_x[ma_peaks], '^')
+  plt.plot(ma_troughs,ma_x[ma_troughs], 'v')
+  plt.title(f'MA Peak Values')
+  plt.xlabel('Frames [Hz]')
+  plt.ylabel('Angle [deg]')
+  plt.legend()
+  plt.show()
+
   # absolute max MA peak
-  ma_single_peak = round(ma_angle.max(), 3)
-  # top 5% are the highest peak values
-  for val in sorted(ma_angle):
-    if val/ma_single_peak > 0.95:
-      tmp.append(val)
-  ma_highest_peak = np.array(tmp)
-  # average max MA peak
+  ma_single_peak = round(ma_x[ma_peaks].max(),3)
+  # last five are the highest peak values
+  ma_highest_peak = np.array(sorted(ma_x[ma_peaks])[-5:])
+  # average max OP peak
   ma_average_peak = round(ma_highest_peak.mean(),3)
-  # print(f'{len(ma_highest_peak)} MA angles within 5% of maximum')
-  # print(f"Absolute Max MA Peak:\t {ma_single_peak} \nAverage Max MA Peak:\t {ma_average_peak} deg")
+  print(f"MA Five Highest Peak:\t {ma_highest_peak} \nAverage Max MA Peak:\t {ma_average_peak} cm\n")
+
+  # Plot OP and MA Angles together
+  plt.figure(figsize=(5,3))
+  plt.plot(op_angle, label = 'OP Cleaned')    
+  plt.plot(op_peaks, op_angle[op_peaks], "*")                
+  plt.plot(ma_angle, label = 'MA Cleaned')  
+  plt.plot(ma_peaks, ma_angle[ma_peaks], "*")                  
+  plt.legend()
+  plt.xlabel('Frames [Hz]')
+  plt.ylabel('Angle [deg]')
+  plt.title(f'OP and MA Angle {LR}.{joint}.{minmax}')
+  plt.show()
 
 
-  diff = op_average_peak - ma_average_peak
+  # # Method 2 --> Avg of Top 5% Peak Values
+
+  # # Filter
+  # op_angle = butter_lowpass_filter(op_angle, 1, 30, 6)
+  # ma_angle = butter_lowpass_filter(ma_angle, 1, 30, 6)
+  # # Outliers
+  # op_angle = remove_outliers(pd.Series(op_angle)).reset_index(drop = True)
+  # ma_angle = remove_outliers(pd.Series(ma_angle)).reset_index(drop = True)
+  # op_angle = np.array(op_angle)
+  # ma_angle = np.array(ma_angle)
+  
+  # tmp = []
+  # op_peaks = []
+  # # absolute max OP peak
+  # op_single_peak = round(op_angle.max(), 3)
+  # # top 5% are the highest peak values
+  # for ind,val in enumerate(op_angle): # for val in sorted(op_angle):
+  #   if val/op_single_peak > 0.95:
+  #     tmp.append(val)
+  #     op_peaks.append(ind)
+  # op_highest_peak = np.array(tmp)
+  # # average max OP peak
+  # op_average_peak = round(op_highest_peak.mean(),3)
+  # # print(f'{len(op_highest_peak)} OP angles within 5% of maximum')
+  # # print(f"Absolute Max OP Peak:\t {op_single_peak} \nAverage Max OP Peak:\t {op_average_peak} deg")
+
+  # tmp = []
+  # ma_peaks = []
+  # # absolute max MA peak
+  # ma_single_peak = round(ma_angle.max(), 3)
+  # # top 5% are the highest peak values
+  # for ind,val in enumerate(ma_angle): #for val in sorted(ma_angle): 
+  #   if val/ma_single_peak > 0.95:
+  #     tmp.append(val)
+  #     ma_peaks.append(ind)
+  # ma_highest_peak = np.array(tmp)
+  # # average max MA peak
+  # ma_average_peak = round(ma_highest_peak.mean(),3)
+  # # print(f'{len(ma_highest_peak)} MA angles within 5% of maximum')
+  # # print(f"Absolute Max MA Peak:\t {ma_single_peak} \nAverage Max MA Peak:\t {ma_average_peak} deg")
+
+  # # Plot OP and MA Angles together
+  # plt.figure(figsize=(5,3))
+  # plt.plot(op_angle, label = 'OP Cleaned')    
+  # plt.plot(op_peaks, op_angle[op_peaks], "*")                
+  # plt.plot(ma_angle, label = 'MA Cleaned')  
+  # plt.plot(ma_peaks, ma_angle[ma_peaks], "*")                  
+  # plt.legend()
+  # plt.xlabel('Frames [Hz]')
+  # plt.ylabel('Angle [deg]')
+  # plt.title(f'OP and MA Angle {LR}.{joint}.{minmax}')
+  # plt.show()
+
+
+
+  diff = op_average_peak - ma_average_peak 
+  # If difference between OP and MA angles too large, take the mean of all angle values
+  if diff > 10:
+    op_average_peak = op_angle.mean()
+    ma_average_peak = ma_angle.mean()
+    diff = op_average_peak - ma_average_peak
   per = abs(op_average_peak - ma_average_peak) / abs(ma_average_peak) * 100 
 
   return op_average_peak, ma_average_peak, round(diff,3), round(per,3)

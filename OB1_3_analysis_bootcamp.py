@@ -18,7 +18,7 @@ Soowan Choi
 '''
 
 
-from OB1_autoanalysis_3_functions import * # todo import other modules
+from OB1_3_functions import * # todo import other modules
 
 
 def load_op(op_file):
@@ -108,18 +108,20 @@ for game_ind in range(len(op_games)):
         #print(op_file, '\t', ma_file)
 
         try: 
+            # If Cleaned Data: OB1_clean_redo.py --> Load Files from "Auto_Clean_" instead of "Clean_"
             # Load OP Data
-            op = load_op('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/Clean_' + mmdd_p + '/' + op_file)
+            op = load_op('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/Auto_Clean_' + mmdd_p + '/' + op_file)
             print(op.head(3))
 
             # Load MA Data
-            ma = load_ma('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/Clean_' + mmdd_p + '/' + ma_file)
+            ma = load_ma('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/Auto_Clean_' + mmdd_p + '/' + ma_file)
             print(ma.head(3))
 
         except FileNotFoundError:
                 # if directory game file doesn't exist, go to next game
                 directory_unknown.append(op_file)
                 continue
+        
 
 
         op_filte = op.copy()
@@ -153,6 +155,7 @@ for game_ind in range(len(op_games)):
         ma_final = ma_align_joints.copy().reset_index().drop("index",axis=1)
 
 
+
         # 1-3) Min/Max Joint Angle 
         
         # 3) For each joint
@@ -182,26 +185,30 @@ for game_ind in range(len(op_games)):
         leftright = ['L', 'R']
         jointname = ['Elbow', ' Shoulder', 'Hip', 'Knee']
         minmax = ['Min', 'Max']
-
+        joint_angle_NA = []
         for i in leftright:
             for j in range(len(jointname)):
                 for k in minmax:
-                    if i == 'L' and k == 'Min':
-                        # compare the minimum angles
-                        op_min, ma_min, diff, per = min_angle(op_left[j], ma_left[j])
-                        single_vals = [op_min, ma_min, diff, per]
-                    elif i == 'L' and k == 'Max':
-                        # compare the maximum angles
-                        op_max, ma_max, diff, per = max_angle(op_left[j], ma_left[j])
-                        single_vals = [op_max, ma_max, diff, per]
-                    elif i == 'R' and k == 'Min':
-                        # compare the minimum angles
-                        op_min, ma_min, diff, per = min_angle(op_right[j], ma_right[j])
-                        single_vals = [op_min, ma_min, diff, per]
-                    elif i == 'R' and k == 'Max':
-                        # compare the maximum angles
-                        op_max, ma_max, diff, per = max_angle(op_right[j], ma_right[j])
-                        single_vals = [op_max, ma_max, diff, per]
+                    try: 
+                        if i == 'L' and k == 'Min':
+                            # compare the minimum angles
+                            op_min, ma_min, diff, per = min_angle(op_left[j], ma_left[j], i, jointname[j], k)
+                            single_vals = [op_min, ma_min, diff, per]
+                        elif i == 'L' and k == 'Max':
+                            # compare the maximum angles
+                            op_max, ma_max, diff, per = max_angle(op_left[j], ma_left[j], i, jointname[j], k)
+                            single_vals = [op_max, ma_max, diff, per]
+                        elif i == 'R' and k == 'Min':
+                            # compare the minimum angles
+                            op_min, ma_min, diff, per = min_angle(op_right[j], ma_right[j], i, jointname[j], k)
+                            single_vals = [op_min, ma_min, diff, per]
+                        elif i == 'R' and k == 'Max':
+                            # compare the maximum angles
+                            op_max, ma_max, diff, per = max_angle(op_right[j], ma_right[j], i, jointname[j], k)
+                            single_vals = [op_max, ma_max, diff, per]
+                    except:
+                        joint_angle_NA.append(f'{mmdd_p}_{op_games[game_ind]}_{i}.{jointname[j]}.{k}') 
+
                         
                     col = [f'OP({i}.{jointname[j]}.{k})', f'MA({i}.{jointname[j]}.{k})', 'Diff[deg]', 'Error[%]']
                     tmp = pd.DataFrame([single_vals], columns = col, index = [mmdd_p[-3:]])
@@ -219,6 +226,7 @@ for game_ind in range(len(op_games)):
 
 
         print("\nFOLLOWING FILES DO NOT EXIST:", directory_unknown)
+        print("FOLLOWING JOINTS ERROR:", joint_angle_NA)
 
     try:
         joint_angles_overall = pd.concat(data)

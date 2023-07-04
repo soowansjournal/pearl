@@ -18,7 +18,7 @@ Soowan Choi
 '''
 
 
-from OB1_autoanalysis_3_functions import * # todo import other modules
+from OB1_3_functions import * # todo import other modules
 
 
 def load_op(op_file):
@@ -36,8 +36,8 @@ def load_ma(ma_file):
 # Select Game
 # op_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
 # ma_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
-op_games = [ 'Jet', 'Astro']
-ma_games = ['Jet', 'Astro']
+op_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
+ma_games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
 
 
 # SELECT FILES HERE
@@ -66,12 +66,13 @@ for game_ind in range(len(op_games)):
         #print(op_file, '\t', ma_file)
 
         try: 
+            # If Cleaned Data: OB1_clean_redo.py --> Load Files from "Auto_Clean_" instead of "Clean_"
             # Load OP Data
-            op = load_op('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/Clean_' + mmdd_p + '/' + op_file)
+            op = load_op('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/Auto_Clean_' + mmdd_p + '/' + op_file)
             print(op.head(3))
 
             # Load MA Data
-            ma = load_ma('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/Clean_' + mmdd_p + '/' + ma_file)
+            ma = load_ma('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/Auto_Clean_' + mmdd_p + '/' + ma_file)
             print(ma.head(3))
 
         except FileNotFoundError:
@@ -80,11 +81,13 @@ for game_ind in range(len(op_games)):
                 continue
 
 
+
         op_filte = op.copy()
         ma_filte = ma.copy()
         op_cut, ma_cut = cut_data(op_filte, ma_filte)
         # align data using: METHOD 2
         op_align_joints, ma_align_joints = align_joints(op_cut, ma_cut)
+
 
 
         # Visualize ALL Data (39 graphs total)
@@ -111,6 +114,7 @@ for game_ind in range(len(op_games)):
         ma_final = ma_align_joints.copy().reset_index().drop("index",axis=1)
 
 
+
         # 1-3) Min/Max Joint Angle 
         
         # 3) For each joint
@@ -126,7 +130,6 @@ for game_ind in range(len(op_games)):
         # right angle 
         op_elbow_ang_right, op_shoulder_ang_right, op_hip_ang_right, op_knee_ang_right = op_joint_angle(op_final, 'Right')
         ma_elbow_ang_right, ma_shoulder_ang_right, ma_hip_ang_right, ma_knee_ang_right = ma_joint_angle(ma_final, 'R')
-
 
         # left angle MIN/MAX + right angle MIN/MAX
         angle_table = pd.DataFrame()
@@ -146,19 +149,19 @@ for game_ind in range(len(op_games)):
                 for k in minmax:
                     if i == 'L' and k == 'Min':
                         # compare the minimum angles
-                        op_min, ma_min, diff, per = min_angle(op_left[j], ma_left[j])
+                        op_min, ma_min, diff, per = min_angle(op_left[j], ma_left[j], i, jointname[j], k)
                         single_vals = [op_min, ma_min, diff, per]
                     elif i == 'L' and k == 'Max':
                         # compare the maximum angles
-                        op_max, ma_max, diff, per = max_angle(op_left[j], ma_left[j])
+                        op_max, ma_max, diff, per = max_angle(op_left[j], ma_left[j], i, jointname[j], k)
                         single_vals = [op_max, ma_max, diff, per]
                     elif i == 'R' and k == 'Min':
                         # compare the minimum angles
-                        op_min, ma_min, diff, per = min_angle(op_right[j], ma_right[j])
+                        op_min, ma_min, diff, per = min_angle(op_right[j], ma_right[j], i, jointname[j], k)
                         single_vals = [op_min, ma_min, diff, per]
                     elif i == 'R' and k == 'Max':
                         # compare the maximum angles
-                        op_max, ma_max, diff, per = max_angle(op_right[j], ma_right[j])
+                        op_max, ma_max, diff, per = max_angle(op_right[j], ma_right[j], i, jointname[j], k)
                         single_vals = [op_max, ma_max, diff, per]
                         
                     col = [f'OP({i}.{jointname[j]}.{k})', f'MA({i}.{jointname[j]}.{k})', 'Diff[deg]', 'Error[%]']
