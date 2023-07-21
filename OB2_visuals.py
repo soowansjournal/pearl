@@ -5,7 +5,7 @@ from sklearn.metrics import confusion_matrix
 
 
 
-df = pd.read_csv("/Users/soowan/Downloads/data_visuals.csv")
+df = pd.read_csv("/Users/soowan/Documents/VSCODE/Pearl/OB2_visuals.csv")
 
 
 # Data points
