@@ -7,10 +7,6 @@ corr_scatter = pd.read_excel("/Users/soowan/Documents/VSCODE/Pearl/OB1_visuals_s
 corr_scatter.head()
 
 
-# # Create a gray color palette with three shades
-# gray_palette = sns.color_palette("Greys", 3)
-
-
 # 1-3) Angle - OP vs MA 
 # (PowerL.L.Shoulder vs Power.L.R.Shoulder | PowerR.L.Shoulder vs PowerR.R.Shoulder | Seated.L.Hip vs Seated.R.Hip)
 plt.rcParams.update({'figure.figsize':(10,8), 'figure.dpi':100})
