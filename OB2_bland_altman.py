@@ -14,6 +14,77 @@ df = pd.read_csv(path)
 
 
 
+
+
+### TIMED UP AND GO TEST
+# # Find column index for OP and MA columns
+# op_index = []
+# for i in range(len(df.columns)):
+#     if 'OP' in df.columns[i]:
+#         op_index.append(i)    
+# # print(op_index)
+
+
+
+# op_measurements = []
+# ma_measurements = []
+# joint_title = []
+
+# # Go through the OP columns
+# for i in op_index:
+#     measurement_op = np.array(df.iloc[:,i])
+#     measurement_ma = np.array(df.iloc[:,i+1])
+
+#     op_measurements.append(measurement_op)
+#     ma_measurements.append(measurement_ma)
+#     joint_title.append(df.columns[i][2:])
+
+
+    # ### TO CREATE INDIVIDUAL BLAND ALTMAN PLOTS --> TUG
+    # # Calculate the differences and average of the measurements
+    # diff = measurement_op - measurement_ma
+    # mean = np.mean([measurement_op, measurement_ma], axis=0)
+    # # Sample standard deviation
+    # sd = np.std(diff, ddof=1)
+    # # Limits of agreement
+    # loa = 1.96 * sd
+
+    # #Create the Bland-Altman plot
+    # plt.scatter(mean, diff, color='black', s=50)
+    # plt.axhline(np.mean(diff), color='red', linestyle='--', label = "Mean Diff")
+    # plt.axhline(np.mean(diff) + loa, color='blue', linestyle='--', label='Upper LOA')
+    # plt.axhline(np.mean(diff) - loa, color='blue', linestyle='--', label='Lower LOA')
+    # plt.axhline(0, color='green', linestyle='--', label='Zero Line')
+
+    # plt.xlabel('Mean of Measurements [sec]')
+    # plt.ylabel('Difference [sec]')
+    # plt.title(f'Timed Up and Go Test')
+    # plt.ylim(-6,6)
+
+    # # Add line labels
+    # plt.text(plt.xlim()[0], np.mean(diff), ' Mean', ha='right', va='bottom', color='red')
+    # plt.text(plt.xlim()[0], np.mean(diff) + loa, ' Upper', ha='right', va='bottom', color='blue')
+    # plt.text(plt.xlim()[0], np.mean(diff) - loa, ' Lower', ha='right', va='top', color='blue')
+    # # Add line values
+    # plt.text(plt.xlim()[1], np.mean(diff), f' {np.mean(diff):.2f}', ha='left', va='center', color='red')
+    # plt.text(plt.xlim()[1], np.mean(diff) + loa, f' {np.mean(diff) + loa:.2f}', ha='left', va='center', color='blue')
+    # plt.text(plt.xlim()[1], np.mean(diff) - loa, f' {np.mean(diff) - loa:.2f}', ha='left', va='center', color='blue')
+    # plt.text(plt.xlim()[1], 0, ' 0', ha='left', va='center', color='green')
+    # plt.show()
+
+
+
+
+
+
+
+
+
+# PEDIATRIC REACH TEST
+
+# Select Reach Type (1,2,3,4,5,6)
+reachnum = '6'
+
 # Find column index for OP and MA columns
 op_index = []
 for i in range(len(df.columns)):
@@ -34,107 +105,69 @@ for i in op_index:
 
     op_measurements.append(measurement_op)
     ma_measurements.append(measurement_ma)
-    joint_title.append(df.columns[i][2:])
+    joint_title.append(df.columns[i][:-4])
 
 
+    ### TO CREATE N by N MATRIX OF PLOTS
+    # Create the figure and gridspec
+    fig = plt.figure(figsize=(8, 12))
+    grid = gridspec.GridSpec(4, 2, figure=fig)
 
-    ### TO CREATE INDIVIDUAL BLAND ALTMAN PLOTS
-    # Calculate the differences and average of the measurements
-    diff = measurement_op - measurement_ma
-    mean = np.mean([measurement_op, measurement_ma], axis=0)
-    # Sample standard deviation
-    sd = np.std(diff, ddof=1)
-    # Limits of agreement
-    loa = 1.96 * sd
+    # Loop through the measurements and create Bland-Altman plots
+    for j, measurement in enumerate(op_measurements):
+        row = j // 2
+        col = j % 2
+        ax = fig.add_subplot(grid[row, col])
 
-    #Create the Bland-Altman plot
-    plt.scatter(mean, diff, color='black', s=50)
-    plt.axhline(np.mean(diff), color='red', linestyle='--', label = "Mean Diff")
-    plt.axhline(np.mean(diff) + loa, color='blue', linestyle='--', label='Upper LOA')
-    plt.axhline(np.mean(diff) - loa, color='blue', linestyle='--', label='Lower LOA')
-    plt.axhline(0, color='green', linestyle='--', label='Zero Line')
-
-    plt.xlabel('Mean of Measurements [sec]')
-    plt.ylabel('Difference [sec]')
-    plt.title(f'Timed Up and Go Test')
-    plt.ylim(-6,6)
-
-    # Add line labels
-    plt.text(plt.xlim()[0], np.mean(diff), ' Mean', ha='right', va='bottom', color='red')
-    plt.text(plt.xlim()[0], np.mean(diff) + loa, ' Upper', ha='right', va='bottom', color='blue')
-    plt.text(plt.xlim()[0], np.mean(diff) - loa, ' Lower', ha='right', va='top', color='blue')
-    # Add line values
-    plt.text(plt.xlim()[1], np.mean(diff), f' {np.mean(diff):.2f}', ha='left', va='center', color='red')
-    plt.text(plt.xlim()[1], np.mean(diff) + loa, f' {np.mean(diff) + loa:.2f}', ha='left', va='center', color='blue')
-    plt.text(plt.xlim()[1], np.mean(diff) - loa, f' {np.mean(diff) - loa:.2f}', ha='left', va='center', color='blue')
-    plt.text(plt.xlim()[1], 0, ' 0', ha='left', va='center', color='green')
-    plt.show()
-
-
-
-
-
-    # ### TO CREATE N by N MATRIX OF PLOTS
-    # # Create the figure and gridspec
-    # fig = plt.figure(figsize=(12, 8))
-    # grid = gridspec.GridSpec(2, 2, figure=fig)
-
-    # # Loop through the measurements and create Bland-Altman plots
-    # for j, measurement in enumerate(op_measurements):
-    #     row = j // 2
-    #     col = j % 2
-    #     ax = fig.add_subplot(grid[row, col])
-
-    #     measurement_op = op_measurements[j] / 100
-    #     measurement_ma = ma_measurements[j] / 100
-    #     diff = measurement_op - measurement_ma
-    #     mean = np.mean([measurement_op, measurement_ma], axis=0)
-    #     # Sample standard deviation
-    #     sd = np.std(diff, ddof=1)
-    #     # Limits of agreement
-    #     loa = 1.96 * sd
+        measurement_op = op_measurements[j] / 100
+        measurement_ma = ma_measurements[j] / 100
+        diff = measurement_op - measurement_ma
+        mean = np.mean([measurement_op, measurement_ma], axis=0)
+        # Sample standard deviation
+        sd = np.std(diff, ddof=1)
+        # Limits of agreement
+        loa = 1.96 * sd
         
-    #     # Create the Bland-Altman plot
-    #     ax.scatter(mean, diff, color='black', s=50)
-    #     ax.axhline(np.mean(diff), color='red', linestyle='--')
-    #     ax.axhline(np.mean(diff), color='red', linestyle='--')
-    #     ax.axhline(np.mean(diff) + loa, color='blue', linestyle='--')
-    #     ax.axhline(np.mean(diff) - loa, color='blue', linestyle='--')
-    #     ax.axhline(0, color='green', linestyle='--')
+        # Create the Bland-Altman plot
+        ax.scatter(mean, diff, color='black', s=50)
+        ax.axhline(np.mean(diff), color='red', linestyle='--')
+        ax.axhline(np.mean(diff), color='red', linestyle='--')
+        ax.axhline(np.mean(diff) + loa, color='blue', linestyle='--')
+        ax.axhline(np.mean(diff) - loa, color='blue', linestyle='--')
+        ax.axhline(0, color='green', linestyle='--')
 
-    #     ax.set_ylim(-0.30, 0.30)  
-    #     ax.set_xlabel('Mean [m/s]')
-    #     ax.set_ylabel('Difference [m/s]')
-    #     ax.set_title(f'{joint_title[j]}')
-    #     # ax.legend()
+        ax.set_ylim(-0.35, 0.35)  
+        ax.set_xlabel('Mean [m]')
+        ax.set_ylabel('Difference [m]')
+        ax.set_title(f'{joint_title[j]}')
+        # ax.legend()
 
-    #     # Add line values
-    #     ax.text(plt.xlim()[1], np.mean(diff), f' {np.mean(diff):.2f}', ha='left', va='center', color='red')
-    #     ax.text(plt.xlim()[1], np.mean(diff) + loa, f' {np.mean(diff) + loa:.2f}', ha='left', va='center', color='blue')
-    #     ax.text(plt.xlim()[1], np.mean(diff) - loa, f' {np.mean(diff) - loa:.2f}', ha='left', va='center', color='blue')
-    #     ax.text(plt.xlim()[1], 0, ' 0', ha='left', va='center', color='green')
+        # Add line values
+        ax.text(plt.xlim()[1], np.mean(diff), f' {np.mean(diff):.2f}', ha='left', va='center', color='red')
+        ax.text(plt.xlim()[1], np.mean(diff) + loa, f' {np.mean(diff) + loa:.2f}', ha='left', va='center', color='blue')
+        ax.text(plt.xlim()[1], np.mean(diff) - loa, f' {np.mean(diff) - loa:.2f}', ha='left', va='center', color='blue')
+        ax.text(plt.xlim()[1], 0, ' 0', ha='left', va='center', color='green')
 
 
-    # # # Set the common legend outside the subplots
-    # # legend_labels = ['Mean Difference', 'Upper LOA', 'Lower LOA', 'Zero Line']  # Add your desired legend labels here
-    # # legend_elements = [Line2D([0], [0], color='red', linestyle='--', label=label) for label in legend_labels]
-    # # legend = plt.legend(handles=legend_elements, title='Legend', loc='center left', bbox_to_anchor=(1.05, 0.5))
-    # # plt.subplots_adjust(right=0.85)
+    # # Set the common legend outside the subplots
+    # legend_labels = ['Mean Difference', 'Upper LOA', 'Lower LOA', 'Zero Line']  # Add your desired legend labels here
+    # legend_elements = [Line2D([0], [0], color='red', linestyle='--', label=label) for label in legend_labels]
+    # legend = plt.legend(handles=legend_elements, title='Legend', loc='center left', bbox_to_anchor=(1.05, 0.5))
+    # plt.subplots_adjust(right=0.85)
 
-    # # Adjust the spacing between subplots
-    # fig.tight_layout()
-    # # Add the overall title
-    # fig.suptitle(f'Bland-Altman Plots ({game} - SPEED)')
-    # # Adjust the spacing between subplots and the overall title
-    # fig.tight_layout(rect=[0, 0, 1, 0.96])
+    # Adjust the spacing between subplots
+    fig.tight_layout()
+    # Add the overall title
+    fig.suptitle(f'Bland-Altman Plots - Pediatric Reach Test #{reachnum}')
+    # Adjust the spacing between subplots and the overall title
+    fig.tight_layout(rect=[0, 0, 1, 0.96])
 
-    # # # Show the plots
-    # # plt.show()
+    # # Show the plots
+    # plt.show()
 
-# # Get the path to the "Downloads" folder
-# downloads_path = os.path.expanduser('~/Downloads')
-# # Save the plot to the "Downloads" folder
-# file_path = os.path.join(downloads_path, f'TUG_bland_altman.png')
-# fig.savefig(file_path)
+# Get the path to the "Downloads" folder
+downloads_path = os.path.expanduser('~/Downloads')
+# Save the plot to the "Downloads" folder
+file_path = os.path.join(downloads_path, f'Pediatric_{reachnum}_bland_altman.png')
+fig.savefig(file_path)
 
-    
