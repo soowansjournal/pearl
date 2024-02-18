@@ -70,11 +70,11 @@ for game_ind in range(len(op_games)):
 
         try:
             # Load OP Data
-            op = load_op('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/Clean_' + mmdd_p + '/' + op_file)
+            op = load_op('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/Auto_Clean_' + mmdd_p + '/' + op_file)
             print(op.head(3))
 
             # Load MA Data
-            ma = load_ma('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/Clean_' + mmdd_p + '/' + ma_file)
+            ma = load_ma('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/Auto_Clean_' + mmdd_p + '/' + ma_file)
             print(ma.head(3))
 
         except FileNotFoundError:
@@ -200,7 +200,6 @@ for game_ind in range(len(op_games)):
         joint_p = pd.DataFrame(joint_p_val, columns = joint_col, index = [mmdd_p[-3:]])
         joint_z = pd.DataFrame(joint_corr_z, columns = joint_col, index = [mmdd_p[-3:]])
 
-        
         # DOWNLOAD the joint coordinate correlation R-Z-P-Values --> paste into data results
         joint_r.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/{op_games[game_ind]}/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-Joint_r.csv', encoding = 'utf-8-sig') 
         joint_p.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/{op_games[game_ind]}/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-Joint_p_val.csv', encoding = 'utf-8-sig') 
@@ -211,15 +210,15 @@ for game_ind in range(len(op_games)):
         data_z.append(joint_z)
         
         print("\nFOLLOWING FILES DO NOT EXIST:", directory_unknown)
-    
-    
+
+        
     # if game doesn't exist for this participant
-    try: 
-        joint_r_overall = pd.concat(data_r)
-        joint_p_overall = pd.concat(data_p)
-        joint_z_overall = pd.concat(data_z)
+    try:
+      joint_r_overall = pd.concat(data_r)
+      joint_p_overall = pd.concat(data_p)
+      joint_z_overall = pd.concat(data_z)
     except:
-        continue
+      continue
 
     # DOWNLOAD the OVERALL joint coordinate correlation R-Z-P-Values --> paste into data results
     joint_r_overall.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/{op_games[game_ind]}/2023-{op_games[game_ind]}-Joint_r.csv', encoding = 'utf-8-sig')

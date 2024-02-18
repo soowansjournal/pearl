@@ -93,7 +93,7 @@ for game_ind in range(len(op_games)):
                                 time = float(op['EndTime'][i]) - float(op['StartTime'][i])
                                 op_sum_time.append(time)
                             elif op['QualityRep'][i] == False: 
-                                time = float(op['EndTime'][i]) - float(op['StartTime'][i])#time = 0
+                                time = 0
                                 op_sum_time.append(time)
                     
                     # 5.2) Read/Analyze the MA results file
@@ -107,7 +107,7 @@ for game_ind in range(len(op_games)):
                                 time = float(ma['EndTime'][i]) - float(ma['StartTime'][i])
                                 ma_sum_time.append(time)
                             elif ma['QualityRep'][i] == False: 
-                                time = float(ma['EndTime'][i]) - float(ma['StartTime'][i])#time = 0
+                                time = 0
                                 ma_sum_time.append(time)
 
 

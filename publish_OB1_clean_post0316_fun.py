@@ -1,6 +1,6 @@
 '''
 ---
-# **Copy of CHAPTER 3: OB1 Clean Post0316 Auto**
+# **Copy of CHAPTER 3: OB1 Clean Post0316**
 ---
 
 **Post 2023-03-16-P05**  
@@ -26,20 +26,6 @@
 
 **Fixed on 2023-04-11**
 - Problem 1: Losing Complete Sight of the User
-
-**Added on 2023-05-22**
-- _**Automatically Loop Through Each Participant**_
-- For mmdd_p in mmdd_p_all
-
-**Tweaked on 2023-05-22**
-- _**Automatically Loop Through Each Game**_
-  - _**if directory game file doesn't exist, go to next game**_
-  -  except FileNotFoundError: directory_unknown.append()
-  - "_**Load automatic peak values to clean**_"
-  - def synch_op(op_synch, op_thresh, op_dist, op_peak, op_end)
-  - def synch_ma(ma_synch, op_synch, ma_thresh, ma_dist, ma_peak)
-  - _**if we dont know the peaks, go to next game**_
-  - game_peaks_unknown.append(op_games[game_ind])
 
 **5 Bootle Blast + 18 Boot Camp**
 - (1-1) Joint Coordinate Position 
@@ -174,44 +160,7 @@ def coord_op(op_coord):
   return op_coord
 
 
-def coord_ma(ma_coord):
-  '3.2.2) Coordinate Transformation'
-
-  print('\n3.2.2) COORDINATE TRANSFORMATION\n----------------------------\n')
-
-  # isolate for relevant column names 
-  new_names = []             
-  for name in ma_coord.columns:
-    if 'Unnamed' in name:     # irrelevant columns
-      pass                 
-    else:                     # relevant columns     
-      new_names.append(name) 
-
-  # search if relevant column exists in the dataframe and locate the index 
-  dic = {}                                                     
-  i = 0                                                             
-  for name in new_names: 
-    if name in ma_coord.columns:
-      dic[i] = [name, 'index location:', ma_coord.columns.get_loc(name)]  # add index location of the column name to dictionary
-      i += 1                                                        # increment dictionary index
-
-  # rename columns of three succeeding index (to same name) from new_names list...
-  naming_system = ['X','Y','Z']                     
-  # get the index of the starting column name, which is 'Front.Head'
-  start = ma_coord.columns.get_loc('Front.Head')            
-  # create a copy of the column names
-  ma_tmp = ma_coord.columns.copy()                    
-  # loop from index of 'Front.Head' to index of last relevant column, increment every 3 steps (identical to csv file)    
-  for i in range(start, dic[max(dic)][-1], 3):  
-    # loop through the next three succeeding index
-    for j in range(0,3):                            
-      # change the specific name of the six succeeding columns in place
-      ma_coord.rename(columns = {ma_coord.columns[i+j]:ma_tmp[i] + naming_system[j]}, inplace= True)
-
-  return ma_coord    
-
-
-def synch_op(op_synch, op_thresh, op_dist, op_peak, op_end):
+def synch_op(op_synch):
   '2.2.4) Synchronization (Clapping Peak:Orbbec End Time)'
 
   print('\n2.2.4) SYNCHRONIZATION (CLAPPING PEAK:ORBBEC END TIME)\n----------------------------\n')
@@ -226,10 +175,8 @@ def synch_op(op_synch, op_thresh, op_dist, op_peak, op_end):
   plt.show()
 
   # zoom in on the peak movements
-  # height = int(input("Minimal Peak Threshold: "))
-  # distance = int(input("Minimal Distance Between Peaks (>1): "))
-  height = op_thresh
-  distance = op_dist
+  height = int(input("Minimal Peak Threshold: "))
+  distance = int(input("Minimal Distance Between Peaks (>1): "))
   x = op_synch['WristLeftY']
   peaks, _ = find_peaks(x, height= height, distance = distance)
   plt.figure(figsize=(5,3))
@@ -243,12 +190,10 @@ def synch_op(op_synch, op_thresh, op_dist, op_peak, op_end):
   print(x[peaks])
 
   # locate the peak of the third clap
-  # op_peak = int(input('\nIndex for peak of 3rd clap: '))
-  op_peak = op_peak
+  op_peak = int(input('\nIndex for peak of 3rd clap: '))
 
   # locate the end frame of the game
-  # end_frame_op = int(input('Orbbec Ending Frame (FROM GRAPH): '))
-  end_frame_op = op_end
+  end_frame_op = int(input('Orbbec Ending Frame (FROM GRAPH): '))
 
   print(f'\nShape of Orbbec BEFORE synchronization: {op_synch.shape}')
   op_synch = op_synch[op_peak:end_frame_op]       # cut orbbec data from starting position (horizontal peak) to ending position (frame at end of game log)
@@ -572,7 +517,7 @@ def nullv_ma(ma_nullv):
   return ma_nullv
 
 
-def synch_ma(ma_synch, op_synch, ma_thresh, ma_dist, ma_peak):
+def synch_ma(ma_synch, op_synch):
   '3.2.4) Synchronization (Clapping Peak:Orbbec End Time)'
 
   print('\n3.2.4) SYNCHRONIZATION (CLAPPING PEAK:ORBBEC END TIME)\n----------------------------\n')
@@ -587,10 +532,8 @@ def synch_ma(ma_synch, op_synch, ma_thresh, ma_dist, ma_peak):
   plt.show()
 
   # zoom in on the peak movements
-  # height = int(input("Minimal Peak Threshold: "))
-  # distance = int(input("Minimal Distance Between Peaks (>1): "))
-  height = ma_thresh
-  distance = ma_dist
+  height = int(input("Minimal Peak Threshold: "))
+  distance = int(input("Minimal Distance Between Peaks (>1): "))
   x = ma_synch['L.WristY']
   peaks, _ = find_peaks(x, height= height, distance = distance)
   plt.figure(figsize=(5,3))
@@ -604,8 +547,7 @@ def synch_ma(ma_synch, op_synch, ma_thresh, ma_dist, ma_peak):
   print(x[peaks])
 
   # locate the peak of the third clap
-  # ma_peak = int(input('\nIndex for peak of 3rd clap: ')) 
-  ma_peak = ma_peak
+  ma_peak = int(input('\nIndex for peak of 3rd clap: ')) 
 
   # overall MA game duration to locate end frame of the game 
   duration = ma_synch.Time.iloc[ma_peak] + (op_synch.Time.iloc[-1] - op_synch.Time.iloc[0])

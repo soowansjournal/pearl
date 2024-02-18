@@ -92,8 +92,8 @@ for game in bb_games:
             col = j % 2
             ax = fig.add_subplot(grid[row, col])
 
-            measurement_op = op_measurements[j]
-            measurement_ma = ma_measurements[j]
+            measurement_op = op_measurements[j] / 100
+            measurement_ma = ma_measurements[j] / 100
             diff = measurement_op - measurement_ma
             mean = np.mean([measurement_op, measurement_ma], axis=0)
             # Sample standard deviation
@@ -109,9 +109,9 @@ for game in bb_games:
             ax.axhline(np.mean(diff) - loa, color='blue', linestyle='--')
             ax.axhline(0, color='green', linestyle='--')
 
-            ax.set_ylim(-20, 20)  
-            ax.set_xlabel('Mean [deg]')
-            ax.set_ylabel('Difference [deg]')
+            ax.set_ylim(-0.15, 0.15)  
+            ax.set_xlabel('Mean [m]')
+            ax.set_ylabel('Difference [m]')
             ax.set_title(f'{joint_title[j]}')
             # ax.legend()
 

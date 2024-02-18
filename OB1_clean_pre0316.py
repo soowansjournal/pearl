@@ -52,8 +52,8 @@ def load_ma(ma_file):
 # ma_games = ['Power1', 'Power2', 'Wizards', 'War', 'Jet', 'Astro', 
 #             'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9',
 #             'Pediatric', 'Single1', 'Single2', 'Five', 'Thirty']
-op_games = ['Power1','BC1', 'Single1']
-ma_games = ['Power1','BC1', 'Single']
+op_games = ['Pediatric']
+ma_games = ['Pediatric']
 
 
 # SELECT FILES HERE

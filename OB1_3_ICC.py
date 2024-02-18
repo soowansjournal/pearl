@@ -45,7 +45,7 @@ def load_results(file):
 # Select Games
 # bootle_blast = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
 # boot_camp = ['BC_Strength', 'BC_Cardio', 'BC_Seated', 'BC_Static']
-games = ['BC_Strength', 'BC_Cardio', 'BC_Seated', 'BC_Static']
+games = ['PowerR', 'PowerL', 'Wizards', 'War', 'Jet', 'Astro']
 
 
 left_overall = []
@@ -54,9 +54,9 @@ right_overall = []
 # For each Game
 for game in games:
    if "BC" in game:
-      angle_df = load_results(f'/Users/soowan/Documents/PEARL/Data/Data_OB1/Old_Clean_20230604/3_Angle/{game}/2023-{game[3:].upper()}-angle.csv')
+      angle_df = load_results(f'/Users/soowan/Documents/PEARL/Data/Data_OB1/3_Angle/{game}/2023-{game[3:].upper()}-angle.csv')
    else: 
-      angle_df = load_results(f'/Users/soowan/Documents/PEARL/Data/Data_OB1/Old_Clean_20230604/3_Angle/{game}/2023-{game}-angle.csv')
+      angle_df = load_results(f'/Users/soowan/Documents/PEARL/Data/Data_OB1/3_Angle/{game}/2023-{game}-angle.csv')
 
    left_angle = []
    right_angle = []

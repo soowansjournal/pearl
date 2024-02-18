@@ -10,7 +10,7 @@ import re
 # Specify which leg!  'R' or 'L'
 leg_side = 'L'
 # Specify which sit! 'Five' or 'Thirty'
-sit_type = 'Five'
+sit_type = 'Thirty'
 
 
 

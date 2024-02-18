@@ -19,7 +19,7 @@ def load_ma(ma_file):
 
 
 # Specify which sit! 'Five' or 'Thirty'
-sit_type = 'Five'
+sit_type = 'Thirty'
 
 
 
@@ -184,11 +184,11 @@ for game_ind in range(len(op_games)):
     else:
         df_game.to_csv(rf'/Users/soowan/Downloads/2023-{op_games[game_ind]}-Thirty-COUNT.csv', encoding = 'utf-8-sig')
 
-    # Download Game Results to Specific Folder
-    if sit_type == 'Five':
-        df_game.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Results_Soowan/STS/Five/2023-{op_games[game_ind]}-Five-COUNT.csv', encoding = 'utf-8-sig')
-    else:
-        df_game.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Results_Soowan/STS/Thirty/2023-{op_games[game_ind]}-Thirty-COUNT.csv', encoding = 'utf-8-sig')
+    # # Download Game Results to Specific Folder
+    # if sit_type == 'Five':
+    #     df_game.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Results_Soowan/STS/Five/2023-{op_games[game_ind]}-Five-COUNT.csv', encoding = 'utf-8-sig')
+    # else:
+    #     df_game.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB2/Results_Soowan/STS/Thirty/2023-{op_games[game_ind]}-Thirty-COUNT.csv', encoding = 'utf-8-sig')
 
 
         

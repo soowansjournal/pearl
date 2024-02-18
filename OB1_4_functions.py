@@ -348,7 +348,7 @@ def reach_calculations(op_final, ma_final):
 def peaks_finder(op_ma, order, side, array_test, reachvsspeed):
 
   # determine the horizontal distance between peaks
-  distance = len(op_final) / 10
+  distance = len(array_test) / 10
 
   x = np.array(array_test)
   peaks, _= find_peaks(x, distance = distance)
@@ -447,19 +447,19 @@ def peaks_method2(order, side, op_array_test, ma_array_test):
         print(f"Absolute Max MA Peak:\t {ma_single_peak} \nAverage Max MA Peak:\t {ma_average_peak} cm")
 
 
-        # plot the peak values found from MA reach data
-        plt.figure(figsize=(5,3))
-        plt.plot(op_array_test, label = 'OP Cleaned')    
-        plt.plot(op_array_test[op_peaks], "*")                
-        plt.plot(ma_array_test, label = 'MA Cleaned')  
-        plt.plot(ma_array_test[ma_peaks], "*")                  
-        plt.legend()
-        plt.xlabel('Frames [Hz]')
-        plt.ylabel('Distance [cm]')
-        plt.title('OP and MA Reach Peaks - SEPARATE')
-        plt.xlabel('Frames [Hz]')
-        plt.ylabel('Distance [cm]')
-        plt.show()
+        # # plot the peak values found from MA reach data
+        # plt.figure(figsize=(5,3))
+        # plt.plot(op_array_test, label = 'OP Cleaned')    
+        # plt.plot(op_array_test[op_peaks], "*")                
+        # plt.plot(ma_array_test, label = 'MA Cleaned')  
+        # plt.plot(ma_array_test[ma_peaks], "*")                  
+        # plt.legend()
+        # plt.xlabel('Frames [Hz]')
+        # plt.ylabel('Distance [cm]')
+        # plt.title('OP and MA Reach Peaks - SEPARATE')
+        # plt.xlabel('Frames [Hz]')
+        # plt.ylabel('Distance [cm]')
+        # plt.show()
 
         return op_average_peak, ma_average_peak, op_highest_peak, ma_highest_peak
 

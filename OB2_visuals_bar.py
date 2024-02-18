@@ -16,7 +16,7 @@ ax = sns.barplot(x='Side',y='RMSE_m',hue='Coordinate',data=corr_bar
            ,palette='Blues'    
            ,estimator=np.median, errorbar=('ci', 50), capsize=0.05)
 
-ax.set(xlabel='Reach Type #: Side',ylabel='RMSE [m]')
+ax.set(xlabel='Reach #: Measured Arm',ylabel='RMSE [m]')
 ax.set_ylim(ymin = 0)
 
 
@@ -29,7 +29,7 @@ ax = sns.barplot(x='Side',y='Correlation',hue='Coordinate',data=corr_bar
            ,palette='Blues'    
            ,estimator=np.median, errorbar=('ci', 50), capsize=0.05)
 
-ax.set(xlabel='Reach Type #: Side',ylabel='Correlation [r]')
+ax.set(xlabel='Reach #: Measured Arm',ylabel='Correlation [r]')
 ax.set_ylim(ymin = 0, ymax = 1.1)
 
 

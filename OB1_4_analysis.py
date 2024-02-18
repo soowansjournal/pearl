@@ -66,18 +66,20 @@ for game_ind in range(len(op_games)):
         #print(op_file, '\t', ma_file)
 
         try: 
+            # If Cleaned Data: OB1_clean_redo.py --> Load Files from "Auto_Clean_" instead of "Clean_"
             # Load OP Data
-            op = load_op('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/Clean_' + mmdd_p + '/' + op_file)
+            op = load_op('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/Auto_Clean_' + mmdd_p + '/' + op_file)
             print(op.head(3))
 
             # Load MA Data
-            ma = load_ma('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/Clean_' + mmdd_p + '/' + ma_file)
+            ma = load_ma('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/Auto_Clean_' + mmdd_p + '/' + ma_file)
             print(ma.head(3))
 
         except FileNotFoundError:
                 # if directory game file doesn't exist, go to next game
                 directory_unknown.append(op_file)
                 continue
+
 
 
         op_filte = op.copy()
@@ -109,6 +111,7 @@ for game_ind in range(len(op_games)):
 
         op_final = op_align_joints.copy().reset_index().drop("index",axis=1)
         ma_final = ma_align_joints.copy().reset_index().drop("index",axis=1)
+
 
 
         # 1-4) Extent of Hand Reach
@@ -186,7 +189,7 @@ for game_ind in range(len(op_games)):
         continue
 
     # DOWNLOAD the OVERALL Max Hand Reach Values --> paste into data results
-    reach_overall.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/4_Reach/{op_games[game_ind]}/2023-{op_games[game_ind]}-reach.csv', encoding = 'utf-8-sig') 
+    reach_overall.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/Old_Clean_20230604/4_Reach/{op_games[game_ind]}/2023-{op_games[game_ind]}-reach.csv', encoding = 'utf-8-sig') 
 
 
 

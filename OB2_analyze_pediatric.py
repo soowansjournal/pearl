@@ -239,12 +239,12 @@ def data_vis(op_vis, ma_vis, joint, op_joint, ma_joint):
 
 def reach_calculations(op_final_cut, ma_final_cut, op_final, ma_final):
   # OP Extent of Hand Reach
-  # ZERO SHIFT MEAN (but add 200 for depth and 90 for height from sensor or just dont zero shift mean for depth and height)
+  # ZERO SHIFT MEAN (but add 200 for x-depth and 90 for z-height from sensor or just dont zero shift mean for depth and height)
 
   # OP LEFT
   # left hand joint = (hx,hy,hz)
   op_le_hx = op_final_cut['HandLeftX'] - np.mean(op_final['HandLeftX']) 
-  op_le_hy = op_final_cut['HandLeftY'] - np.mean(op_final['HandLeftY'])
+  op_le_hy = op_final_cut['HandLeftY'] - np.mean(op_final['HandLeftY']) 
   op_le_hz = op_final_cut['HandLeftZ'] - np.mean(op_final['HandLeftZ']) 
   # 3D
   leftreach_op = np.sqrt((op_le_hx)**2 + (op_le_hy)**2 + (op_le_hz)**2)
@@ -257,7 +257,7 @@ def reach_calculations(op_final_cut, ma_final_cut, op_final, ma_final):
   # right hand joint = (hx,hy,hz)
   op_ri_hx = op_final_cut['HandRightX'] - np.mean(op_final['HandRightX'])
   op_ri_hy = op_final_cut['HandRightY'] - np.mean(op_final['HandRightY'])
-  op_ri_hz = op_final_cut['HandRightZ'] - np.mean(op_final['HandRightZ']) 
+  op_ri_hz = op_final_cut['HandRightZ'] - np.mean(op_final['HandRightZ'])
   # 3D
   rightreach_op = np.sqrt((op_ri_hx)**2 + (op_ri_hy)**2 + (op_ri_hz)**2)
   # x,y,z
@@ -269,7 +269,7 @@ def reach_calculations(op_final_cut, ma_final_cut, op_final, ma_final):
   # MA LEFT 
   # left hand joint = (hx,hy,hz)
   ma_le_hx = ma_final_cut['L.WristX'] - np.mean(ma_final['L.WristX']) 
-  ma_le_hy = ma_final_cut['L.WristY'] - np.mean(ma_final['L.WristY'])
+  ma_le_hy = ma_final_cut['L.WristY'] - np.mean(ma_final['L.WristY']) 
   ma_le_hz = ma_final_cut['L.WristZ'] - np.mean(ma_final['L.WristZ']) 
   # 3D
   leftreach_ma = np.sqrt((ma_le_hx)**2 + (ma_le_hy)**2 + (ma_le_hz)**2)
@@ -281,7 +281,7 @@ def reach_calculations(op_final_cut, ma_final_cut, op_final, ma_final):
   # MA RIGHT
   # right hand joint = (hx,hy,hz)
   ma_ri_hx = ma_final_cut['R.WristX'] - np.mean(ma_final['R.WristX']) 
-  ma_ri_hy = ma_final_cut['R.WristY'] - np.mean(ma_final['R.WristY'])
+  ma_ri_hy = ma_final_cut['R.WristY'] - np.mean(ma_final['R.WristY']) 
   ma_ri_hz = ma_final_cut['R.WristZ'] - np.mean(ma_final['R.WristZ']) 
   # 3D
   rightreach_ma = np.sqrt((ma_ri_hx)**2 + (ma_ri_hy)**2 + (ma_ri_hz)**2)

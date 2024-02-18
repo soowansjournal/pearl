@@ -125,11 +125,11 @@ for game_ind in range(len(op_games)):
 
         try:
             # Load OP Data
-            op = load_op('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/Clean_' + mmdd_p + '/' + op_file)
+            op = load_op('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/Auto_Clean_' + mmdd_p + '/' + op_file)
             print(op.head(3))
 
             # Load MA Data
-            ma = load_ma('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/Clean_' + mmdd_p + '/' + ma_file)
+            ma = load_ma('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/Auto_Clean_' + mmdd_p + '/' + ma_file)
             print(ma.head(3))
 
         except FileNotFoundError:
@@ -145,24 +145,24 @@ for game_ind in range(len(op_games)):
         op_align_joints, ma_align_joints = align_joints(op_cut, ma_cut)
 
 
-        # Visualize ALL Data (39 graphs total)
-        op_head = ['Head']
-        ma_head = ['Front.Head']
-        op_side = ['Left','Right']
-        ma_side = ['L.','R.']
-        xyz = ['Y','Z','X']
-        # Head Data
-        for i in range(len(op_head)):
-            for k in range(len(xyz)):
-                op_joint = op_head[i] + xyz[k]
-                ma_joint = ma_head[i] + xyz[k]
-                joint = ma_joint
-                if xyz[k] == 'Y':
-                    data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align horizontal(Y) coordinate
-                elif xyz[k] == 'Z':
-                    data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align vertical(Z) coordinate
-                elif xyz[k] == 'X':
-                    data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align depth(X) coordinate
+        # # Visualize ALL Data (39 graphs total)
+        # op_head = ['Head']
+        # ma_head = ['Front.Head']
+        # op_side = ['Left','Right']
+        # ma_side = ['L.','R.']
+        # xyz = ['Y','Z','X']
+        # # Head Data
+        # for i in range(len(op_head)):
+        #     for k in range(len(xyz)):
+        #         op_joint = op_head[i] + xyz[k]
+        #         ma_joint = ma_head[i] + xyz[k]
+        #         joint = ma_joint
+        #         if xyz[k] == 'Y':
+        #             data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align horizontal(Y) coordinate
+        #         elif xyz[k] == 'Z':
+        #             data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align vertical(Z) coordinate
+        #         elif xyz[k] == 'X':
+        #             data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align depth(X) coordinate
 
 
         op_final = op_align_joints.copy().reset_index().drop("index",axis=1)
@@ -275,12 +275,13 @@ for game_ind in range(len(op_games)):
         
         print("\nFOLLOWING FILES DO NOT EXIST:", directory_unknown)
 
+
     try:
-        joint_r_overall = pd.concat(data_r)
-        joint_p_overall = pd.concat(data_p)
-        joint_z_overall = pd.concat(data_z)
+      joint_r_overall = pd.concat(data_r)
+      joint_p_overall = pd.concat(data_p)
+      joint_z_overall = pd.concat(data_z)
     except:
-        continue
+      continue
 
     # # DOWNLOAD EACH GAME ALL PARTICIPANT
     joint_r_overall.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Boot_Camp/{op_games[game_ind]}/2023-{op_games[game_ind]}-Joint_r.csv', encoding = 'utf-8-sig')
@@ -347,39 +348,40 @@ for game_ind in range(len(op_games)):
         static_z.append(joint_z_overall)
 
 
+
+
 try:
-    joint_r_strength = pd.concat(strength_r)
-    joint_r_cardio = pd.concat(cardio_r)
-    joint_r_seated = pd.concat(seated_r)
-    joint_r_static = pd.concat(static_r)
+  joint_r_strength = pd.concat(strength_r)
+  joint_r_cardio = pd.concat(cardio_r)
+  joint_r_seated = pd.concat(seated_r)
+  joint_r_static = pd.concat(static_r)
 
-    joint_p_strength = pd.concat(strength_p)
-    joint_p_cardio = pd.concat(cardio_p)
-    joint_p_seated = pd.concat(seated_p)
-    joint_p_static = pd.concat(static_p)
+  joint_p_strength = pd.concat(strength_p)
+  joint_p_cardio = pd.concat(cardio_p)
+  joint_p_seated = pd.concat(seated_p)
+  joint_p_static = pd.concat(static_p)
 
-    joint_z_strength = pd.concat(strength_z)
-    joint_z_cardio = pd.concat(cardio_z)
-    joint_z_seated = pd.concat(seated_z)
-    joint_z_static = pd.concat(static_z)
+  joint_z_strength = pd.concat(strength_z)
+  joint_z_cardio = pd.concat(cardio_z)
+  joint_z_seated = pd.concat(seated_z)
+  joint_z_static = pd.concat(static_z)
 
 
-    # DOWNLOAD GROUPED GAMES ALL PARTICIPANT 
-    joint_r_strength.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Strength/2023-STRENGTH-Joint_r.csv', encoding = 'utf-8-sig')
-    joint_r_cardio.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Cardio/2023-CARDIO-Joint_r.csv', encoding = 'utf-8-sig')
-    joint_r_seated.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Seated/2023-SEATED-Joint_r.csv', encoding = 'utf-8-sig')
-    joint_r_static.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Static/2023-STATIC-Joint_r.csv', encoding = 'utf-8-sig')
+  # DOWNLOAD GROUPED GAMES ALL PARTICIPANT 
+  joint_r_strength.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Strength/2023-STRENGTH-Joint_r.csv', encoding = 'utf-8-sig')
+  joint_r_cardio.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Cardio/2023-CARDIO-Joint_r.csv', encoding = 'utf-8-sig')
+  joint_r_seated.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Seated/2023-SEATED-Joint_r.csv', encoding = 'utf-8-sig')
+  joint_r_static.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Static/2023-STATIC-Joint_r.csv', encoding = 'utf-8-sig')
 
-    joint_p_strength.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Strength/2023-STRENGTH-Joint_p_val.csv', encoding = 'utf-8-sig')
-    joint_p_cardio.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Cardio/2023-CARDIO-Joint_p_val.csv', encoding = 'utf-8-sig')
-    joint_p_seated.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Seated/2023-SEATED-Joint_p_val.csv', encoding = 'utf-8-sig')
-    joint_p_static.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Static/2023-STATIC-Joint_p_val.csv', encoding = 'utf-8-sig')
+  joint_p_strength.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Strength/2023-STRENGTH-Joint_p_val.csv', encoding = 'utf-8-sig')
+  joint_p_cardio.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Cardio/2023-CARDIO-Joint_p_val.csv', encoding = 'utf-8-sig')
+  joint_p_seated.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Seated/2023-SEATED-Joint_p_val.csv', encoding = 'utf-8-sig')
+  joint_p_static.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Static/2023-STATIC-Joint_p_val.csv', encoding = 'utf-8-sig')
 
-    joint_z_strength.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Strength/2023-STRENGTH-Joint_z.csv', encoding = 'utf-8-sig')
-    joint_z_cardio.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Cardio/2023-CARDIO-Joint_z.csv', encoding = 'utf-8-sig')
-    joint_z_seated.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Seated/2023-SEATED-Joint_z.csv', encoding = 'utf-8-sig')
-    joint_z_static.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Static/2023-STATIC-Joint_z.csv', encoding = 'utf-8-sig')
-
+  joint_z_strength.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Strength/2023-STRENGTH-Joint_z.csv', encoding = 'utf-8-sig')
+  joint_z_cardio.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Cardio/2023-CARDIO-Joint_z.csv', encoding = 'utf-8-sig')
+  joint_z_seated.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Seated/2023-SEATED-Joint_z.csv', encoding = 'utf-8-sig')
+  joint_z_static.to_csv(rf'/Users/soowan/Documents/PEARL/Data/Data_OB1/1_Coordinate/BC_Static/2023-STATIC-Joint_z.csv', encoding = 'utf-8-sig')
 
 except:
-    print("Not enough games to group")
+  print("Not enough games to group")

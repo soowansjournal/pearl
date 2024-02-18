@@ -28,7 +28,9 @@ for i, label in enumerate(labels):
 # Add axis labels and a title
 plt.xlabel('False Positive Rate (1 - Specificity)')
 plt.ylabel('True Positive Rate (Sensitivity/Recall)')
-plt.title('ROC Curve for Exercise')
+plt.title('TPR vs FPR for Exercise')
+plt.ylim(top=1.1, bottom = 0)
+plt.xlim(right=1.1, left = 0)
 
 # Display the plot
 plt.show()
@@ -50,6 +52,8 @@ for i, label in enumerate(labels):
 plt.xlabel('Sensitivity/Recall')
 plt.ylabel('Precision')
 plt.title('Precision-Recall for Exercise')
+plt.ylim(top=1.05, bottom = 0.55)
+plt.xlim(right=1.05, left = 0.55)
 
 # Display the plot
 plt.show()
@@ -69,6 +73,8 @@ for i, label in enumerate(labels):
 plt.xlabel('Sensitivity/Recall')
 plt.ylabel('Specificity')
 plt.title('Specificity vs Sensitivity (Bubble Size: Precision)')
+plt.ylim(top=1.1, bottom = 0)
+plt.xlim(right=1.1, left = 0)
 
 # Display the plot
 plt.show()
@@ -91,6 +97,7 @@ for i, label in enumerate(labels):
 plt.xlabel('Exercise')
 plt.ylabel('F1-Score')
 plt.title('F1-Score for Exercise')
+plt.ylim(top=1.1, bottom = 0)
 
 # Display the plot
 plt.show()
@@ -113,6 +120,7 @@ for i, label in enumerate(labels):
 plt.xlabel('Exercise')
 plt.ylabel('Accuracy [%]')
 plt.title('Accuracy for Exercise')
+plt.ylim(top=1.1, bottom = 0)
 
 # Display the plot
 plt.show()

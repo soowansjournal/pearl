@@ -28,12 +28,12 @@ import re
 
 
 # # USING CLEAN FILES
-# TIMER
-source_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_BC_Timer'
-destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/OB2_Clean'
-# # COUNT
-# source_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_BC_Count'
+# # TIMER
+# source_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_BC_Timer'
 # destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/OB2_Clean'
+# COUNT
+source_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_BC_Count'
+destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/OB2_Clean'
 # # SINGLE_RIGHT
 # source_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/Clean_SCA_SLS/SingleR'
 # destination_folder = '/Users/soowan/Documents/PEARL/Data/Data_OB2/OB2_Clean'

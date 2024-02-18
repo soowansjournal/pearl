@@ -147,15 +147,15 @@ def load_ma(ma_file):
 #              'Single1', 'Single2', 'Five', 'Thirty']
 # ma_games = ['BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9',
 #              'Single', 'Single', 'Five', 'Thirty']
-op_games = ['BC6']
-ma_games = ['BC6']
+op_games = ['BC3']
+ma_games = ['BC3']
 
 # SELECT FILES HERE
 # mmdd_p_all = ['0221_P01', '0314_P02', '0314_P03', '0315_P04', 
 #               '0316_P05', '0322_P06', '0402_P07', '0403_P08', '0403_P09', '0404_P10', '0404_P11', 
 #               '0406_P12', '0406_P13', '0407_P14', '0407_P15', '0407_P16', '0408_P17', '0408_P18', 
 #               '0411_P19', '0412_P20', '0412_P21', '0413_P22', '0420_P23', '0420_P24', '0430_P25', '0502_P26', '0516_P27', '0601_P28']
-mmdd_p_all = ['0601_P28']
+mmdd_p_all = ['0314_P03']
 
 # Specify if Repetition Count exercise or Repetition Timer exercise
 count = ['Sqt', 'StLun', 'VMODip', 'HipFlex', 'HipExt', 'HipAbd', 'Kick', 'LatStep', 'BackStep',
