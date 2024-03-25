@@ -41,7 +41,7 @@ Soowan Choi
 '''
 
 
-from OB1_clean_post0316_fun import * # todo import other modules
+from publish_OB1_clean_post0316_fun import * # todo import other modules
 
 def load_op(op_file):
   # create dataframe from uploaded csv files using pandas.read_csv()
@@ -63,27 +63,27 @@ def load_ma(ma_file):
 # ma_games = ['Power1', 'Power2', 'Wizards', 'War', 'Jet', 'Astro', 
 #             'BC1', 'BC2', 'BC3', 'BC4', 'BC5', 'BC6', 'BC7', 'BC8', 'BC9',
 #             'Pediatric', 'Single1', 'Single2', 'Five', 'Thirty']
-op_games = ['Pediatric']
-ma_games = ['Pediatric']
+op_games = ['Wizards']
+ma_games = ['Wizards']
 
 
 # SELECT FILES HERE
-mmdd = '0407' 
-p = 'P14'
+mmdd = '0125' 
+p = 'P??'
 mmdd_p = mmdd + '_' + p
 
 for game_ind in range(len(op_games)):
   print(f'\n\n\n\n\n\n\n\n{op_games[game_ind]}\n\n\n\n\n\n\n\n')
-  op_file = '2023' + mmdd + '-' + op_games[game_ind] + "-Data.csv"
-  ma_file = '2023' + mmdd + '-' + ma_games[game_ind] + ".csv"
+  op_file = '2024' + mmdd + '-' + op_games[game_ind] + "-Data.csv"
+  ma_file = '2024' + mmdd + '-' + ma_games[game_ind] + ".csv"
 
   # Load OP Data
-  op = load_op('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/OP_' + mmdd_p + '/' + op_file)
+  op = load_op('/Users/soowan/Documents/PEARL/Data/Data_0551/2024_' + mmdd_p + '/OP_' + mmdd_p + '/' + op_file)
   print(op.head(3))
   
 
   # Load MA Data
-  ma = load_ma('/Users/soowan/Documents/PEARL/Data/Data_0551/2023_' + mmdd_p + '/MA_' + mmdd_p + '/' + ma_file)
+  ma = load_ma('/Users/soowan/Documents/PEARL/Data/Data_0551/2024_' + mmdd_p + '/MA_' + mmdd_p + '/' + ma_file)
   print(ma.head(3))
 
 
@@ -217,17 +217,17 @@ for game_ind in range(len(op_games)):
   # DOWNLOAD FILES TO DOWNLOADS FOLDER
   if 'Power' in op_games[game_ind] or 'BC' in op_games[game_ind]:
     # DOWNLOAD CLEANED OP DATA
-    op_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_game}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig') 
+    op_final.to_csv(rf'/Users/soowan/Downloads/2024{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_game}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig') 
     # DOWNLOAD OP Data Tracking Accuracy 
-    tracking.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_game}-Data-tracked.csv', encoding = 'utf-8-sig')
+    tracking.to_csv(rf'/Users/soowan/Downloads/2024{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_game}-Data-tracked.csv', encoding = 'utf-8-sig')
     # DOWNLOAD CLEANED MA BOOT CAMP DATA
-    ma_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{ma_game}-MA-CLEAN.csv', encoding = 'utf-8-sig')
+    ma_final.to_csv(rf'/Users/soowan/Downloads/2024{mmdd_p[:4]}-{mmdd_p[-3:]}-{ma_game}-MA-CLEAN.csv', encoding = 'utf-8-sig')
   else:
-    op_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig') 
+    op_final.to_csv(rf'/Users/soowan/Downloads/2024{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-Data-OP-CLEAN.csv',  encoding = 'utf-8-sig') 
     # DOWNLOAD OP Data Tracking Accuracy 
-    tracking.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-Data-tracked.csv', encoding = 'utf-8-sig')
+    tracking.to_csv(rf'/Users/soowan/Downloads/2024{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-Data-tracked.csv', encoding = 'utf-8-sig')
     # DOWNLOAD CLEANED MA BOOT CAMP DATA
-    ma_final.to_csv(rf'/Users/soowan/Downloads/2023{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-MA-CLEAN.csv', encoding = 'utf-8-sig')
+    ma_final.to_csv(rf'/Users/soowan/Downloads/2024{mmdd_p[:4]}-{mmdd_p[-3:]}-{op_games[game_ind]}-MA-CLEAN.csv', encoding = 'utf-8-sig')
                  
  
   # cut data 
@@ -250,8 +250,10 @@ for game_ind in range(len(op_games)):
   # Visualize ALL Data (39 graphs total)
   op_head = ['Head']
   ma_head = ['Front.Head']
-  op_joints = ['Wrist','Hip','Knee']
-  ma_joints = ['Wrist','ASIS','Knee']
+  # op_joints = ['Wrist','Hip','Knee']
+  op_joints = ['Shoulder','Elbow','Wrist','Hip','Knee','Foot','Hip','Knee','Foot']
+  # ma_joints = ['Wrist','ASIS','Knee']
+  ma_joints = ['Shoulder','Elbow','Wrist','ASIS','Knee','Ankle','Hip_JC','Knee_JC','Ankle_JC']
   op_side = ['Left','Right']
   ma_side = ['L.','R.']
   xyz = ['Y','Z','X']
@@ -261,23 +263,19 @@ for game_ind in range(len(op_games)):
       op_joint = op_head[i] + xyz[k]
       ma_joint = ma_head[i] + xyz[k]
       joint = ma_joint
-      if xyz[k] == 'Y':
-        data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align horizontal(Y) coordinate
-      elif xyz[k] == 'Z':
-        data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align vertical(Z) coordinate
-      elif xyz[k] == 'X':
-        data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align depth(X) coordinate
+      data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align depth(X) coordinate
 
   # Body Data
   for i in range(len(op_joints)):                   # for each joints
     for j in range(len(op_side)):                   # for each sides 
       for k in range(len(xyz)):                     # for each xyz 
         op_joint = op_joints[i] + op_side[j] + xyz[k]  # specific OP joint name
-        ma_joint = ma_side[j] + ma_joints[i] + xyz[k]  # specific MA joint name 
         joint = ma_side[j] + ma_joints[i] + xyz[k]     # joint of interest
-        if xyz[k] == 'Y':
-          data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align horizontal(Y) coordinate
-        elif xyz[k] == 'Z':
-          data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align vertical(Z) coordinate
-        elif xyz[k] == 'X':
-          data_vis(op_align_joints, ma_align_joints, joint, op_joint, ma_joint)  # align depth(X) coordinate
+        
+        if "_JC" in ma_joints[i]:
+          ma_joint = "V_" + ma_side[j] + ma_joints[i] + xyz[k]  # specific MA joint name 
+        else:
+          ma_joint = ma_side[j] + ma_joints[i] + xyz[k]  # specific MA joint name 
+        
+        data_vis(op_align_joints, ma_align_joints, ma_joint, op_joint, ma_joint)  # align coordinate
+

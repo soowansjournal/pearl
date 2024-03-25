@@ -413,7 +413,8 @@ def coord_ma(ma_coord):
   # rename columns of three succeeding index (to same name) from new_names list...
   naming_system = ['Y','X','Z']                     
   # get the index of the starting column name, which is 'Front.Head'
-  start = ma_coord.columns.get_loc('Front.Head')            
+  # start = ma_coord.columns.get_loc('Front.Head')   
+  start = ma_coord.columns.get_loc('Top.Head')           
   # create a copy of the column names
   ma_tmp = ma_coord.columns.copy()                    
   # loop from index of 'Front.Head' to index of last relevant column, increment every 3 steps (identical to csv file)    
@@ -447,7 +448,8 @@ def nullv_ma(ma_nullv):
 
   # Important columns with NULL values BEFORE INTERPOLATING
   isna = []
-  important = ['Front.Head','.ShoulderX','.ElbowX','.WristX','.ASISX','.KneeX','.AnkleX']
+  # important = ['Front.Head','.ShoulderX','.ElbowX','.WristX','.ASISX','.KneeX','.AnkleX']
+  important = ['Front.Head','.ShoulderX','.ElbowX','.WristX','.ASISX','.KneeX','.AnkleX','.Hip_JCX','.Knee_JCX','.Ankle_JCX']
   print('\nIMPORTANT Joints with NULL values BEFORE INTERPOLATING NULL:')
   for col in nulls:
     for joint in important:
@@ -495,7 +497,8 @@ def nullv_ma(ma_nullv):
 
   # IMPORTANT columns with NULL values AFTER INTERPOLATING 
   isna = []
-  important = ['.ShoulderX','.ElbowX','.WristX','.ASISX','.KneeX','.AnkleX']
+  # important = ['.ShoulderX','.ElbowX','.WristX','.ASISX','.KneeX','.AnkleX']
+  important = ['Front.Head','.ShoulderX','.ElbowX','.WristX','.ASISX','.KneeX','.AnkleX','.Hip_JCX','.Knee_JCX','.Ankle_JCX']
   print('\nIMPORTANT Joints with NULL values AFTER INTERPOLATING NULL:')
   for col in nulls:
     for joint in important:
@@ -697,8 +700,10 @@ def align_joints(op_align_joints, ma_align_joints):
   # Realign All Synchronized Joint Data (39 graphs total)
   op_head = ['Head']
   ma_head = ['Front.Head']
-  op_joints = ['Shoulder','Elbow','Wrist','Hip','Knee','Foot']
-  ma_joints = ['Shoulder','Elbow','Wrist','ASIS','Knee','Ankle']
+  # op_joints = ['Shoulder','Elbow','Wrist','Hip','Knee','Foot']
+  op_joints = ['Shoulder','Elbow','Wrist','Hip','Knee','Foot','Hip','Knee','Foot']
+  # ma_joints = ['Shoulder','Elbow','Wrist','ASIS','Knee','Ankle']
+  ma_joints = ['Shoulder','Elbow','Wrist','ASIS','Knee','Ankle','Hip_JC','Knee_JC','Ankle_JC']
   op_side = ['Left','Right']
   ma_side = ['L.','R.']
   xyz = ['Y','Z','X']
@@ -723,13 +728,20 @@ def align_joints(op_align_joints, ma_align_joints):
         align_x = remove_outliers(align_x)
         align_x = align_x.mean()                                           # alignment value in X
         ma_align_joints[ma_joint] = ma_align_joints[ma_joint] - align_x
+        
   # Body Data
   for i in range(len(op_joints)):                   # for each joints
     for j in range(len(op_side)):                   # for each sides 
       for k in range(len(xyz)):                     # for each xyz 
         op_joint = op_joints[i] + op_side[j] + xyz[k]  # specific OP joint name
-        ma_joint = ma_side[j] + ma_joints[i] + xyz[k]  # specific MA joint name 
         joint = ma_side[j] + ma_joints[i] + xyz[k]     # joint of interest
+
+        if "_JC" in ma_joints[i]:
+          ma_joint = "V_" + ma_side[j] + ma_joints[i] + xyz[k]  # specific MA joint name 
+          joint = "V_" + ma_side[j] + ma_joints[i] + xyz[k]     
+        else:
+          ma_joint = ma_side[j] + ma_joints[i] + xyz[k]  # specific MA joint name 
+
         if xyz[k] == 'Y':
           align_y = ma_align_joints[ma_joint] - op_align_joints[op_joint]   
           align_y = remove_outliers(align_y)
@@ -747,7 +759,7 @@ def align_joints(op_align_joints, ma_align_joints):
           ma_align_joints[ma_joint] = ma_align_joints[ma_joint] - align_x
 
   # Compare coordinates for OP vs MA - AFTER ALIGN
-  #compare_coordinates(op_align_joints, ma_align_joints, beforevsafter = 'AFTER')
+  # compare_coordinates(op_align_joints, ma_align_joints, beforevsafter = 'AFTER')
 
   return op_align_joints, ma_align_joints
 

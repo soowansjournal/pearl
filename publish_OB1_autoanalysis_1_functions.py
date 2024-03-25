@@ -113,8 +113,10 @@ def align_joints(op_align_joints, ma_align_joints):
   # Realign All Synchronized Joint Data (39 graphs total)
   op_head = ['Head']
   ma_head = ['Front.Head']
-  op_joints = ['Shoulder','Elbow','Wrist','Hip','Knee','Foot']
-  ma_joints = ['Shoulder','Elbow','Wrist','ASIS','Knee','Ankle']
+  # op_joints = ['Shoulder','Elbow','Wrist','Hip','Knee','Foot']
+  op_joints = ['Shoulder','Elbow','Wrist','Hip','Knee','Foot','Hip','Knee','Foot']
+  # ma_joints = ['Shoulder','Elbow','Wrist','ASIS','Knee','Ankle']
+  ma_joints = ['Shoulder','Elbow','Wrist','ASIS','Knee','Ankle','Hip_JC','Knee_JC','Ankle_JC']
   op_side = ['Left','Right']
   ma_side = ['L.','R.']
   xyz = ['Y','Z','X']
@@ -144,8 +146,13 @@ def align_joints(op_align_joints, ma_align_joints):
     for j in range(len(op_side)):                   # for each sides 
       for k in range(len(xyz)):                     # for each xyz 
         op_joint = op_joints[i] + op_side[j] + xyz[k]  # specific OP joint name
-        ma_joint = ma_side[j] + ma_joints[i] + xyz[k]  # specific MA joint name 
-        joint = ma_side[j] + ma_joints[i] + xyz[k]     # joint of interest
+        
+        if "_JC" in ma_joints[i]:
+          ma_joint = "V_" + ma_side[j] + ma_joints[i] + xyz[k]  # specific MA joint name 
+          joint = "V_" + ma_side[j] + ma_joints[i] + xyz[k]     
+        else:
+          ma_joint = ma_side[j] + ma_joints[i] + xyz[k]  # specific MA joint name 
+        
         if xyz[k] == 'Y':
           align_y = ma_align_joints[ma_joint] - op_align_joints[op_joint]   
           align_y = remove_outliers(align_y)
