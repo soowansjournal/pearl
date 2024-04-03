@@ -292,7 +292,9 @@ def table_angle_results(df_list):
   
   print(f"\nANGLE METHOD 0 - RESULTS\n")
   results = pd.concat([df_list[0],df_list[1],df_list[2],df_list[3],df_list[4],df_list[5],df_list[6],df_list[7],
-                    df_list[8],df_list[9],df_list[10],df_list[11],df_list[12],df_list[13],df_list[14],df_list[15]], axis=1)
+                    df_list[8],df_list[9],df_list[10],df_list[11],df_list[12],df_list[13],df_list[14],df_list[15], 
+                    df_list[16],df_list[17],df_list[18],df_list[19],df_list[20],df_list[21],df_list[22],df_list[23],
+                    df_list[24],df_list[25],df_list[26],df_list[27]], axis=1)
 
   return results
 

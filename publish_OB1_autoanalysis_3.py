@@ -125,7 +125,7 @@ for game_ind in range(len(op_games)):
     op_right = [op_elbow_ang_right, op_shoulder_ang_right, op_hip_ang_right, op_knee_ang_right, op_shoulder_ang_right, op_hip_ang_right, op_knee_ang_right]
     ma_right = [ma_elbow_ang_right, ma_shoulder_ang_right, ma_hip_ang_right, ma_knee_ang_right, ma_shoulder_ang_right_JC, ma_hip_ang_right_JC, ma_knee_ang_right_JC]
 
-    leftright = ['L', 'R']
+    leftright = ['L','R']
     jointname = ['Elbow', 'Shoulder', 'Hip', 'Knee', 'Shoulder_JC', 'Hip_JC', 'Knee_JC']
     minmax = ['Min', 'Max']
 
@@ -155,6 +155,7 @@ for game_ind in range(len(op_games)):
 
 
     # show results
+    print(df_list[0])
     joint_angles = table_angle_results(df_list)
 
     # DOWNLOAD the angle results --> paste into data results
