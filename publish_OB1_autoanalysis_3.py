@@ -9,7 +9,7 @@ Soowan Choi
 '''
 
 
-from OB1_autoanalysis_3_functions import * # todo import other modules
+from publish_OB1_autoanalysis_3_functions import * # todo import other modules
 
 
 def load_op(op_file):
@@ -109,24 +109,24 @@ for game_ind in range(len(op_games)):
 
     # left angle
     op_elbow_ang_left, op_shoulder_ang_left, op_hip_ang_left, op_knee_ang_left = op_joint_angle(op_final, 'Left')
-    ma_elbow_ang_left, ma_shoulder_ang_left, ma_hip_ang_left, ma_knee_ang_left = ma_joint_angle(ma_final, 'L')
+    ma_elbow_ang_left, ma_shoulder_ang_left, ma_hip_ang_left, ma_knee_ang_left, ma_shoulder_ang_left_JC, ma_hip_ang_left_JC, ma_knee_ang_left_JC = ma_joint_angle(ma_final, 'L')
 
     # right angle 
     op_elbow_ang_right, op_shoulder_ang_right, op_hip_ang_right, op_knee_ang_right = op_joint_angle(op_final, 'Right')
-    ma_elbow_ang_right, ma_shoulder_ang_right, ma_hip_ang_right, ma_knee_ang_right = ma_joint_angle(ma_final, 'R')
+    ma_elbow_ang_right, ma_shoulder_ang_right, ma_hip_ang_right, ma_knee_ang_right, ma_shoulder_ang_right_JC, ma_hip_ang_right_JC, ma_knee_ang_right_JC = ma_joint_angle(ma_final, 'R')
 
 
     # left angle MIN/MAX + right angle MIN/MAX
     angle_table = pd.DataFrame()
     df_list = []
 
-    op_left = [op_elbow_ang_left, op_shoulder_ang_left, op_hip_ang_left, op_knee_ang_left]
-    ma_left = [ma_elbow_ang_left, ma_shoulder_ang_left, ma_hip_ang_left, ma_knee_ang_left]
-    op_right = [op_elbow_ang_right, op_shoulder_ang_right, op_hip_ang_right, op_knee_ang_right]
-    ma_right = [ma_elbow_ang_right, ma_shoulder_ang_right, ma_hip_ang_right, ma_knee_ang_right]
+    op_left = [op_elbow_ang_left, op_shoulder_ang_left, op_hip_ang_left, op_knee_ang_left, op_shoulder_ang_left, op_hip_ang_left, op_knee_ang_left]
+    ma_left = [ma_elbow_ang_left, ma_shoulder_ang_left, ma_hip_ang_left, ma_knee_ang_left, ma_shoulder_ang_left_JC, ma_hip_ang_left_JC, ma_knee_ang_left_JC]
+    op_right = [op_elbow_ang_right, op_shoulder_ang_right, op_hip_ang_right, op_knee_ang_right, op_shoulder_ang_right, op_hip_ang_right, op_knee_ang_right]
+    ma_right = [ma_elbow_ang_right, ma_shoulder_ang_right, ma_hip_ang_right, ma_knee_ang_right, ma_shoulder_ang_right_JC, ma_hip_ang_right_JC, ma_knee_ang_right_JC]
 
     leftright = ['L', 'R']
-    jointname = ['Elbow', ' Shoulder', 'Hip', 'Knee']
+    jointname = ['Elbow', 'Shoulder', 'Hip', 'Knee', 'Shoulder_JC', 'Hip_JC', 'Knee_JC']
     minmax = ['Min', 'Max']
 
     for i in leftright:

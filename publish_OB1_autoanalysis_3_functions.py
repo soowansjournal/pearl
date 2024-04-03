@@ -47,23 +47,23 @@ def butter_lowpass_filter(data, cutoff, fs, order):
 
 
 def remove_outliers(array):
-  #calculate interquartile range 
-  q1, q3 = np.percentile(array, [25 ,75])
-  iqr = q3 - q1
+    #calculate interquartile range 
+    q1, q3 = np.percentile(array, [25 ,75])
+    iqr = q3 - q1
 
-  lower = q1 - 1.5*iqr
-  upper = q3 + 1.5*iqr
+    lower = q1 - 1.5*iqr
+    upper = q3 + 1.5*iqr
 
-  lower_outliers = len(array[array < lower])
-  upper_outliers = len(array[array > upper])
+    lower_outliers = len(array[array < lower])
+    upper_outliers = len(array[array > upper])
 
-  outliers_index = list(array.index[array < lower].values) +  list(array.index[array > upper].values)
+    outliers_index = list(array.index[array < lower].values) +  list(array.index[array > upper].values)
 
-  # drop upper and lower outliers
-  print(f'Lower Outliers: {lower_outliers} Upper Outliers: {upper_outliers}')
-  array = array.drop(outliers_index)
+    # drop upper and lower outliers
+    print(f'Lower Outliers: {lower_outliers} Upper Outliers: {upper_outliers}')
+    array = array.drop(outliers_index)
 
-  return array
+    return array
 
 
 def cut_data(op_cut, ma_cut):
@@ -336,7 +336,6 @@ def angles(A, B):
 
 def get_op_xyz(op_final, LeftRight, joint1, joint2, joint3):
   '''to get the segment vectors xyz coordinates relative to joint of interest'''
-
   # segment vector 1
   Ax = op_final[f'{joint1}{LeftRight}X'] - op_final[f'{joint2}{LeftRight}X']
   Ay = op_final[f'{joint1}{LeftRight}Y'] - op_final[f'{joint2}{LeftRight}Y']
@@ -385,19 +384,48 @@ def op_joint_angle(op_final, LeftRight):
 
 
 def get_ma_xyz(ma_final, LR, joint1, joint2, joint3):
-  '''to get the segment vectors xyz coordinates relative to joint of interest'''
+    '''to get the segment vectors xyz coordinates relative to joint of interest'''
 
-  # segment vector 1
-  Ax = ma_final[f'{LR}.{joint1}X'] - ma_final[f'{LR}.{joint2}X']
-  Ay = ma_final[f'{LR}.{joint1}Y'] - ma_final[f'{LR}.{joint2}Y']
-  Az = ma_final[f'{LR}.{joint1}Z'] - ma_final[f'{LR}.{joint2}Z']
+    # R.AnkleY vs V_R.Ankle_JCY
+    if 'JC' in joint1:
+      joint1_x = f'V_{LR}.{joint1}X'
+      joint1_y = f'V_{LR}.{joint1}Y'
+      joint1_z = f'V_{LR}.{joint1}Z'
+    else:
+      joint1_x = f'{LR}.{joint1}X'
+      joint1_y = f'{LR}.{joint1}Y'
+      joint1_z = f'{LR}.{joint1}Z'
 
-  # segment vector 2
-  Bx = ma_final[f'{LR}.{joint3}X'] - ma_final[f'{LR}.{joint2}X']
-  By = ma_final[f'{LR}.{joint3}Y'] - ma_final[f'{LR}.{joint2}Y']
-  Bz = ma_final[f'{LR}.{joint3}Z'] - ma_final[f'{LR}.{joint2}Z']
+    if 'JC' in joint2:
+      joint2_x = f'V_{LR}.{joint2}X'
+      joint2_y = f'V_{LR}.{joint2}Y'
+      joint2_z = f'V_{LR}.{joint2}Z'
+    else:
+      joint2_x = f'{LR}.{joint2}X'
+      joint2_y = f'{LR}.{joint2}Y'
+      joint2_z = f'{LR}.{joint2}Z'
+    
+    if 'JC' in joint3:
+      joint3_x = f'V_{LR}.{joint3}X'
+      joint3_y = f'V_{LR}.{joint3}Y'
+      joint3_z = f'V_{LR}.{joint3}Z'
+    else:
+      joint3_x = f'{LR}.{joint3}X'
+      joint3_y = f'{LR}.{joint3}Y'
+      joint3_z = f'{LR}.{joint3}Z'
 
-  return Ax,Ay,Az,Bx,By,Bz
+    # segment vector 1
+    Ax = ma_final[joint1_x] - ma_final[joint2_x]
+    Ay = ma_final[joint1_y] - ma_final[joint2_y]
+    Az = ma_final[joint1_z] - ma_final[joint2_z]
+
+    # segment vector 2
+    Bx = ma_final[joint3_x] - ma_final[joint2_x]
+    By = ma_final[joint3_y] - ma_final[joint2_y]
+    Bz = ma_final[joint3_z] - ma_final[joint2_z]
+  
+
+    return Ax,Ay,Az,Bx,By,Bz
 
 
 def ma_joint_angle(ma_final, LR):
@@ -415,6 +443,13 @@ def ma_joint_angle(ma_final, LR):
   # To Knee Joint (G: Thigh | H: Shank)
   Gx,Gy,Gz,Hx,Hy,Hz = get_ma_xyz(ma_final, LR, 'ASIS', 'Knee', 'Ankle')
 
+  # To Shoulder Joint (I: Upper Arm | J: Trunk)
+  Ix,Iy,Iz,Jx,Jy,Jz = get_ma_xyz(ma_final, LR, 'Elbow', 'Shoulder', 'Hip_JC')
+  # To Hip Joint (E: Thigh | F: Trunk)
+  Kx,Ky,Kz,Lx,Ly,Lz = get_ma_xyz(ma_final, LR, 'Knee_JC', 'Hip_JC', 'Shoulder')
+  # To Knee Joint (G: Thigh | H: Shank)
+  Mx,My,Mz,Nx,Ny,Nz = get_ma_xyz(ma_final, LR, 'Hip_JC', 'Knee_JC', 'Ankle_JC')
+
   # organize coordinates for each frame for each segment relative to joint
   A = coordinates(Ax,Ay,Az)
   B = coordinates(Bx,By,Bz)
@@ -425,10 +460,22 @@ def ma_joint_angle(ma_final, LR):
   G = coordinates(Gx,Gy,Gz)
   H = coordinates(Hx,Hy,Hz)
 
+  I = coordinates(Ix,Iy,Iz)
+  J = coordinates(Jx,Jy,Jz)
+  K = coordinates(Kx,Ky,Kz)
+  L = coordinates(Lx,Ly,Lz)
+  M = coordinates(Mx,My,Mz)
+  N = coordinates(Nx,Ny,Nz)
+
+
   # get angles for each frame
   ma_elbow_angle = angles(A,B)
   ma_shoulder_angle = angles(C,D)
   ma_hip_angle = angles(E,F)
   ma_knee_angle = angles(G,H)
 
-  return ma_elbow_angle, ma_shoulder_angle, ma_hip_angle, ma_knee_angle
+  ma_shoulder_angle_JC = angles(I,J)
+  ma_hip_angle_JC = angles(K,L)
+  ma_knee_angle_JC = angles(M,N)
+
+  return ma_elbow_angle, ma_shoulder_angle, ma_hip_angle, ma_knee_angle,  ma_shoulder_angle_JC,  ma_hip_angle_JC,  ma_knee_angle_JC
